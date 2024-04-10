@@ -6,6 +6,10 @@ on:
     branches-ignore:
       - main
 
+  # manually trigger the workflow
+  workflow_dispatch:
+
+
 jobs:
   test:
     runs-on: ubuntu-latest
