@@ -31,7 +31,6 @@ class BookRepositoryTest {
         BookEntity savedBook = bookRepository.save(bookEntity);
 
         // then
-        System.out.println(savedBook);
         assertNotNull(savedBook);
         assertEquals(savedBook.getTitle(), bookEntity.getTitle());
         assertEquals(savedBook.getAuthor(), bookEntity.getAuthor());
@@ -51,7 +50,6 @@ class BookRepositoryTest {
         BookEntity foundBook = bookRepository.findById(savedBook.getId()).orElse(null);
 
         // then
-        System.out.println(foundBook);
         assertNotNull(foundBook);
         assertEquals(foundBook.getTitle(), bookEntity.getTitle());
         assertEquals(foundBook.getAuthor(), bookEntity.getAuthor());
