@@ -8,6 +8,11 @@ on:
 
   # manually trigger the workflow
   workflow_dispatch:
+    inputs:
+      test:
+        description: 'Run tests'
+        required: true
+        default: 'true'
 
 
 jobs:
