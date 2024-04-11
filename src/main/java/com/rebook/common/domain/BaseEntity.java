@@ -1,4 +1,4 @@
-package com.rebook.domain.entity;
+package com.rebook.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

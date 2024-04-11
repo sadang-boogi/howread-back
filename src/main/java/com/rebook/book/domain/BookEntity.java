@@ -1,5 +1,7 @@
-package com.rebook.domain.entity;
+package com.rebook.book.domain;
 
+import com.rebook.common.domain.BaseEntity;
+import com.rebook.review.domain.ReviewEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
 
