@@ -1,5 +1,6 @@
 package com.rebook.repository;
 
+import com.rebook.book.repository.BookRepository;
 import com.rebook.domain.entity.BookEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
