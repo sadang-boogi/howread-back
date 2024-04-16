@@ -3,6 +3,8 @@ package com.rebook.book.domain;
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.review.domain.ReviewEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
 import java.util.ArrayList;
@@ -10,6 +12,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "book")
+@Getter
+@Setter
 public class BookEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
