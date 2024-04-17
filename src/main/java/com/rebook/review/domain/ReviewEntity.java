@@ -1,6 +1,7 @@
 package com.rebook.review.domain;
 
 import com.rebook.common.domain.BaseEntity;
+import com.rebook.review.dto.ReviewRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,8 +31,8 @@ public class ReviewEntity extends BaseEntity {
         this.content = content;
         this.starRate = starRate;
     }
-    public static ReviewEntity of(final String content, final BigDecimal starRate){
-        return new ReviewEntity(null, content, starRate);
+    public static ReviewEntity of(final ReviewRequest review){
+        return new ReviewEntity(null, review.getContent(), review.getStarRate());
     }
 
     public ReviewEntity() {
