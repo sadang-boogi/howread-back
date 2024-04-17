@@ -2,10 +2,14 @@ package com.rebook.review.domain;
 
 import com.rebook.common.domain.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
 import java.math.BigDecimal;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "review")
 public class ReviewEntity extends BaseEntity {
@@ -18,6 +22,19 @@ public class ReviewEntity extends BaseEntity {
     private String content;
 
     @Comment("평점")
-    @Column(name = "star_rate", precision = 1, scale = 2)
+    @Column(name = "star_rate", precision = 3, scale = 2)
     private BigDecimal starRate;
+
+    public ReviewEntity(Long id, String content, BigDecimal starRate) {
+        this.id = id;
+        this.content = content;
+        this.starRate = starRate;
+    }
+    public static ReviewEntity of(final String content, final BigDecimal starRate){
+        return new ReviewEntity(null, content, starRate);
+    }
+
+    public ReviewEntity() {
+
+    }
 }
