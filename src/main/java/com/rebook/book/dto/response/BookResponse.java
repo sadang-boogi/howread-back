@@ -1,4 +1,4 @@
-package com.rebook.book.dto;
+package com.rebook.book.dto.response;
 
 import com.rebook.book.domain.BookEntity;
 import lombok.Getter;
