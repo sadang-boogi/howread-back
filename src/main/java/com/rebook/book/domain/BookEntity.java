@@ -35,7 +35,7 @@ public class BookEntity extends BaseEntity {
     private String thumbnailUrl;
 
     @OneToMany(mappedBy = "book")
-    private List<BookHashTagEntity> bookHashTags = new ArrayList<>();
+    private List<BookHashtagEntity> bookHashTags = new ArrayList<>();
 
     @OneToMany
     private List<ReviewEntity> reviews = new ArrayList<>();

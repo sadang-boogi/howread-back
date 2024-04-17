@@ -1,6 +1,6 @@
 package com.rebook.book.controller;
 
-import com.rebook.book.dto.BookResponse;
+import com.rebook.book.dto.response.BookResponse;
 import com.rebook.book.dto.request.BookCreateRequest;
 import com.rebook.book.service.BookService;
 import jakarta.validation.Valid;
