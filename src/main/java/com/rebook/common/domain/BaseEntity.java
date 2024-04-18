@@ -21,4 +21,15 @@ public class BaseEntity {
     @LastModifiedDate
     @Column(columnDefinition = "datetime(6) default now() on update now()")
     private Instant updatedAt;
+
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean isDeleted = false;
+
+    public boolean isDeleted() {
+        return this.isDeleted;
+    }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 }
