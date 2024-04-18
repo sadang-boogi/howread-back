@@ -7,11 +7,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@Table(name = "hashtag")
 @Getter
+@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE hashtag SET is_deleted = true WHERE id = ?")
+@Table(name = "hashtag")
+@Entity
 public class HashtagEntity extends BaseEntity {
 
     @Id

@@ -53,5 +53,13 @@ public class HashtagService {
         hashtagEntity.changeName(hashtagUpdateRequest);
     }
 
+    @Transactional
+    public void delete(final Long hashtagId) {
+        HashtagEntity hashtagEntity = hashtagRepository.findById(hashtagId)
+                .orElseThrow(HashtagNotFoundException::new);
+
+        hashtagRepository.delete(hashtagEntity);
+    }
+
 }
 

@@ -53,4 +53,10 @@ public class HashtagController {
         return ResponseEntity.ok().body(updatedHashtag);
     }
 
+    @DeleteMapping("/{hashtagId}")
+    public ResponseEntity<Void> deleteHashtag(@PathVariable final Long hashtagId) {
+        hashtagService.delete(hashtagId);
+
+        return ResponseEntity.noContent().build();
+    }
 }
