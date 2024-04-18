@@ -1,11 +1,11 @@
 package com.rebook.book.domain;
 
-import com.rebook.hashtag.domain.HashTagEntity;
+import com.rebook.hashtag.domain.HashtagEntity;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "book_hashtag")
-public class BookHashTagEntity {
+public class BookHashtagEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,5 +17,5 @@ public class BookHashTagEntity {
 
     @ManyToOne
     @JoinColumn(name = "hashtag_id")
-    private HashTagEntity hashTag;
+    private HashtagEntity hashTag;
 }
