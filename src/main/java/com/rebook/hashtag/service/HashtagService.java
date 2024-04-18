@@ -1,16 +1,17 @@
 package com.rebook.hashtag.service;
 
+import com.rebook.common.exception.BadRequestException;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.hashtag.dto.requeest.HashtagRequest;
 import com.rebook.hashtag.dto.response.HashtagResponse;
-import com.rebook.hashtag.exception.HashtagNotFoundException;
 import com.rebook.hashtag.repository.HashtagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+
+import static com.rebook.common.exception.ExceptionCode.NOT_FOUND_HASHTAG_ID;
 
 @RequiredArgsConstructor
 @Service
@@ -40,7 +41,7 @@ public class HashtagService {
     @Transactional(readOnly = true)
     public HashtagResponse getHashtag(final Long hashtagId) {
         HashtagEntity hashtag = hashtagRepository.findById(hashtagId)
-                .orElseThrow(HashtagNotFoundException::new);
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_HASHTAG_ID));
 
         return HashtagResponse.of(hashtag);
     }
@@ -48,7 +49,7 @@ public class HashtagService {
     @Transactional
     public void update(final Long hashtagId, final HashtagRequest hashtagUpdateRequest) {
         HashtagEntity hashtagEntity = hashtagRepository.findById(hashtagId)
-                .orElseThrow(HashtagNotFoundException::new);
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_HASHTAG_ID));
 
         hashtagEntity.changeName(hashtagUpdateRequest);
     }
@@ -56,7 +57,7 @@ public class HashtagService {
     @Transactional
     public void delete(final Long hashtagId) {
         HashtagEntity hashtagEntity = hashtagRepository.findById(hashtagId)
-                .orElseThrow(HashtagNotFoundException::new);
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_HASHTAG_ID));
 
         hashtagRepository.delete(hashtagEntity);
     }

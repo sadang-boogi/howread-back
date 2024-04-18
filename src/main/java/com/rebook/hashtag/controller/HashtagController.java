@@ -1,6 +1,5 @@
 package com.rebook.hashtag.controller;
 
-import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.hashtag.dto.requeest.HashtagRequest;
 import com.rebook.hashtag.dto.response.HashtagResponse;
 import com.rebook.hashtag.service.HashtagService;
