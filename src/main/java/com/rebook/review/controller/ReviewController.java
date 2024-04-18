@@ -8,25 +8,23 @@ import com.rebook.review.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("api/v1/reviews")
+@RequestMapping("/api/v1/reviews")
 @RestController
 public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewRepository reviewRepository;
 
     @PostMapping
-    public ResponseEntity<ReviewResponse> saveReview(@Valid final ReviewRequest reviewRequest){
+    public ResponseEntity<ReviewResponse> saveReview(@Valid @RequestBody final ReviewRequest reviewRequest){
         Review savedReview = reviewService.save(reviewRequest);
         ReviewResponse reviewResponse = ReviewResponse.of(savedReview);
-        return ResponseEntity.ok(reviewResponse);
+        return ResponseEntity.created(URI.create("/api/v1/reviews")).body(reviewResponse);
     }
 
     @GetMapping
