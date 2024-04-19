@@ -18,23 +18,21 @@ import java.util.List;
 @RestController
 public class ReviewController {
     private final ReviewService reviewService;
-    private final ReviewRepository reviewRepository;
 
     @PostMapping
-    public ResponseEntity<ReviewResponse> saveReview(@Valid @RequestBody final ReviewRequest reviewRequest){
+    public ResponseEntity<ReviewResponse> saveReview(@Valid @RequestBody final ReviewRequest reviewRequest) {
         Review savedReview = reviewService.save(reviewRequest);
         ReviewResponse reviewResponse = ReviewResponse.of(savedReview);
         return ResponseEntity.created(URI.create("/api/v1/reviews")).body(reviewResponse);
     }
 
     @GetMapping
-    public ResponseEntity<List<ReviewResponse>> getReviews(){
+    public ResponseEntity<List<ReviewResponse>> getReviews() {
         final List<Review> reviews = reviewService.getReviews();
         List<ReviewResponse> responses = reviews.stream()
                 .map(ReviewResponse::of)
                 .toList();
         return ResponseEntity.ok(responses);
     }
-
 
 }

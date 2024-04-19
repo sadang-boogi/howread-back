@@ -3,7 +3,6 @@ package com.rebook.review.service;
 import com.rebook.review.domain.Review;
 import com.rebook.review.domain.ReviewEntity;
 import com.rebook.review.dto.ReviewRequest;
-import com.rebook.review.dto.ReviewResponse;
 import com.rebook.review.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,14 +16,16 @@ public class ReviewService {
     public ReviewService(ReviewRepository reviewRepository) {
         this.reviewRepository = reviewRepository;
     }
+
     @Transactional
-    public Review save(ReviewRequest reviewRequest){
+    public Review save(ReviewRequest reviewRequest) {
         ReviewEntity reviewEntity = ReviewEntity.of(reviewRequest);
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
+
         return Review.of(savedReview);
     }
 
-    public List<Review> getReviews(){
+    public List<Review> getReviews() {
         List<ReviewEntity> reviews = reviewRepository.findAll();
         return reviews.stream()
                 .map(Review::of)
