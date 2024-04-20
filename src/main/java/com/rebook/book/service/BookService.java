@@ -16,15 +16,14 @@ public class BookService {
     private final BookRepository bookRepository;
 
     @Transactional
-    public Long save(final BookCreateRequest bookCreateRequest) {
+    public BookResponse save(final BookCreateRequest bookCreateRequest) {
         BookEntity book = BookEntity.of(
                 bookCreateRequest.getTitle(),
                 bookCreateRequest.getAuthor(),
                 bookCreateRequest.getThumbnailUrl()
         );
 
-        BookEntity savedBook = bookRepository.save(book);
-        return savedBook.getId();
+        return BookResponse.of(bookRepository.save(book));
     }
 
     @Transactional(readOnly = true)

@@ -10,7 +10,6 @@ import org.hibernate.annotations.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "book")
@@ -49,7 +48,7 @@ public class BookEntity extends BaseEntity {
         this.id = id;
         this.title = title;
         this.author = author;
-        this.thumbnailUrl = getThumbnailImageName(thumbnailUrl);
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     public static BookEntity of(
@@ -65,7 +64,7 @@ public class BookEntity extends BaseEntity {
         );
     }
 
-    private String getThumbnailImageName(final String thumbnailUrl) {
-        return Objects.requireNonNullElse(thumbnailUrl, DEFAULT_IMAGE_NAME);
+    public String getThumbnailUrl() {
+        return thumbnailUrl != null ? thumbnailUrl : DEFAULT_IMAGE_NAME;
     }
 }
