@@ -1,6 +1,6 @@
 package com.rebook.book.dto.response;
 
-import com.rebook.book.domain.BookEntity;
+import com.rebook.book.domain.entity.BookEntity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

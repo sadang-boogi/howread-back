@@ -1,4 +1,4 @@
-package com.rebook.book.domain;
+package com.rebook.book.domain.entity;
 
 import com.rebook.hashtag.domain.HashtagEntity;
 import jakarta.persistence.*;

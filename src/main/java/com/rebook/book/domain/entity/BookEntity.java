@@ -1,4 +1,4 @@
-package com.rebook.book.domain;
+package com.rebook.book.domain.entity;
 
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.review.domain.ReviewEntity;
