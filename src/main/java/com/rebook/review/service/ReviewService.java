@@ -30,8 +30,8 @@ public class ReviewService {
         return Review.of(savedReview);
     }
 
-    public List<Review> getReviews(){
-        List<ReviewEntity> reviews = reviewRepository.findAllByOrderByCreatedAtDesc();
+    public List<Review> getReviewsWithBookId(Long bookId){
+        List<ReviewEntity> reviews = reviewRepository.findByBook_IdOrderByCreatedAtAsc(bookId);
         return reviews.stream()
                 .map(Review::of)
                 .toList();

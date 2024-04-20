@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/books/{bookId}/reviews")
 @RestController
-@Tag(name = "Review", description = "Review API")
 public class ReviewController {
     private final ReviewService reviewService;
 
@@ -31,8 +30,8 @@ public class ReviewController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReviewResponse>> getReviews(){
-        final List<Review> reviews = reviewService.getReviews();
+    public ResponseEntity<List<ReviewResponse>> getReviews(@PathVariable("bookId") Long bookId){
+        final List<Review> reviews = reviewService.getReviewsWithBookId(bookId);
         List<ReviewResponse> responses = reviews.stream()
                 .map(ReviewResponse::of)
                 .toList();
