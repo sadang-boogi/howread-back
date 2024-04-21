@@ -10,10 +10,10 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 @Where(clause = "is_deleted = false")
 @SQLDelete(sql = "UPDATE hashtag SET is_deleted = true WHERE id = ?")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "hashtag")
 @Entity
 public class HashtagEntity extends BaseEntity {

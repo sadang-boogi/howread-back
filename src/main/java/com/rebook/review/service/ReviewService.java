@@ -17,14 +17,15 @@ public class ReviewService {
     public ReviewService(ReviewRepository reviewRepository) {
         this.reviewRepository = reviewRepository;
     }
+
     @Transactional
-    public Review save(ReviewRequest reviewRequest){
+    public Review save(ReviewRequest reviewRequest) {
         ReviewEntity reviewEntity = ReviewEntity.of(reviewRequest);
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
         return Review.of(savedReview);
     }
 
-    public List<Review> getReviews(){
+    public List<Review> getReviews() {
         List<ReviewEntity> reviews = reviewRepository.findAll();
         return reviews.stream()
                 .map(Review::of)
