@@ -27,13 +27,13 @@ public class ReviewService {
                 .orElseThrow(() -> new EntityNotFoundException("bookId not found: " + bookId));
         ReviewEntity reviewEntity = ReviewEntity.of(book,reviewRequest);
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
-        return Review.of(savedReview);
+        return Review.from(savedReview);
     }
 
     public List<Review> getReviewsWithBookId(Long bookId){
         List<ReviewEntity> reviews = reviewRepository.findByBook_IdOrderByCreatedAtAsc(bookId);
         return reviews.stream()
-                .map(Review::of)
+                .map(Review::from)
                 .toList();
     }
 }

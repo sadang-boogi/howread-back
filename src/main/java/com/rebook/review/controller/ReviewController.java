@@ -4,7 +4,6 @@ import com.rebook.review.domain.Review;
 import com.rebook.review.dto.ReviewRequest;
 import com.rebook.review.dto.ReviewResponse;
 import com.rebook.review.service.ReviewService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ public class ReviewController {
             @PathVariable("bookId") Long bookId,
             @Valid @RequestBody final ReviewRequest reviewRequest){
         Review savedReview = reviewService.save(bookId,reviewRequest);
-        ReviewResponse reviewResponse = ReviewResponse.of(savedReview);
+        ReviewResponse reviewResponse = ReviewResponse.from(savedReview);
         return ResponseEntity.created(URI.create("/api/v1/reviews")).body(reviewResponse);
     }
 
@@ -33,7 +32,7 @@ public class ReviewController {
     public ResponseEntity<List<ReviewResponse>> getReviews(@PathVariable("bookId") Long bookId){
         final List<Review> reviews = reviewService.getReviewsWithBookId(bookId);
         List<ReviewResponse> responses = reviews.stream()
-                .map(ReviewResponse::of)
+                .map(ReviewResponse::from)
                 .toList();
         return ResponseEntity.ok(responses);
     }

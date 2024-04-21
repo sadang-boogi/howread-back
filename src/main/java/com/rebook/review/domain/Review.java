@@ -19,7 +19,7 @@ public class Review {
     public Review() {
     }
 
-    public static Review of(final ReviewEntity reviewEntity) {
+    public static Review from(final ReviewEntity reviewEntity) {
         return new Review(
                 reviewEntity.getBook(),
                 reviewEntity.getId(),
