@@ -1,4 +1,4 @@
-package com.rebook.book.domain;
+package com.rebook.book.domain.entity;
 
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.review.domain.ReviewEntity;
@@ -10,11 +10,12 @@ import org.hibernate.annotations.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-@Entity
-@Table(name = "book")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "book")
+@Entity
 public class BookEntity extends BaseEntity {
 
     private static final String DEFAULT_IMAGE_NAME = "default_image.jpeg";
@@ -39,7 +40,7 @@ public class BookEntity extends BaseEntity {
     @OneToMany
     private List<ReviewEntity> reviews = new ArrayList<>();
 
-    public BookEntity(
+    private BookEntity(
             final Long id,
             final String title,
             final String author,
@@ -65,6 +66,6 @@ public class BookEntity extends BaseEntity {
     }
 
     public String getThumbnailUrl() {
-        return thumbnailUrl != null ? thumbnailUrl : DEFAULT_IMAGE_NAME;
+        return Objects.requireNonNullElse(thumbnailUrl, DEFAULT_IMAGE_NAME);
     }
 }
