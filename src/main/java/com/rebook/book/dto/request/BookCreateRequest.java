@@ -9,10 +9,10 @@ import lombok.Getter;
 public class BookCreateRequest {
 
     @NotBlank(message = "책 제목을 입력해주세요.")
-    private final String title;
+    private String title;
 
     @NotBlank(message = "저자를 입력해주세요.")
-    private final String author;
+    private String author;
 
-    private final String thumbnailUrl;
+    private String thumbnailUrl;
 }
