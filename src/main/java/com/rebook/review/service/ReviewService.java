@@ -1,6 +1,6 @@
 package com.rebook.review.service;
 
-import com.rebook.book.domain.BookEntity;
+import com.rebook.book.domain.entity.BookEntity;
 import com.rebook.book.repository.BookRepository;
 import com.rebook.review.domain.Review;
 import com.rebook.review.domain.ReviewEntity;
