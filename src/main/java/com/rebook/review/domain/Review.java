@@ -1,9 +1,16 @@
 package com.rebook.review.domain;
 
+import com.rebook.book.domain.entity.BookEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
+@Getter
+@AllArgsConstructor
 public class Review {
+    private BookEntity book;
     private Long id;
     private String content;
     private BigDecimal starRate;
@@ -12,34 +19,11 @@ public class Review {
     public Review() {
     }
 
-    public static Review of(final ReviewEntity reviewEntity) {
+    public static Review from(final ReviewEntity reviewEntity) {
         return new Review(
+                reviewEntity.getBook(),
                 reviewEntity.getId(),
                 reviewEntity.getContent(),
                 reviewEntity.getStarRate(),
-                reviewEntity.getCreatedAt());
+                reviewEntity.getCreatedAt());}
     }
-
-    public Review(Long id, String content, BigDecimal starRate, ZonedDateTime createdAt) {
-        this.id = id;
-        this.content = content;
-        this.starRate = starRate;
-        this.createdAt = createdAt;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public BigDecimal getStarRate() {
-        return starRate;
-    }
-
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
-    }
-}
