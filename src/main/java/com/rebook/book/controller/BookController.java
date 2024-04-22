@@ -19,11 +19,11 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
-    public ResponseEntity<Void> saveBook(
+    public ResponseEntity<BookResponse> saveBook(
             @RequestBody @Valid final BookCreateRequest bookCreateRequest
     ) {
-        final Long bookId = bookService.save(bookCreateRequest);
-        return ResponseEntity.created(URI.create("/api/v1/books/" + bookId)).build();
+        BookResponse book = bookService.save(bookCreateRequest);
+        return ResponseEntity.created(URI.create("/api/v1/books/" + book.getId())).body(book);
     }
 
     @GetMapping
