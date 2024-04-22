@@ -16,7 +16,4 @@ public class BookCreateRequest {
     private String author;
 
     private String thumbnailUrl;
-    public BookCreateRequest() {
-    }
-
 }
