@@ -3,8 +3,12 @@ package com.rebook.book.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class BookCreateRequest {
 
@@ -15,4 +19,6 @@ public class BookCreateRequest {
     private String author;
 
     private String thumbnailUrl;
+
+    private List<Long> hashtagIds;
 }

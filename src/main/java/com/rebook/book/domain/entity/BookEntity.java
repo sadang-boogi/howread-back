@@ -1,6 +1,7 @@
 package com.rebook.book.domain.entity;
 
 import com.rebook.common.domain.BaseEntity;
+import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.review.domain.ReviewEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,6 +12,8 @@ import org.hibernate.annotations.Comment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static jakarta.persistence.CascadeType.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,7 +37,7 @@ public class BookEntity extends BaseEntity {
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = ALL)
     private List<BookHashtagEntity> bookHashTags = new ArrayList<>();
 
     @OneToMany
@@ -63,6 +66,11 @@ public class BookEntity extends BaseEntity {
                 author,
                 thumbnailUrl
         );
+    }
+
+    public void addHashtag(HashtagEntity hashtag) {
+        BookHashtagEntity bookHashtag = BookHashtagEntity.of(this, hashtag);
+        bookHashTags.add(bookHashtag);
     }
 
     public String getThumbnailUrl() {
