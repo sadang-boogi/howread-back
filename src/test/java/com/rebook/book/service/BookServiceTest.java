@@ -22,7 +22,7 @@ class BookServiceTest {
     @Test
     void saveBookWithoutHashtag() {
         // given
-        BookCreateRequest bookCreateRequest = new BookCreateRequest("객사오", "조영호", null);
+        BookCreateRequest bookCreateRequest = new BookCreateRequest("객사오", "조영호", null, null);
 
         // when
         BookResponse bookResponse = bookService.save(bookCreateRequest);
