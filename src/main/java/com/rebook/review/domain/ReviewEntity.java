@@ -6,6 +6,8 @@ import com.rebook.review.dto.ReviewRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 
@@ -14,6 +16,8 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "review")
 @AllArgsConstructor
+@SQLRestriction("is_deleted is false")
+@SQLDelete(sql = "UPDATE review SET is_deleted = true WHERE id = ?")
 @NoArgsConstructor
 public class ReviewEntity extends BaseEntity {
     @Id
