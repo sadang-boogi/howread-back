@@ -4,14 +4,13 @@ import com.rebook.book.domain.entity.BookEntity;
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.review.dto.ReviewRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import java.math.BigDecimal;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "review")
 @AllArgsConstructor

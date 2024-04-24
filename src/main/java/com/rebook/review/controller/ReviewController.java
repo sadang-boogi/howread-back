@@ -43,23 +43,27 @@ public class ReviewController {
         return ResponseEntity.ok(responses);
     }
 
-    /**
-     @PostMapping("/reviews")
-     public ResponseEntity<ReviewResponse> saveReview(@Valid @RequestBody final ReviewRequest reviewRequest){
-     Review savedReview = reviewService.save(reviewRequest);
-     ReviewResponse reviewResponse = ReviewResponse.of(savedReview);
-     return ResponseEntity.created(URI.create("/api/v1/reviews")).body(reviewResponse);
-     }
+    @PutMapping("/{reviewId}")
+    @Operation(summary = "Update a Review for a Book", description = "해당 책의 특정 리뷰를 수정한다.")
+    public ResponseEntity<ReviewResponse> updateReview(
+            @PathVariable("bookId") Long bookId,
+            @PathVariable("reviewId") Long reviewId,
+            @Valid @RequestBody final ReviewRequest reviewRequest) {
+        Review updatedReview = reviewService.update(bookId, reviewId, reviewRequest);
+        ReviewResponse reviewResponse = ReviewResponse.from(updatedReview);
+        return ResponseEntity.ok(reviewResponse);
+    }
 
-     @GetMapping("/reviews")
-     public ResponseEntity<List<ReviewResponse>> getReviews(){
-     final List<Review> reviews = reviewService.getReviews();
-     List<ReviewResponse> responses = reviews.stream()
-     .map(ReviewResponse::of)
-     .toList();
-     return ResponseEntity.ok(responses);
-     }
-     */
+    @DeleteMapping("/{reviewId}")
+    @Operation(summary = "Delete a Review for a Book", description = "해당 책의 특정 리뷰를 삭제한다.")
+    public ResponseEntity<Void> deleteReview(
+            @PathVariable("reviewId") Long reviewId) {
+        reviewService.delete(reviewId);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 
 
 

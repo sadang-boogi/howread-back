@@ -36,4 +36,26 @@ public class ReviewService {
                 .map(Review::from)
                 .toList();
     }
+
+    @Transactional
+    public Review update(Long bookId, Long reviewId, ReviewRequest reviewRequest) {
+        // 존재하는 책인지 확인
+        BookEntity book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book not found with ID: " + bookId));
+
+        // 리뷰 id로 리뷰 조회
+        ReviewEntity review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new EntityNotFoundException("Review not found with ID: " + reviewId));
+
+        // 새로운 값으로 리뷰 업데이트
+        review.setContent(reviewRequest.getContent());
+        review.setStarRate(reviewRequest.getStarRate());
+
+        return Review.from(review);
+    }
+
+    @Transactional
+    public void delete(Long reviewId) {
+        reviewRepository.deleteById(reviewId);
+    }
 }
