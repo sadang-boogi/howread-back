@@ -6,7 +6,6 @@ import com.rebook.review.domain.Review;
 import com.rebook.review.domain.ReviewEntity;
 import com.rebook.review.dto.ReviewRequest;
 import com.rebook.review.repository.ReviewRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +30,9 @@ public class ReviewService {
     }
 
     public List<Review> getReviewsWithBookId(Long bookId){
-        List<ReviewEntity> reviews = reviewRepository.findByBook_IdOrderByCreatedAtAsc(bookId);
+        BookEntity book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_BOOK_ID));
+        List<ReviewEntity> reviews = reviewRepository.findByBookIdOrderByCreatedAtAsc(bookId);
         return reviews.stream()
                 .map(Review::from)
                 .toList();
@@ -40,22 +41,24 @@ public class ReviewService {
     @Transactional
     public Review update(Long bookId, Long reviewId, ReviewRequest reviewRequest) {
         // 존재하는 책인지 확인
-        BookEntity book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("Book not found with ID: " + bookId));
+        BookEntity bookEntity = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_BOOK_ID));
 
         // 리뷰 id로 리뷰 조회
-        ReviewEntity review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new EntityNotFoundException("Review not found with ID: " + reviewId));
+        ReviewEntity reviewEntity = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_REVIEW_ID));
 
-        // 새로운 값으로 리뷰 업데이트
-        review.setContent(reviewRequest.getContent());
-        review.setStarRate(reviewRequest.getStarRate());
+        // 기존 리뷰 엔티티 업데이트
+        reviewEntity.setContent(reviewRequest.getContent());
+        reviewEntity.setStarRate(reviewRequest.getStarRate());
 
-        return Review.from(review);
+        return Review.from(reviewEntity);
     }
 
     @Transactional
-    public void delete(Long reviewId) {
+    public void softDelete(Long reviewId) {
+        ReviewEntity review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_REVIEW_ID));
         reviewRepository.deleteById(reviewId);
     }
 }
