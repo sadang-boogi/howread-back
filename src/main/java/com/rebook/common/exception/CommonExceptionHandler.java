@@ -13,9 +13,9 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<Object> handleBadRequestException(BadRequestException e) {
-        log.error("errorCode: {}, errorMessage: {}", e.getErrorCode(), e.getMessage());
+        log.error("errorCode: {}, errorMessage: {}", e.getCode(), e.getMessage());
 
-        ExceptionResponse exception = new ExceptionResponse(LocalDateTime.now(), e.getErrorCode(), e.getMessage());
+        ExceptionResponse exception = new ExceptionResponse(LocalDateTime.now(), e.getCode(), e.getMessage());
 
         return ResponseEntity.badRequest().body(exception);
     }

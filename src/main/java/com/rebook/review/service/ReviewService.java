@@ -2,6 +2,8 @@ package com.rebook.review.service;
 
 import com.rebook.book.domain.entity.BookEntity;
 import com.rebook.book.repository.BookRepository;
+import com.rebook.common.exception.BadRequestException;
+import com.rebook.common.exception.ExceptionCode;
 import com.rebook.review.domain.Review;
 import com.rebook.review.domain.ReviewEntity;
 import com.rebook.review.dto.ReviewRequest;
@@ -20,10 +22,11 @@ public class ReviewService {
         this.reviewRepository = reviewRepository;
         this.bookRepository = bookRepository;
     }
+
     @Transactional
     public Review save(Long bookId,ReviewRequest reviewRequest){
         BookEntity book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("bookId not found: " + bookId));
+                .orElseThrow(() -> new BadRequestException(ExceptionCode.NOT_FOUND_BOOK_ID));
         ReviewEntity reviewEntity = ReviewEntity.of(book,reviewRequest);
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
         return Review.from(savedReview);

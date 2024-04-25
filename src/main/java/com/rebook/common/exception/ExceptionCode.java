@@ -14,6 +14,7 @@ public enum ExceptionCode {
     NOT_FOUND_BOOK_ID("NOT_FOUND", "요청하신 책은 존재하지 않습니다."),
     ;
 
-    private final int errorCode;
+    private final String code;
+
     private final String message;
 }
