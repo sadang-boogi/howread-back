@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -20,5 +21,5 @@ public class BookUpdateRequest {
 
     private String thumbnailUrl;
 
-    private List<Long> hashtagIds;
+    private List<Long> hashtagIds = new ArrayList<>();
 }

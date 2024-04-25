@@ -31,6 +31,7 @@ public class ReviewEntity extends BaseEntity {
         this.content = content;
         this.starRate = starRate;
     }
+
     public static ReviewEntity of(final ReviewRequest review){
         return new ReviewEntity(null, review.getContent(), review.getStarRate());
     }

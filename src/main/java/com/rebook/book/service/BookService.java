@@ -56,7 +56,7 @@ public class BookService {
         return BookResponse.from(book);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void updateBook(Long bookId, BookUpdateRequest bookUpdateRequest) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
@@ -68,5 +68,12 @@ public class BookService {
             List<HashtagEntity> hashtags = hashtagRepository.findByIds(bookUpdateRequest.getHashtagIds());
             hashtags.forEach(book::addHashtag);
         }
+    }
+
+    @Transactional
+    public void deleteBook(Long bookId) {
+        BookEntity book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
+        book.delete();
     }
 }
