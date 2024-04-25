@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @RequiredArgsConstructor
 public class ExceptionResponse {
-
     private final LocalDateTime errorTime;
-    private final int errorCode;
+    private final String code;
     private final String message;
 }
