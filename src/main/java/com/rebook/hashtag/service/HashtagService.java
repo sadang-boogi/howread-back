@@ -1,6 +1,6 @@
 package com.rebook.hashtag.service;
 
-import com.rebook.common.exception.BadRequestException;
+import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.hashtag.dto.requeest.HashtagRequest;
 import com.rebook.hashtag.dto.response.HashtagResponse;
@@ -41,7 +41,7 @@ public class HashtagService {
     @Transactional(readOnly = true)
     public HashtagResponse getHashtag(final Long hashtagId) {
         HashtagEntity hashtag = hashtagRepository.findById(hashtagId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_HASHTAG_ID));
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_HASHTAG_ID));
 
         return HashtagResponse.of(hashtag);
     }
@@ -49,7 +49,7 @@ public class HashtagService {
     @Transactional
     public void update(final Long hashtagId, final HashtagRequest hashtagUpdateRequest) {
         HashtagEntity hashtagEntity = hashtagRepository.findById(hashtagId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_HASHTAG_ID));
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_HASHTAG_ID));
 
         hashtagEntity.changeName(hashtagUpdateRequest);
     }
@@ -57,7 +57,7 @@ public class HashtagService {
     @Transactional
     public void delete(final Long hashtagId) {
         HashtagEntity hashtagEntity = hashtagRepository.findById(hashtagId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_HASHTAG_ID));
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_HASHTAG_ID));
 
         hashtagRepository.delete(hashtagEntity);
     }
