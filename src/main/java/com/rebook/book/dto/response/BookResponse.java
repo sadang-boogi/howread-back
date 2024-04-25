@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
@@ -28,7 +27,7 @@ public class BookResponse {
                 book.getBookHashTags().stream()
                         .map(BookHashtagEntity::getHashTag)
                         .map(HashtagEntity::getName)
-                        .collect(Collectors.toList())
+                        .toList()
         );
     }
 }

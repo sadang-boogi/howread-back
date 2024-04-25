@@ -1,5 +1,6 @@
 package com.rebook.book.domain.entity;
 
+import com.rebook.book.dto.request.BookUpdateRequest;
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.review.domain.ReviewEntity;
@@ -8,13 +9,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static jakarta.persistence.CascadeType.*;
-
+@SQLRestriction(value = "is_deleted = false")
+@SQLDelete(sql = "UPDATE book SET is_deleted = true WHERE id = ?")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "book")
@@ -37,7 +40,7 @@ public class BookEntity extends BaseEntity {
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;
 
-    @OneToMany(mappedBy = "book", cascade = ALL)
+    @OneToMany(mappedBy = "book")
     private List<BookHashtagEntity> bookHashTags = new ArrayList<>();
 
     @OneToMany
@@ -71,6 +74,16 @@ public class BookEntity extends BaseEntity {
     public void addHashtag(HashtagEntity hashtag) {
         BookHashtagEntity bookHashtag = BookHashtagEntity.of(this, hashtag);
         bookHashTags.add(bookHashtag);
+    }
+
+    public void update(BookUpdateRequest bookUpdateRequest) {
+        this.title = bookUpdateRequest.getTitle();
+        this.author = bookUpdateRequest.getAuthor();
+        this.thumbnailUrl = bookUpdateRequest.getThumbnailUrl();
+    }
+
+    public void clearHashTags() {
+        this.bookHashTags.clear();
     }
 
     public String getThumbnailUrl() {
