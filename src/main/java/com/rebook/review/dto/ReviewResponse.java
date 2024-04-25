@@ -14,7 +14,7 @@ public class ReviewResponse {
     private BigDecimal starRate;
     private ZonedDateTime createdAt;
 
-    public static ReviewResponse of(final Review review) {
+    public static ReviewResponse from(final Review review) {
         return new ReviewResponse(
                 review.getContent(),
                 review.getStarRate(),

@@ -1,22 +1,30 @@
 package com.rebook.review.domain;
 
+import com.rebook.book.domain.entity.BookEntity;
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.review.dto.ReviewRequest;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 import java.math.BigDecimal;
 
-@Setter
 @Getter
 @Entity
 @Table(name = "review")
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReviewEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Comment("리뷰 도서")
+    @ManyToOne
+    @JoinColumn(name = "bookId")
+    private BookEntity book;
 
     @Comment("리뷰 내용")
     @Column(name = "content", nullable = false)
@@ -32,11 +40,12 @@ public class ReviewEntity extends BaseEntity {
         this.starRate = starRate;
     }
 
-    public static ReviewEntity of(final ReviewRequest review){
-        return new ReviewEntity(null, review.getContent(), review.getStarRate());
+    public static ReviewEntity of(BookEntity book, ReviewRequest request) {
+        return new ReviewEntity(
+                null,
+                book,
+                request.getContent(),
+                request.getStarRate());
     }
 
-    public ReviewEntity() {
-
-    }
 }
