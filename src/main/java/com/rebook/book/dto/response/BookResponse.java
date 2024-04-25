@@ -19,7 +19,7 @@ public class BookResponse {
     private String thumbnailUrl;
     private List<String> hashtags;
 
-    public static BookResponse of(final BookEntity book) {
+    public static BookResponse from(final BookEntity book) {
         return new BookResponse(
                 book.getId(),
                 book.getTitle(),
