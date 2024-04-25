@@ -4,7 +4,7 @@ import com.rebook.book.domain.entity.BookEntity;
 import com.rebook.book.dto.request.BookCreateRequest;
 import com.rebook.book.dto.response.BookResponse;
 import com.rebook.book.repository.BookRepository;
-import com.rebook.common.exception.BadRequestException;
+import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.hashtag.repository.HashtagRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.rebook.common.exception.ExceptionCode.NOT_FOUND_HASHTAG_ID;
+import static com.rebook.common.exception.ExceptionCode.NOT_FOUND_BOOK_ID;
 
 @RequiredArgsConstructor
 @Service
@@ -32,14 +32,11 @@ public class BookService {
         );
 
         if (bookCreateRequest.getHashtagIds() != null && !bookCreateRequest.getHashtagIds().isEmpty()) {
-            bookCreateRequest.getHashtagIds().forEach(hashtagId -> {
-                HashtagEntity hashtag = hashtagRepository.findById(hashtagId)
-                        .orElseThrow(() -> new BadRequestException(NOT_FOUND_HASHTAG_ID));
-                book.addHashtag(hashtag);
-            });
+            List<HashtagEntity> hashtags = hashtagRepository.findByIds(bookCreateRequest.getHashtagIds());
+            hashtags.forEach(book::addHashtag);
         }
 
-        return BookResponse.of(bookRepository.save(book));
+        return BookResponse.from(bookRepository.save(book));
     }
 
     @Transactional(readOnly = true)
@@ -47,7 +44,18 @@ public class BookService {
         List<BookEntity> books = bookRepository.findAll();
 
         return books.stream()
-                .map(BookResponse::of)
+                .map(BookResponse::from)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public BookResponse getBook(final Long bookId) {
+
+        BookEntity book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
+
+        BookResponse bookResponse = BookResponse.from(book);
+
+        return bookResponse;
     }
 }
