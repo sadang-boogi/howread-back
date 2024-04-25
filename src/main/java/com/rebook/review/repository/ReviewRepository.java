@@ -2,10 +2,11 @@ package com.rebook.review.repository;
 
 import com.rebook.review.domain.ReviewEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface ReviewRepository extends JpaRepository<ReviewEntity, Long>{
+public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
     List<ReviewEntity> findAllByOrderByCreatedAtAsc();
-    List<ReviewEntity> findByBook_IdOrderByCreatedAtAsc(Long bookId);
+    List<ReviewEntity> findByBookIdOrderByCreatedAtAsc(Long bookId);
 }
