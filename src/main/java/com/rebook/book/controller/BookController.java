@@ -1,7 +1,8 @@
 package com.rebook.book.controller;
 
-import com.rebook.book.dto.response.BookResponse;
 import com.rebook.book.dto.request.BookCreateRequest;
+import com.rebook.book.dto.request.BookUpdateRequest;
+import com.rebook.book.dto.response.BookResponse;
 import com.rebook.book.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,4 +34,28 @@ public class BookController {
                 .body(books);
     }
 
+    @GetMapping("/{bookId}")
+    public ResponseEntity<BookResponse> getBook(@PathVariable Long bookId) {
+        BookResponse book = bookService.getBook(bookId);
+
+        return ResponseEntity.ok()
+                .body(book);
+    }
+
+    @PutMapping("/{bookId}")
+    public ResponseEntity<Void> updateBook(
+            @PathVariable Long bookId,
+            @RequestBody BookUpdateRequest bookUpdateRequest
+    ) {
+        bookService.updateBook(bookId, bookUpdateRequest);
+        return ResponseEntity.ok()
+                .build();
+    }
+
+    @DeleteMapping("/{bookId}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long bookId) {
+        bookService.deleteBook(bookId);
+        return ResponseEntity.ok()
+                .build();
+    }
 }

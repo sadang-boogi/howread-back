@@ -34,6 +34,12 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "star_rate", precision = 3, scale = 2)
     private BigDecimal starRate;
 
+    public ReviewEntity(Long id, String content, BigDecimal starRate) {
+        this.id = id;
+        this.content = content;
+        this.starRate = starRate;
+    }
+
     public static ReviewEntity of(BookEntity book, ReviewRequest request) {
         return new ReviewEntity(
                 null,

@@ -1,24 +1,33 @@
 package com.rebook.book.dto.response;
 
 import com.rebook.book.domain.entity.BookEntity;
+import com.rebook.book.domain.entity.BookHashtagEntity;
+import com.rebook.hashtag.domain.HashtagEntity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+import java.util.List;
+
+@AllArgsConstructor
 @Getter
 public class BookResponse {
 
-    private final Long id;
-    private final String title;
-    private final String author;
-    private final String thumbnailUrl;
+    private Long id;
+    private String title;
+    private String author;
+    private String thumbnailUrl;
+    private List<String> hashtags;
 
-    public static BookResponse of(final BookEntity book) {
+    public static BookResponse from(final BookEntity book) {
         return new BookResponse(
                 book.getId(),
                 book.getTitle(),
                 book.getAuthor(),
-                book.getThumbnailUrl()
+                book.getThumbnailUrl(),
+                book.getBookHashTags().stream()
+                        .map(BookHashtagEntity::getHashTag)
+                        .map(HashtagEntity::getName)
+                        .toList()
         );
     }
 }
