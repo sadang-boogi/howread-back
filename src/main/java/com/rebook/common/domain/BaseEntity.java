@@ -28,10 +28,6 @@ public abstract class BaseEntity {
         return this.isDeleted;
     }
 
-    public void delete() {
-        this.isDeleted = true;
-    }
-
     @PrePersist
     public void PrePersist() {
         this.createdAt = ZonedDateTime.now();
@@ -47,5 +43,4 @@ public abstract class BaseEntity {
         this.isDeleted = true;
         this.deletedAt = ZonedDateTime.now();
     }
-
 }

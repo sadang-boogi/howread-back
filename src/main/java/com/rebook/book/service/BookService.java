@@ -74,6 +74,6 @@ public class BookService {
     public void deleteBook(Long bookId) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
-        book.delete();
+        book.softDelete();
     }
 }
