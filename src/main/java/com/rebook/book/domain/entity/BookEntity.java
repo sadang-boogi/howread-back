@@ -40,7 +40,7 @@ public class BookEntity extends BaseEntity {
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<BookHashtagEntity> bookHashTags = new ArrayList<>();
 
     @OneToMany
