@@ -21,6 +21,9 @@ public abstract class BaseEntity {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean isDeleted = false;
 
+    @Column(columnDefinition = "datetime(6)")
+    private ZonedDateTime deletedAt;
+
     public boolean isDeleted() {
         return this.isDeleted;
     }
@@ -39,4 +42,10 @@ public abstract class BaseEntity {
     public void PreUpdate() {
         this.updatedAt = ZonedDateTime.now();
     }
+
+    public void softDelete() {
+        this.isDeleted = true;
+        this.deletedAt = ZonedDateTime.now();
+    }
+
 }

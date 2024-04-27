@@ -62,6 +62,6 @@ public class ReviewService {
     public void softDelete(Long reviewId) {
         ReviewEntity review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_REVIEW_ID));
-        reviewRepository.deleteById(reviewId);
+        review.softDelete();
     }
 }
