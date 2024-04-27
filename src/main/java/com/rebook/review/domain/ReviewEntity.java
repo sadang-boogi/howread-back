@@ -4,17 +4,20 @@ import com.rebook.book.domain.entity.BookEntity;
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.review.dto.ReviewRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "review")
 @AllArgsConstructor
+@SQLRestriction("is_deleted is false")
+@SQLDelete(sql = "UPDATE review SET is_deleted = true WHERE id = ?")
 @NoArgsConstructor
 public class ReviewEntity extends BaseEntity {
     @Id
