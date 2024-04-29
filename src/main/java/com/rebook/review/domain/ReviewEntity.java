@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 @Table(name = "review")
 @AllArgsConstructor
 @SQLRestriction("is_deleted is false")
-@SQLDelete(sql = "UPDATE review SET is_deleted = true WHERE id = ?")
 @NoArgsConstructor
 public class ReviewEntity extends BaseEntity {
     @Id
