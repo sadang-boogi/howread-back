@@ -47,7 +47,7 @@ public class BookEntity extends BaseEntity {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<BookHashtagEntity> bookHashTags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<ReviewEntity> reviews = new ArrayList<>();
 
     private BookEntity(
