@@ -4,6 +4,7 @@ import com.rebook.book.controller.request.BookCreateRequest;
 import com.rebook.book.controller.request.BookUpdateRequest;
 import com.rebook.book.controller.response.BookResponse;
 import com.rebook.book.service.BookService;
+import com.rebook.common.schema.ListResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +29,10 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookResponse>> getBooks() {
+    public ResponseEntity<ListResponse<BookResponse>> getBooks() {
         final List<BookResponse> books = bookService.getBooks();
-        return ResponseEntity.ok()
-                .body(books);
+        ListResponse<BookResponse> response = new ListResponse<>(books);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{bookId}")
