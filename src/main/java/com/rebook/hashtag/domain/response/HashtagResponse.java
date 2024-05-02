@@ -1,4 +1,4 @@
-package com.rebook.hashtag.dto.response;
+package com.rebook.hashtag.domain.response;
 
 import com.rebook.hashtag.domain.HashtagEntity;
 import lombok.Getter;

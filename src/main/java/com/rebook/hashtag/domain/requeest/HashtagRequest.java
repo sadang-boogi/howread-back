@@ -1,4 +1,4 @@
-package com.rebook.hashtag.dto.requeest;
+package com.rebook.hashtag.domain.requeest;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
