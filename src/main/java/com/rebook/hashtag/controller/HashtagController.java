@@ -3,6 +3,7 @@ package com.rebook.hashtag.controller;
 import com.rebook.hashtag.controller.requeest.HashtagRequest;
 import com.rebook.hashtag.controller.response.HashtagResponse;
 import com.rebook.hashtag.service.HashtagService;
+import com.rebook.hashtag.service.command.HashtagCommand;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,8 @@ public class HashtagController {
     public ResponseEntity<HashtagResponse> createHashtag(
             @RequestBody @Valid final HashtagRequest hashtagRequest
     ) {
-        HashtagResponse hashtag = hashtagService.create(hashtagRequest);
+        HashtagCommand hashtagCommand = HashtagCommand.of(hashtagRequest);
+        HashtagResponse hashtag = hashtagService.create(hashtagCommand);
 
         return ResponseEntity.created(URI.create("/api/v1/hashtags/" + hashtag.getId())).body(hashtag);
     }

@@ -5,6 +5,7 @@ import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.hashtag.controller.requeest.HashtagRequest;
 import com.rebook.hashtag.controller.response.HashtagResponse;
 import com.rebook.hashtag.repository.HashtagRepository;
+import com.rebook.hashtag.service.command.HashtagCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +21,8 @@ public class HashtagService {
     private final HashtagRepository hashtagRepository;
 
     @Transactional
-    public HashtagResponse create(final HashtagRequest hashtagCreateRequest) {
-        HashtagEntity hashtag = HashtagEntity.of(
-                hashtagCreateRequest.getName()
-        );
+    public HashtagResponse create(final HashtagCommand hashtagCommand) {
+        HashtagEntity hashtag = HashtagEntity.of(hashtagCommand.getName());
         HashtagEntity createdHashtag = hashtagRepository.save(hashtag);
 
         return HashtagResponse.of(createdHashtag);
