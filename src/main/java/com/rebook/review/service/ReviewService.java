@@ -24,15 +24,15 @@ public class ReviewService {
     }
 
     @Transactional
-    public Review save(Long bookId,ReviewRequest reviewRequest){
+    public Review save(Long bookId, ReviewRequest reviewRequest) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_BOOK_ID));
-        ReviewEntity reviewEntity = ReviewEntity.of(book,reviewRequest);
+        ReviewEntity reviewEntity = ReviewEntity.of(book, reviewRequest);
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
         return Review.from(savedReview);
     }
 
-    public List<Review> getReviewsWithBookId(Long bookId){
+    public List<Review> getReviewsWithBookId(Long bookId) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_BOOK_ID));
         List<ReviewEntity> reviews = reviewRepository.findByBookIdOrderByCreatedAtAsc(bookId);
@@ -53,7 +53,7 @@ public class ReviewService {
 
         // 기존 리뷰 엔티티 업데이트
         reviewEntity.setContent(reviewRequest.getContent());
-        reviewEntity.setStarRate(reviewRequest.getStarRate());
+        reviewEntity.setScore(reviewRequest.getStarRate());
 
         return Review.from(reviewEntity);
     }
