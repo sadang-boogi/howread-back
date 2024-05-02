@@ -1,6 +1,8 @@
 package com.rebook.review.controller;
 
-import com.rebook.review.dto.ReviewDTO;
+import com.rebook.review.controller.request.ReviewRequest;
+import com.rebook.review.controller.response.ReviewResponse;
+import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +28,7 @@ public class ReviewController {
             @PathVariable("bookId") Long bookId,
             @Valid @RequestBody final ReviewRequest reviewRequest) {
 
-        ReviewDTO savedReview = reviewService.save(bookId, reviewRequest);
+        ReviewDto savedReview = reviewService.save(bookId, reviewRequest);
         ReviewResponse reviewResponse = ReviewResponse.fromDTO(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));
         return ResponseEntity.created(location).body(reviewResponse);
@@ -35,7 +37,7 @@ public class ReviewController {
     @GetMapping
     @Operation(summary = "Get All Reviews for a Book", description = "해당 책의 작성리뷰를 조회한다.")
     public ResponseEntity<List<ReviewResponse>> getReviews(@PathVariable("bookId") Long bookId) {
-        final List<ReviewDTO> reviews = reviewService.getReviewsWithBookId(bookId);
+        final List<ReviewDto> reviews = reviewService.getReviewsWithBookId(bookId);
         List<ReviewResponse> responses = reviews.stream()
                 .map(ReviewResponse::fromDTO)
                 .toList();
@@ -48,7 +50,7 @@ public class ReviewController {
             @PathVariable("bookId") Long bookId,
             @PathVariable("reviewId") Long reviewId,
             @Valid @RequestBody final ReviewRequest reviewRequest) {
-        ReviewDTO updatedReview = reviewService.update(bookId, reviewId, reviewRequest);
+        ReviewDto updatedReview = reviewService.update(bookId, reviewId, reviewRequest);
         ReviewResponse reviewResponse = ReviewResponse.fromDTO(updatedReview);
         return ResponseEntity.ok(reviewResponse);
     }

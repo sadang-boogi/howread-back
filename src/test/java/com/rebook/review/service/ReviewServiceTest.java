@@ -2,9 +2,8 @@ package com.rebook.review.service;
 
 import com.rebook.book.domain.entity.BookEntity;
 import com.rebook.book.repository.BookRepository;
-import com.rebook.review.controller.ReviewRequest;
 import com.rebook.review.domain.ReviewEntity;
-import com.rebook.review.dto.ReviewDTO;
+import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.review.repository.ReviewRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,7 +57,7 @@ class ReviewServiceTest {
 
 
         // When
-        List<ReviewDTO> result = reviewService.getReviewsWithBookId(bookEntity.getId());
+        List<ReviewDto> result = reviewService.getReviewsWithBookId(bookEntity.getId());
 
         // Then
         assertEquals(2, result.size());

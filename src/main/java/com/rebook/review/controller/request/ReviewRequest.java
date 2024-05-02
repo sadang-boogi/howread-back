@@ -1,4 +1,4 @@
-package com.rebook.review.controller;
+package com.rebook.review.controller.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

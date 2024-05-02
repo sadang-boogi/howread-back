@@ -1,7 +1,7 @@
-package com.rebook.review.controller;
+package com.rebook.review.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rebook.review.dto.ReviewDTO;
+import com.rebook.review.service.dto.ReviewDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,7 +16,7 @@ public class ReviewResponse {
     private BigDecimal starRate;
     private ZonedDateTime createdAt;
 
-    public static ReviewResponse fromDTO(ReviewDTO review) {
+    public static ReviewResponse fromDTO(ReviewDto review) {
         return new ReviewResponse(
                 review.getId(),
                 review.getContent(),

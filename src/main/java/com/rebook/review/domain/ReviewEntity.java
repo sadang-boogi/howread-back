@@ -2,7 +2,7 @@ package com.rebook.review.domain;
 
 import com.rebook.book.domain.entity.BookEntity;
 import com.rebook.common.domain.BaseEntity;
-import com.rebook.review.controller.ReviewRequest;
+import com.rebook.review.controller.request.ReviewRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
