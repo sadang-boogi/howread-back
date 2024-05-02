@@ -63,11 +63,8 @@ public class ReviewController {
 
     @DeleteMapping("/{reviewId}")
     @Operation(summary = "Delete a Review for a Book", description = "해당 책의 특정 리뷰를 삭제한다.")
-    public ResponseEntity<Void> softDeleteReview(
-            @PathVariable("reviewId") Long reviewId) {
+    public ResponseEntity<Void> softDeleteReview(@PathVariable("reviewId") Long reviewId) {
         reviewService.softDelete(reviewId);
         return ResponseEntity.noContent().build();
     }
-
-
 }

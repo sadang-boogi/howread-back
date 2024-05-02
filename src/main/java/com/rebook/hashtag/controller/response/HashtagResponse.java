@@ -1,20 +1,29 @@
 package com.rebook.hashtag.controller.response;
 
-import com.rebook.hashtag.domain.HashtagEntity;
+import com.rebook.hashtag.service.dto.HashtagDto;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class HashtagResponse {
 
-    private final Long id;
-    private final String name;
+    private Long id;
+    private String name;
 
-    public static HashtagResponse of(HashtagEntity hashtagEntity) {
-        return new HashtagResponse(
-                hashtagEntity.getId(),
-                hashtagEntity.getName()
-        );
+    @Builder
+    private HashtagResponse(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public static HashtagResponse fromDto(HashtagDto hashtagDto) {
+        return HashtagResponse.builder()
+                .id(hashtagDto.getId())
+                .name(hashtagDto.getName())
+                .build();
     }
 }

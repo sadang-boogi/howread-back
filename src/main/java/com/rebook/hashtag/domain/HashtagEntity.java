@@ -1,7 +1,6 @@
 package com.rebook.hashtag.domain;
 
 import com.rebook.common.domain.BaseEntity;
-import com.rebook.hashtag.controller.requeest.HashtagRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -38,7 +37,7 @@ public class HashtagEntity extends BaseEntity {
                 name);
     }
 
-    public void changeName(HashtagRequest hashtagRequest) {
-        this.name = hashtagRequest.getName();
+    public void changeName(String name) {
+        this.name = name;
     }
 }
