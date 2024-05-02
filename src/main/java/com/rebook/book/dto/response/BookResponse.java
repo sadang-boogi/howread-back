@@ -19,7 +19,7 @@ public class BookResponse {
     private String author;
     private String thumbnailUrl;
     private List<String> hashtags;
-    private BigDecimal averageStarRate;
+    private BigDecimal rating;
 
     public static BookResponse from(final BookEntity book) {
         return new BookResponse(
@@ -31,11 +31,12 @@ public class BookResponse {
                         .map(BookHashtagEntity::getHashTag)
                         .map(HashtagEntity::getName)
                         .toList(),
-                book.getAverageStarRate()
+                book.getRating()
         );
     }
+
     @JsonProperty("averageStarRate")
-    public String getAverageStarRate() {
-        return averageStarRate.toString();
+    public String getRating() {
+        return rating.toString();
     }
 }
