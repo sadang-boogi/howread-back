@@ -4,9 +4,9 @@ import com.rebook.book.domain.entity.BookEntity;
 import com.rebook.book.repository.BookRepository;
 import com.rebook.common.exception.ExceptionCode;
 import com.rebook.common.exception.NotFoundException;
-import com.rebook.review.domain.Review;
 import com.rebook.review.domain.ReviewEntity;
-import com.rebook.review.dto.ReviewRequest;
+import com.rebook.review.controller.ReviewRequest;
+import com.rebook.review.dto.ReviewDTO;
 import com.rebook.review.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,25 +24,25 @@ public class ReviewService {
     }
 
     @Transactional
-    public Review save(Long bookId,ReviewRequest reviewRequest){
+    public ReviewDTO save(Long bookId, ReviewRequest reviewRequest) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_BOOK_ID));
-        ReviewEntity reviewEntity = ReviewEntity.of(book,reviewRequest);
+        ReviewEntity reviewEntity = ReviewEntity.of(book, reviewRequest);
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
-        return Review.from(savedReview);
+        return ReviewDTO.fromEntity(savedReview);
     }
 
-    public List<Review> getReviewsWithBookId(Long bookId){
+    public List<ReviewDTO> getReviewsWithBookId(Long bookId) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_BOOK_ID));
         List<ReviewEntity> reviews = reviewRepository.findByBookIdOrderByCreatedAtAsc(bookId);
         return reviews.stream()
-                .map(Review::from)
+                .map(ReviewDTO::fromEntity)
                 .toList();
     }
 
     @Transactional
-    public Review update(Long bookId, Long reviewId, ReviewRequest reviewRequest) {
+    public ReviewDTO update(Long bookId, Long reviewId, ReviewRequest reviewRequest) {
         // 존재하는 책인지 확인
         BookEntity bookEntity = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_BOOK_ID));
@@ -55,7 +55,7 @@ public class ReviewService {
         reviewEntity.setContent(reviewRequest.getContent());
         reviewEntity.setStarRate(reviewRequest.getStarRate());
 
-        return Review.from(reviewEntity);
+        return ReviewDTO.fromEntity(reviewEntity);
     }
 
     @Transactional

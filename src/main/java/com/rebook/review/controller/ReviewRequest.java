@@ -1,4 +1,4 @@
-package com.rebook.review.dto;
+package com.rebook.review.controller;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 public class ReviewRequest {
-    @NotBlank(message ="리뷰 내용을 입력해주세요.")
+    @NotBlank(message = "리뷰 내용을 입력해주세요.")
     private String content;
     @NotNull(message = "별점을 등록해주세요.")
     private BigDecimal starRate;

@@ -1,8 +1,6 @@
 package com.rebook.review.controller;
 
-import com.rebook.review.domain.Review;
-import com.rebook.review.dto.ReviewRequest;
-import com.rebook.review.dto.ReviewResponse;
+import com.rebook.review.dto.ReviewDTO;
 import com.rebook.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,19 +24,20 @@ public class ReviewController {
     @Operation(summary = "Create Review for a Book", description = "해당 책에 리뷰를 작성한다.")
     public ResponseEntity<ReviewResponse> saveReview(
             @PathVariable("bookId") Long bookId,
-            @Valid @RequestBody final ReviewRequest reviewRequest){
-        Review savedReview = reviewService.save(bookId,reviewRequest);
-        ReviewResponse reviewResponse = ReviewResponse.from(savedReview);
+            @Valid @RequestBody final ReviewRequest reviewRequest) {
+
+        ReviewDTO savedReview = reviewService.save(bookId, reviewRequest);
+        ReviewResponse reviewResponse = ReviewResponse.fromDTO(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));
         return ResponseEntity.created(location).body(reviewResponse);
     }
 
     @GetMapping
     @Operation(summary = "Get All Reviews for a Book", description = "해당 책의 작성리뷰를 조회한다.")
-    public ResponseEntity<List<ReviewResponse>> getReviews(@PathVariable("bookId") Long bookId){
-        final List<Review> reviews = reviewService.getReviewsWithBookId(bookId);
+    public ResponseEntity<List<ReviewResponse>> getReviews(@PathVariable("bookId") Long bookId) {
+        final List<ReviewDTO> reviews = reviewService.getReviewsWithBookId(bookId);
         List<ReviewResponse> responses = reviews.stream()
-                .map(ReviewResponse::from)
+                .map(ReviewResponse::fromDTO)
                 .toList();
         return ResponseEntity.ok(responses);
     }
@@ -49,8 +48,8 @@ public class ReviewController {
             @PathVariable("bookId") Long bookId,
             @PathVariable("reviewId") Long reviewId,
             @Valid @RequestBody final ReviewRequest reviewRequest) {
-        Review updatedReview = reviewService.update(bookId, reviewId, reviewRequest);
-        ReviewResponse reviewResponse = ReviewResponse.from(updatedReview);
+        ReviewDTO updatedReview = reviewService.update(bookId, reviewId, reviewRequest);
+        ReviewResponse reviewResponse = ReviewResponse.fromDTO(updatedReview);
         return ResponseEntity.ok(reviewResponse);
     }
 
@@ -61,10 +60,6 @@ public class ReviewController {
         reviewService.softDelete(reviewId);
         return ResponseEntity.noContent().build();
     }
-
-
-
-
 
 
 }
