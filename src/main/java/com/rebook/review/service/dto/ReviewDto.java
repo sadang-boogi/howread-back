@@ -16,14 +16,14 @@ public class ReviewDto {
     private BookEntity book;
     private Long id;
     private String content;
-    private BigDecimal starRate;
+    private BigDecimal score;
     private ZonedDateTime createdAt;
 
     public static ReviewDto fromEntity(ReviewEntity reviewEntity) {
         return new ReviewDto(reviewEntity.getBook(),
                 reviewEntity.getId(),
                 reviewEntity.getContent(),
-                reviewEntity.getStarRate(),
+                reviewEntity.getScore(),
                 reviewEntity.getCreatedAt());
     }
 }

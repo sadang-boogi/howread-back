@@ -20,7 +20,7 @@ public class ReviewResponse {
         return new ReviewResponse(
                 review.getId(),
                 review.getContent(),
-                review.getStarRate(),
+                review.getScore(),
                 review.getCreatedAt());
     }
 

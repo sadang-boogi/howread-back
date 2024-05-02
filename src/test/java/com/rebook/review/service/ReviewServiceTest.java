@@ -62,9 +62,9 @@ class ReviewServiceTest {
         // Then
         assertEquals(2, result.size());
         assertEquals("first content", result.get(0).getContent());
-        assertEquals(BigDecimal.valueOf(4.5), result.get(0).getStarRate());
+        assertEquals(BigDecimal.valueOf(4.5), result.get(0).getScore());
         assertEquals("second content", result.get(1).getContent());
-        assertEquals(BigDecimal.valueOf(3.5), result.get(1).getStarRate());
+        assertEquals(BigDecimal.valueOf(3.5), result.get(1).getScore());
 
     }
 }
