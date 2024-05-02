@@ -1,5 +1,6 @@
 package com.rebook.review.controller;
 
+import com.rebook.common.schema.ListResponse;
 import com.rebook.review.controller.request.ReviewRequest;
 import com.rebook.review.controller.response.ReviewResponse;
 import com.rebook.review.service.dto.ReviewDto;
@@ -36,12 +37,13 @@ public class ReviewController {
 
     @GetMapping
     @Operation(summary = "Get All Reviews for a Book", description = "해당 책의 작성리뷰를 조회한다.")
-    public ResponseEntity<List<ReviewResponse>> getReviews(@PathVariable("bookId") Long bookId) {
-        final List<ReviewDto> reviews = reviewService.getReviewsWithBookId(bookId);
-        List<ReviewResponse> responses = reviews.stream()
+    public ResponseEntity<ListResponse<ReviewResponse>> getReviews(@PathVariable("bookId") Long bookId) {
+        final List<ReviewDto> reviewDtos = reviewService.getReviewsWithBookId(bookId);
+        List<ReviewResponse> reviewResponses = reviewDtos.stream()
                 .map(ReviewResponse::fromDTO)
                 .toList();
-        return ResponseEntity.ok(responses);
+        ListResponse<ReviewResponse> responses = new ListResponse<>(reviewResponses);
+        return ResponseEntity.ok().body(responses);
     }
 
     @PutMapping("/{reviewId}")
