@@ -1,11 +1,13 @@
-package com.rebook.book.controller.response;
+package com.rebook.book.dto.response;
 
-import com.rebook.book.domain.BookEntity;
-import com.rebook.book.domain.BookHashtagEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rebook.book.domain.entity.BookEntity;
+import com.rebook.book.domain.entity.BookHashtagEntity;
 import com.rebook.hashtag.domain.HashtagEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @AllArgsConstructor
@@ -17,6 +19,7 @@ public class BookResponse {
     private String author;
     private String thumbnailUrl;
     private List<String> hashtags;
+    private BigDecimal rating;
 
     public static BookResponse from(final BookEntity book) {
         return new BookResponse(
@@ -27,7 +30,13 @@ public class BookResponse {
                 book.getBookHashTags().stream()
                         .map(BookHashtagEntity::getHashTag)
                         .map(HashtagEntity::getName)
-                        .toList()
+                        .toList(),
+                book.getRating()
         );
+    }
+
+    @JsonProperty("averageStarRate")
+    public String getRating() {
+        return rating.toString();
     }
 }
