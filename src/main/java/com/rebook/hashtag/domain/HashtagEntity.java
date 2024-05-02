@@ -1,7 +1,7 @@
 package com.rebook.hashtag.domain;
 
 import com.rebook.common.domain.BaseEntity;
-import com.rebook.hashtag.domain.requeest.HashtagRequest;
+import com.rebook.hashtag.controller.requeest.HashtagRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

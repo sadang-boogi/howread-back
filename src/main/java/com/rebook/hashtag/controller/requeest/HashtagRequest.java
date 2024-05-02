@@ -1,4 +1,4 @@
-package com.rebook.hashtag.domain.requeest;
+package com.rebook.hashtag.controller.requeest;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

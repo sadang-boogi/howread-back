@@ -1,7 +1,7 @@
 package com.rebook.hashtag.controller;
 
-import com.rebook.hashtag.domain.requeest.HashtagRequest;
-import com.rebook.hashtag.domain.response.HashtagResponse;
+import com.rebook.hashtag.controller.requeest.HashtagRequest;
+import com.rebook.hashtag.controller.response.HashtagResponse;
 import com.rebook.hashtag.service.HashtagService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

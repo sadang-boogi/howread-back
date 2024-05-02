@@ -2,8 +2,8 @@ package com.rebook.hashtag.service;
 
 import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
-import com.rebook.hashtag.domain.requeest.HashtagRequest;
-import com.rebook.hashtag.domain.response.HashtagResponse;
+import com.rebook.hashtag.controller.requeest.HashtagRequest;
+import com.rebook.hashtag.controller.response.HashtagResponse;
 import com.rebook.hashtag.repository.HashtagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
