@@ -26,8 +26,8 @@ public class ReviewController {
     @Operation(summary = "Create Review for a Book", description = "해당 책에 리뷰를 작성한다.")
     public ResponseEntity<ReviewResponse> saveReview(
             @PathVariable("bookId") Long bookId,
-            @Valid @RequestBody final ReviewRequest reviewRequest){
-        Review savedReview = reviewService.save(bookId,reviewRequest);
+            @Valid @RequestBody final ReviewRequest reviewRequest) {
+        Review savedReview = reviewService.save(bookId, reviewRequest);
         ReviewResponse reviewResponse = ReviewResponse.from(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));
         return ResponseEntity.created(location).body(reviewResponse);
@@ -35,7 +35,7 @@ public class ReviewController {
 
     @GetMapping
     @Operation(summary = "Get All Reviews for a Book", description = "해당 책의 작성리뷰를 조회한다.")
-    public ResponseEntity<List<ReviewResponse>> getReviews(@PathVariable("bookId") Long bookId){
+    public ResponseEntity<List<ReviewResponse>> getReviews(@PathVariable("bookId") Long bookId) {
         final List<Review> reviews = reviewService.getReviewsWithBookId(bookId);
         List<ReviewResponse> responses = reviews.stream()
                 .map(ReviewResponse::from)
@@ -61,10 +61,6 @@ public class ReviewController {
         reviewService.softDelete(reviewId);
         return ResponseEntity.noContent().build();
     }
-
-
-
-
 
 
 }

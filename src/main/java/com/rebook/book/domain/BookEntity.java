@@ -1,4 +1,4 @@
-package com.rebook.book.domain.entity;
+package com.rebook.book.domain;
 
 import com.rebook.book.dto.request.BookUpdateRequest;
 import com.rebook.common.domain.BaseEntity;
@@ -76,7 +76,7 @@ public class BookEntity extends BaseEntity {
         bookHashTags.add(bookHashtag);
     }
 
-    public void update(BookUpdateRequest bookUpdateRequest) {
+    public void update(BookUpdateRequest bookUpdateRequest) { //todo: 레이어를 최대한 분리, 현재는 DTO 로 받는데 Entity로 하도록
         this.title = bookUpdateRequest.getTitle();
         this.author = bookUpdateRequest.getAuthor();
         this.thumbnailUrl = bookUpdateRequest.getThumbnailUrl();

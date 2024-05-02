@@ -1,7 +1,7 @@
 package com.rebook.book.dto.response;
 
-import com.rebook.book.domain.entity.BookEntity;
-import com.rebook.book.domain.entity.BookHashtagEntity;
+import com.rebook.book.domain.BookEntity;
+import com.rebook.book.domain.BookHashtagEntity;
 import com.rebook.hashtag.domain.HashtagEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

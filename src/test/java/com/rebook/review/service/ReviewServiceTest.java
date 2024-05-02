@@ -1,6 +1,6 @@
 package com.rebook.review.service;
 
-import com.rebook.book.domain.entity.BookEntity;
+import com.rebook.book.domain.BookEntity;
 import com.rebook.book.repository.BookRepository;
 import com.rebook.review.domain.Review;
 import com.rebook.review.dto.ReviewRequest;
@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class ReviewServiceTest {
     @Autowired
@@ -23,22 +22,22 @@ class ReviewServiceTest {
 
     @DisplayName("책 id로 review 저장")
     @Test
-    void saveReview(){
+    void saveReview() {
 
         //given
         //책 저장
         BookEntity newBook = BookEntity.of("객체 지향", "조영호", "defalut-image.jpa");
         BookEntity savedBook = bookRepository.save(newBook);
         //bookId로 reviewRequest 생성
-        ReviewRequest reviewRequest = new ReviewRequest( "review for 객체지향",new BigDecimal("4.5"));
+        ReviewRequest reviewRequest = new ReviewRequest("review for 객체지향", new BigDecimal("4.5"));
 
         //when 리뷰 저장
-        Review savedReview = reviewService.save(savedBook.getId(),reviewRequest);
+        Review savedReview = reviewService.save(savedBook.getId(), reviewRequest);
 
         //then 저장한 책의 book Id와 저장된 리뷰의 bookId 비교
-        assertEquals(savedBook.getId(),savedReview.getBook().getId());
-        assertEquals(savedReview.getContent(),reviewRequest.getContent());
-        assertEquals(savedReview.getStarRate(),reviewRequest.getStarRate());
+        assertEquals(savedBook.getId(), savedReview.getBook().getId());
+        assertEquals(savedReview.getContent(), reviewRequest.getContent());
+        assertEquals(savedReview.getStarRate(), reviewRequest.getStarRate());
 
     }
 }

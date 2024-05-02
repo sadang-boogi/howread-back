@@ -1,6 +1,6 @@
 package com.rebook.review.domain;
 
-import com.rebook.book.domain.entity.BookEntity;
+import com.rebook.book.domain.BookEntity;
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.review.dto.ReviewRequest;
 import jakarta.persistence.*;

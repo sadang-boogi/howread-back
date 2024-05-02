@@ -1,4 +1,4 @@
-package com.rebook.book.domain.entity;
+package com.rebook.book.domain;
 
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.hashtag.domain.HashtagEntity;

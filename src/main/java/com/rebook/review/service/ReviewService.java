@@ -1,6 +1,6 @@
 package com.rebook.review.service;
 
-import com.rebook.book.domain.entity.BookEntity;
+import com.rebook.book.domain.BookEntity;
 import com.rebook.book.repository.BookRepository;
 import com.rebook.common.exception.ExceptionCode;
 import com.rebook.common.exception.NotFoundException;
