@@ -1,15 +1,14 @@
 package com.rebook.review.service;
 
-
-import com.rebook.book.domain.entity.BookEntity;
+import com.rebook.book.domain.BookEntity;
 import com.rebook.book.repository.BookRepository;
 import com.rebook.common.exception.ExceptionCode;
 import com.rebook.common.exception.NotFoundException;
 import com.rebook.review.domain.ReviewEntity;
+import com.rebook.review.repository.ReviewRepository;
 import com.rebook.review.service.command.SaveReviewCommand;
 import com.rebook.review.service.command.UpdateReviewCommand;
 import com.rebook.review.service.dto.ReviewDto;
-import com.rebook.review.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

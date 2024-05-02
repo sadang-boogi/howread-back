@@ -1,9 +1,9 @@
 package com.rebook.book.service;
 
-import com.rebook.book.domain.BookEntity;
 import com.rebook.book.controller.request.BookCreateRequest;
 import com.rebook.book.controller.request.BookUpdateRequest;
 import com.rebook.book.controller.response.BookResponse;
+import com.rebook.book.domain.BookEntity;
 import com.rebook.book.repository.BookRepository;
 import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
@@ -36,7 +36,7 @@ public class BookService {
             hashtags.forEach(book::addHashtag);
         }
 
-        return BookResponse.from(bookRepository.save(book));
+        return com.rebook.book.controller.response.BookResponse.from(bookRepository.save(book));
     }
 
     @Transactional(readOnly = true)

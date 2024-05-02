@@ -1,8 +1,8 @@
-package com.rebook.book.dto.response;
+package com.rebook.book.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rebook.book.domain.entity.BookEntity;
-import com.rebook.book.domain.entity.BookHashtagEntity;
+import com.rebook.book.domain.BookEntity;
+import com.rebook.book.domain.BookHashtagEntity;
 import com.rebook.hashtag.domain.HashtagEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

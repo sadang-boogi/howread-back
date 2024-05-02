@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.Objects;
 
 @SQLRestriction(value = "is_deleted = false")
-@SQLDelete(sql = "UPDATE book SET is_deleted = true WHERE id = ?")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -91,7 +89,7 @@ public class BookEntity extends BaseEntity {
         bookHashTags.add(bookHashtag);
     }
 
-    public void update(BookUpdateRequest bookUpdateRequest) { //todo: 레이어를 최대한 분리, 현재는 DTO 로 받는데 Entity로 하도록
+    public void update(BookUpdateRequest bookUpdateRequest) {
         this.title = bookUpdateRequest.getTitle();
         this.author = bookUpdateRequest.getAuthor();
         this.thumbnailUrl = bookUpdateRequest.getThumbnailUrl();
