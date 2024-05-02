@@ -2,8 +2,6 @@ package com.rebook.book.domain;
 
 import com.rebook.book.controller.request.BookUpdateRequest;
 import com.rebook.common.domain.BaseEntity;
-import com.rebook.common.exception.ExceptionCode;
-import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.review.domain.ReviewEntity;
 import jakarta.persistence.*;
@@ -74,16 +72,18 @@ public class BookEntity extends BaseEntity {
                 thumbnailUrl
         );
     }
-    public BigDecimal getAverageStarRate() {
+
+    public BigDecimal getRating() {
         if (reviews.isEmpty()) {
             return BigDecimal.ZERO; // 리뷰가 없으면 0 반환
         }
         BigDecimal sum = reviews.stream()
-                .map(ReviewEntity::getStarRate)
+                .map(ReviewEntity::getScore)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal average = sum.divide(BigDecimal.valueOf(reviews.size()), 3, RoundingMode.HALF_UP);
         return average;
     }
+
     public void addHashtag(HashtagEntity hashtag) {
         BookHashtagEntity bookHashtag = BookHashtagEntity.of(this, hashtag);
         bookHashTags.add(bookHashtag);

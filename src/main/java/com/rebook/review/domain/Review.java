@@ -24,6 +24,7 @@ public class Review {
                 reviewEntity.getBook(),
                 reviewEntity.getId(),
                 reviewEntity.getContent(),
-                reviewEntity.getStarRate(),
-                reviewEntity.getCreatedAt());}
+                reviewEntity.getScore(),
+                reviewEntity.getCreatedAt());
     }
+}
