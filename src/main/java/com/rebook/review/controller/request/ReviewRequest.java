@@ -12,9 +12,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 public class ReviewRequest {
+
     @NotBlank(message = "리뷰 내용을 입력해주세요.")
     private String content;
+
     @NotNull(message = "별점을 등록해주세요.")
     private BigDecimal score;
-
 }

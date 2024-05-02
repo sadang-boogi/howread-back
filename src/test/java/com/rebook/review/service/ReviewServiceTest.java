@@ -54,7 +54,6 @@ class ReviewServiceTest {
         //bookId로 리뷰 목록 조회시 reviews 반환
         when(reviewRepository.findByBookIdOrderByCreatedAtAsc(bookEntity.getId())).thenReturn(reviews);
 
-
         // When
         List<ReviewDto> result = reviewService.getReviewsWithBookId(bookEntity.getId());
 

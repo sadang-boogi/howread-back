@@ -4,11 +4,9 @@ import com.rebook.hashtag.service.dto.HashtagDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class HashtagResponse {
 
     private Long id;
