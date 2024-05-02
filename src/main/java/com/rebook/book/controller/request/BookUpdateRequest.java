@@ -1,4 +1,4 @@
-package com.rebook.book.dto.request;
+package com.rebook.book.controller.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

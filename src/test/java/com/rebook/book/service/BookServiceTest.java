@@ -1,8 +1,8 @@
 package com.rebook.book.service;
 
-import com.rebook.book.dto.request.BookCreateRequest;
-import com.rebook.book.dto.request.BookUpdateRequest;
-import com.rebook.book.dto.response.BookResponse;
+import com.rebook.book.controller.request.BookCreateRequest;
+import com.rebook.book.controller.request.BookUpdateRequest;
+import com.rebook.book.controller.response.BookResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 package com.rebook.book.controller;
 
-import com.rebook.book.dto.request.BookCreateRequest;
-import com.rebook.book.dto.request.BookUpdateRequest;
-import com.rebook.book.dto.response.BookResponse;
+import com.rebook.book.controller.request.BookCreateRequest;
+import com.rebook.book.controller.request.BookUpdateRequest;
+import com.rebook.book.controller.response.BookResponse;
 import com.rebook.book.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

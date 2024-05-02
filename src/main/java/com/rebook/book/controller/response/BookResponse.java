@@ -1,4 +1,4 @@
-package com.rebook.book.dto.response;
+package com.rebook.book.controller.response;
 
 import com.rebook.book.domain.BookEntity;
 import com.rebook.book.domain.BookHashtagEntity;

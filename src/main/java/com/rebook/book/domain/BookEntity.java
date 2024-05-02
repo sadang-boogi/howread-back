@@ -1,6 +1,6 @@
 package com.rebook.book.domain;
 
-import com.rebook.book.dto.request.BookUpdateRequest;
+import com.rebook.book.controller.request.BookUpdateRequest;
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.review.domain.ReviewEntity;

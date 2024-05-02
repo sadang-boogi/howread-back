@@ -1,9 +1,9 @@
 package com.rebook.book.service;
 
 import com.rebook.book.domain.BookEntity;
-import com.rebook.book.dto.request.BookCreateRequest;
-import com.rebook.book.dto.request.BookUpdateRequest;
-import com.rebook.book.dto.response.BookResponse;
+import com.rebook.book.controller.request.BookCreateRequest;
+import com.rebook.book.controller.request.BookUpdateRequest;
+import com.rebook.book.controller.response.BookResponse;
 import com.rebook.book.repository.BookRepository;
 import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
