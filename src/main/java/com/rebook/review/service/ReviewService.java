@@ -54,7 +54,7 @@ public class ReviewService {
 
         // 기존 리뷰 엔티티 업데이트
         reviewEntity.setContent(reviewRequest.getContent());
-        reviewEntity.setStarRate(reviewRequest.getStarRate());
+        reviewEntity.setScore(reviewRequest.getStarRate());
 
         return ReviewDto.fromEntity(reviewEntity);
     }

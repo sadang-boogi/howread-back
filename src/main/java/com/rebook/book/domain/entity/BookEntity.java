@@ -13,6 +13,8 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,7 +47,7 @@ public class BookEntity extends BaseEntity {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<BookHashtagEntity> bookHashTags = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<ReviewEntity> reviews = new ArrayList<>();
 
     private BookEntity(
@@ -71,6 +73,17 @@ public class BookEntity extends BaseEntity {
                 author,
                 thumbnailUrl
         );
+    }
+
+    public BigDecimal getRating() {
+        if (reviews.isEmpty()) {
+            return BigDecimal.ZERO; // 리뷰가 없으면 0 반환
+        }
+        BigDecimal sum = reviews.stream()
+                .map(ReviewEntity::getScore)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal average = sum.divide(BigDecimal.valueOf(reviews.size()), 3, RoundingMode.HALF_UP);
+        return average;
     }
 
     public void addHashtag(HashtagEntity hashtag) {

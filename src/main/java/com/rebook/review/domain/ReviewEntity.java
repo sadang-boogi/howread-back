@@ -6,7 +6,6 @@ import com.rebook.review.controller.request.ReviewRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
@@ -17,7 +16,6 @@ import java.math.BigDecimal;
 @Table(name = "review")
 @AllArgsConstructor
 @SQLRestriction("is_deleted is false")
-@SQLDelete(sql = "UPDATE review SET is_deleted = true WHERE id = ?")
 @NoArgsConstructor
 public class ReviewEntity extends BaseEntity {
     @Id
@@ -35,12 +33,12 @@ public class ReviewEntity extends BaseEntity {
 
     @Comment("평점")
     @Column(name = "star_rate", precision = 3, scale = 2)
-    private BigDecimal starRate;
+    private BigDecimal score;
 
-    public ReviewEntity(Long id, String content, BigDecimal starRate) {
+    public ReviewEntity(Long id, String content, BigDecimal score) {
         this.id = id;
         this.content = content;
-        this.starRate = starRate;
+        this.score = score;
     }
 
     public static ReviewEntity of(BookEntity book, ReviewRequest request) {
