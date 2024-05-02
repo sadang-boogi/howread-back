@@ -6,7 +6,8 @@ import com.rebook.book.repository.BookRepository;
 import com.rebook.common.exception.ExceptionCode;
 import com.rebook.common.exception.NotFoundException;
 import com.rebook.review.domain.ReviewEntity;
-import com.rebook.review.controller.request.ReviewRequest;
+import com.rebook.review.service.command.SaveReviewCommand;
+import com.rebook.review.service.command.UpdateReviewCommand;
 import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.review.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
@@ -25,10 +26,10 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewDto save(Long bookId, ReviewRequest reviewRequest) {
-        BookEntity book = bookRepository.findById(bookId)
+    public ReviewDto save(SaveReviewCommand reviewCommand) {
+        BookEntity book = bookRepository.findById(reviewCommand.getBookId())
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_BOOK_ID));
-        ReviewEntity reviewEntity = ReviewEntity.of(book, reviewRequest);
+        ReviewEntity reviewEntity = ReviewEntity.of(book, reviewCommand.getContent(), reviewCommand.getScore());
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
         return ReviewDto.fromEntity(savedReview);
     }
@@ -43,18 +44,19 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewDto update(Long bookId, Long reviewId, ReviewRequest reviewRequest) {
+    public ReviewDto update(UpdateReviewCommand reviewCommand) {
+
         // 존재하는 책인지 확인
-        BookEntity bookEntity = bookRepository.findById(bookId)
+        BookEntity bookEntity = bookRepository.findById(reviewCommand.getBookId())
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_BOOK_ID));
 
         // 리뷰 id로 리뷰 조회
-        ReviewEntity reviewEntity = reviewRepository.findById(reviewId)
+        ReviewEntity reviewEntity = reviewRepository.findById(reviewCommand.getBookId())
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_REVIEW_ID));
 
         // 기존 리뷰 엔티티 업데이트
-        reviewEntity.setContent(reviewRequest.getContent());
-        reviewEntity.setScore(reviewRequest.getStarRate());
+        reviewEntity.setContent(reviewCommand.getContent());
+        reviewEntity.setScore(reviewCommand.getScore());
 
         return ReviewDto.fromEntity(reviewEntity);
     }

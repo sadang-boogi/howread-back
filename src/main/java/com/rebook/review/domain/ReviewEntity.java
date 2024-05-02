@@ -32,7 +32,7 @@ public class ReviewEntity extends BaseEntity {
     private String content;
 
     @Comment("평점")
-    @Column(name = "star_rate", precision = 3, scale = 2)
+    @Column(name = "score", precision = 3, scale = 2)
     private BigDecimal score;
 
     public ReviewEntity(Long id, String content, BigDecimal score) {
@@ -41,12 +41,12 @@ public class ReviewEntity extends BaseEntity {
         this.score = score;
     }
 
-    public static ReviewEntity of(BookEntity book, ReviewRequest request) {
+    public static ReviewEntity of(BookEntity book, String content, BigDecimal score) {
         return new ReviewEntity(
                 null,
                 book,
-                request.getContent(),
-                request.getStarRate());
+                content,
+                score);
     }
 
 }

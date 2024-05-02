@@ -3,6 +3,8 @@ package com.rebook.review.controller;
 import com.rebook.common.schema.ListResponse;
 import com.rebook.review.controller.request.ReviewRequest;
 import com.rebook.review.controller.response.ReviewResponse;
+import com.rebook.review.service.command.SaveReviewCommand;
+import com.rebook.review.service.command.UpdateReviewCommand;
 import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +31,8 @@ public class ReviewController {
             @PathVariable("bookId") Long bookId,
             @Valid @RequestBody final ReviewRequest reviewRequest) {
 
-        ReviewDto savedReview = reviewService.save(bookId, reviewRequest);
+        SaveReviewCommand reviewCommand = SaveReviewCommand.from(bookId, reviewRequest);
+        ReviewDto savedReview = reviewService.save(reviewCommand);
         ReviewResponse reviewResponse = ReviewResponse.fromDTO(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));
         return ResponseEntity.created(location).body(reviewResponse);
@@ -52,7 +55,8 @@ public class ReviewController {
             @PathVariable("bookId") Long bookId,
             @PathVariable("reviewId") Long reviewId,
             @Valid @RequestBody final ReviewRequest reviewRequest) {
-        ReviewDto updatedReview = reviewService.update(bookId, reviewId, reviewRequest);
+        UpdateReviewCommand reviewCommand = UpdateReviewCommand.from(bookId, reviewId, reviewRequest);
+        ReviewDto updatedReview = reviewService.update(reviewCommand);
         ReviewResponse reviewResponse = ReviewResponse.fromDTO(updatedReview);
         return ResponseEntity.ok(reviewResponse);
     }
