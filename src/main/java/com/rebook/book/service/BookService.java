@@ -1,10 +1,11 @@
 package com.rebook.book.service;
 
-import com.rebook.book.controller.request.BookCreateRequest;
 import com.rebook.book.controller.request.BookUpdateRequest;
 import com.rebook.book.controller.response.BookResponse;
 import com.rebook.book.domain.BookEntity;
 import com.rebook.book.repository.BookRepository;
+import com.rebook.book.service.command.BookCreateCommand;
+import com.rebook.book.service.dto.BookDto;
 import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.hashtag.repository.HashtagRepository;
@@ -24,19 +25,19 @@ public class BookService {
     private final HashtagRepository hashtagRepository;
 
     @Transactional
-    public BookResponse save(final BookCreateRequest bookCreateRequest) {
+    public BookDto save(final BookCreateCommand bookCreateCommand) {
         BookEntity book = BookEntity.of(
-                bookCreateRequest.getTitle(),
-                bookCreateRequest.getAuthor(),
-                bookCreateRequest.getThumbnailUrl()
+                bookCreateCommand.getTitle(),
+                bookCreateCommand.getAuthor(),
+                bookCreateCommand.getThumbnailUrl()
         );
 
-        if (bookCreateRequest.getHashtagIds() != null && !bookCreateRequest.getHashtagIds().isEmpty()) {
-            List<HashtagEntity> hashtags = hashtagRepository.findByIds(bookCreateRequest.getHashtagIds());
+        if (bookCreateCommand.getHashtagIds() != null && !bookCreateCommand.getHashtagIds().isEmpty()) {
+            List<HashtagEntity> hashtags = hashtagRepository.findByIds(bookCreateCommand.getHashtagIds());
             hashtags.forEach(book::addHashtag);
         }
 
-        return BookResponse.from(bookRepository.save(book));
+        return BookDto.fromEntity(bookRepository.save(book));
     }
 
     @Transactional(readOnly = true)

@@ -43,7 +43,7 @@ public class BookEntity extends BaseEntity {
     private String thumbnailUrl;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-    private List<BookHashtagEntity> bookHashTags = new ArrayList<>();
+    private List<BookHashtagEntity> bookHashtags = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<ReviewEntity> reviews = new ArrayList<>();
@@ -85,7 +85,7 @@ public class BookEntity extends BaseEntity {
 
     public void addHashtag(HashtagEntity hashtag) {
         BookHashtagEntity bookHashtag = BookHashtagEntity.of(this, hashtag);
-        bookHashTags.add(bookHashtag);
+        bookHashtags.add(bookHashtag);
     }
 
     public void update(BookUpdateRequest bookUpdateRequest) {
@@ -95,7 +95,7 @@ public class BookEntity extends BaseEntity {
     }
 
     public void clearHashTags() {
-        this.bookHashTags.clear();
+        this.bookHashtags.clear();
     }
 
     public String getThumbnailUrl() {

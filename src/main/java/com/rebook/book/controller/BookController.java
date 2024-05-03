@@ -4,6 +4,7 @@ import com.rebook.book.controller.request.BookCreateRequest;
 import com.rebook.book.controller.request.BookUpdateRequest;
 import com.rebook.book.controller.response.BookResponse;
 import com.rebook.book.service.BookService;
+import com.rebook.book.service.command.BookCreateCommand;
 import com.rebook.common.schema.ListResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,8 @@ public class BookController {
     public ResponseEntity<BookResponse> saveBook(
             @RequestBody @Valid final BookCreateRequest bookCreateRequest
     ) {
-        BookResponse book = bookService.save(bookCreateRequest);
+        BookResponse book = BookResponse.from(bookService.save(BookCreateCommand.from(bookCreateRequest)));
+
         return ResponseEntity.created(URI.create("/api/v1/books/" + book.getId())).body(book);
     }
 
