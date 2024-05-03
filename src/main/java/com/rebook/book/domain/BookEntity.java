@@ -80,8 +80,7 @@ public class BookEntity extends BaseEntity {
         BigDecimal sum = reviews.stream()
                 .map(ReviewEntity::getScore)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal average = sum.divide(BigDecimal.valueOf(reviews.size()), 3, RoundingMode.HALF_UP);
-        return average;
+        return sum.divide(BigDecimal.valueOf(reviews.size()), 3, RoundingMode.HALF_UP);
     }
 
     public void addHashtag(HashtagEntity hashtag) {

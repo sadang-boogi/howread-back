@@ -36,7 +36,7 @@ public class BookService {
             hashtags.forEach(book::addHashtag);
         }
 
-        return com.rebook.book.controller.response.BookResponse.from(bookRepository.save(book));
+        return BookResponse.from(bookRepository.save(book));
     }
 
     @Transactional(readOnly = true)
