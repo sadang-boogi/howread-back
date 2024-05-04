@@ -41,11 +41,11 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public List<BookResponse> getBooks() {
+    public List<BookDto> getBooks() {
         List<BookEntity> books = bookRepository.findAll();
 
         return books.stream()
-                .map(BookResponse::from)
+                .map(BookDto::fromEntity)
                 .toList();
     }
 
@@ -54,7 +54,7 @@ public class BookService {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
-        return BookResponse.from(book);
+        return BookResponse.from(BookDto.fromEntity(book));
     }
 
     @Transactional

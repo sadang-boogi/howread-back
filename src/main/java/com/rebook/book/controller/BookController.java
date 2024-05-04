@@ -5,6 +5,7 @@ import com.rebook.book.controller.request.BookUpdateRequest;
 import com.rebook.book.controller.response.BookResponse;
 import com.rebook.book.service.BookService;
 import com.rebook.book.service.command.BookCreateCommand;
+import com.rebook.book.service.dto.BookDto;
 import com.rebook.common.schema.ListResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,11 @@ public class BookController {
 
     @GetMapping
     public ResponseEntity<ListResponse<BookResponse>> getBooks() {
-        final List<BookResponse> books = bookService.getBooks();
-        ListResponse<BookResponse> response = new ListResponse<>(books);
+        List<BookDto> books = bookService.getBooks();
+        List<BookResponse> bookResponses = books.stream()
+                .map(BookResponse::from)
+                .toList();
+        ListResponse<BookResponse> response = new ListResponse<>(bookResponses);
         return ResponseEntity.ok().body(response);
     }
 
