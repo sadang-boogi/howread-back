@@ -5,6 +5,7 @@ import com.rebook.book.controller.request.BookUpdateRequest;
 import com.rebook.book.controller.response.BookResponse;
 import com.rebook.book.service.BookService;
 import com.rebook.book.service.command.BookCreateCommand;
+import com.rebook.book.service.command.BookUpdateCommand;
 import com.rebook.book.service.dto.BookDto;
 import com.rebook.common.schema.ListResponse;
 import jakarta.validation.Valid;
@@ -43,7 +44,7 @@ public class BookController {
 
     @GetMapping("/{bookId}")
     public ResponseEntity<BookResponse> getBook(@PathVariable Long bookId) {
-        BookResponse book = bookService.getBook(bookId);
+        BookResponse book = BookResponse.from(bookService.getBook(bookId));
 
         return ResponseEntity.ok()
                 .body(book);
@@ -54,7 +55,7 @@ public class BookController {
             @PathVariable Long bookId,
             @RequestBody BookUpdateRequest bookUpdateRequest
     ) {
-        bookService.updateBook(bookId, bookUpdateRequest);
+        bookService.updateBook(bookId, BookUpdateCommand.from(bookUpdateRequest));
         return ResponseEntity.ok()
                 .build();
     }

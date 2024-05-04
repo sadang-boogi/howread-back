@@ -1,10 +1,9 @@
 package com.rebook.book.service;
 
-import com.rebook.book.controller.request.BookUpdateRequest;
-import com.rebook.book.controller.response.BookResponse;
 import com.rebook.book.domain.BookEntity;
 import com.rebook.book.repository.BookRepository;
 import com.rebook.book.service.command.BookCreateCommand;
+import com.rebook.book.service.command.BookUpdateCommand;
 import com.rebook.book.service.dto.BookDto;
 import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
@@ -50,23 +49,29 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public BookResponse getBook(final Long bookId) {
+    public BookDto getBook(final Long bookId) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
-        return BookResponse.from(BookDto.fromEntity(book));
+        return BookDto.fromEntity(book);
     }
 
     @Transactional
-    public void updateBook(Long bookId, BookUpdateRequest bookUpdateRequest) {
+    public void updateBook(Long bookId, BookUpdateCommand bookUpdateCommand) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
-        book.update(bookUpdateRequest);
-        book.clearHashTags();
+        BookEntity updateBookCommand = BookEntity.of(
+                bookUpdateCommand.getTitle(),
+                bookUpdateCommand.getAuthor(),
+                bookUpdateCommand.getThumbnailUrl()
+        );
 
-        if (bookUpdateRequest.getHashtagIds() != null && !bookUpdateRequest.getHashtagIds().isEmpty()) {
-            List<HashtagEntity> hashtags = hashtagRepository.findByIds(bookUpdateRequest.getHashtagIds());
+        book.update(updateBookCommand);
+        book.clearHashtags();
+
+        if (bookUpdateCommand.getHashtagIds() != null && !bookUpdateCommand.getHashtagIds().isEmpty()) {
+            List<HashtagEntity> hashtags = hashtagRepository.findByIds(bookUpdateCommand.getHashtagIds());
             hashtags.forEach(book::addHashtag);
         }
     }

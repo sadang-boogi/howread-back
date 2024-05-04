@@ -25,11 +25,11 @@ public class BookHashtagEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hashtag_id")
-    private HashtagEntity hashTag;
+    private HashtagEntity hashtag;
 
-    private BookHashtagEntity(BookEntity book, HashtagEntity hashTag) {
+    private BookHashtagEntity(BookEntity book, HashtagEntity hashtag) {
         this.book = book;
-        this.hashTag = hashTag;
+        this.hashtag = hashtag;
     }
 
     public static BookHashtagEntity of(BookEntity book, HashtagEntity hashtag) {

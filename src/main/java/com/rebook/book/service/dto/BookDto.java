@@ -47,7 +47,7 @@ public class BookDto {
                 .author(bookEntity.getAuthor())
                 .thumbnailUrl(bookEntity.getThumbnailUrl())
                 .hashtags(bookEntity.getBookHashtags().stream()
-                        .map(BookHashtagEntity::getHashTag)
+                        .map(BookHashtagEntity::getHashtag)
                         .map(HashtagDto::fromEntity)
                         .toList())
                 .reviews(bookEntity.getReviews().stream()

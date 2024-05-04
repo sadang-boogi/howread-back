@@ -1,6 +1,5 @@
 package com.rebook.book.domain;
 
-import com.rebook.book.controller.request.BookUpdateRequest;
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.review.domain.ReviewEntity;
@@ -88,13 +87,13 @@ public class BookEntity extends BaseEntity {
         bookHashtags.add(bookHashtag);
     }
 
-    public void update(BookUpdateRequest bookUpdateRequest) {
-        this.title = bookUpdateRequest.getTitle();
-        this.author = bookUpdateRequest.getAuthor();
-        this.thumbnailUrl = bookUpdateRequest.getThumbnailUrl();
+    public void update(BookEntity updateBook) {
+        this.title = updateBook.getTitle(); //todo: 확인 필요: 엔티티에서 Command 객체 사용해도 되는가?
+        this.author = updateBook.getAuthor();
+        this.thumbnailUrl = updateBook.getThumbnailUrl();
     }
 
-    public void clearHashTags() {
+    public void clearHashtags() {
         this.bookHashtags.clear();
     }
 
