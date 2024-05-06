@@ -1,23 +1,46 @@
 package com.rebook.common.domain;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import lombok.Getter;
 
 import java.time.ZonedDateTime;
 
-@EntityListeners(AuditingEntityListener.class)
+@Getter
 @MappedSuperclass
-public class BaseEntity {
+public abstract class BaseEntity {
 
-    @CreatedDate
     @Column(updatable = false, columnDefinition = "datetime(6) default now()")
     private ZonedDateTime createdAt;
 
-    @LastModifiedDate
     @Column(columnDefinition = "datetime(6) default now() on update now()")
     private ZonedDateTime updatedAt;
+
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean isDeleted = false;
+
+    @Column(columnDefinition = "datetime(6)")
+    private ZonedDateTime deletedAt;
+
+    public boolean isDeleted() {
+        return this.isDeleted;
+    }
+
+    @PrePersist
+    public void PrePersist() {
+        this.createdAt = ZonedDateTime.now();
+        this.updatedAt = ZonedDateTime.now();
+    }
+
+    @PreUpdate
+    public void PreUpdate() {
+        this.updatedAt = ZonedDateTime.now();
+    }
+
+    public void softDelete() {
+        this.isDeleted = true;
+        this.deletedAt = ZonedDateTime.now();
+    }
 }

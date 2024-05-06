@@ -16,20 +16,38 @@ spring:
         format_sql: true
         show_sql: true
 
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /api/v1/docs            # Swagger UI 경로
+    tags-sorter: alpha            # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
+    operations-sorter: alpha      # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
+  api-docs:
+    path: /api-docs
+    groups:
+      enabled: true
+  cache:
+    disabled: true
+
 ---
 
-spring.config.activate.on-profile: test
-
 spring:
+  config:
+    activate:
+      on-profile: test
+
   datasource:
     url: jdbc:h2:mem:test;MODE=MySQL;DATABASE_TO_LOWER=TRUE
     driver-class-name: org.h2.Driver
     username: sa
     password:
-    jpa:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
       hibernate:
-        ddl-auto: create-drop
-        properties:
-          hibernate:
-          format_sql: true
-    show_sql: true
+        format_sql: true
+        show_sql: true
+
+
