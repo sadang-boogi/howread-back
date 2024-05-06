@@ -1,6 +1,5 @@
-package com.rebook.book.domain.entity;
+package com.rebook.book.domain;
 
-import com.rebook.book.dto.request.BookUpdateRequest;
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.review.domain.ReviewEntity;
@@ -10,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
@@ -20,7 +18,6 @@ import java.util.List;
 import java.util.Objects;
 
 @SQLRestriction(value = "is_deleted = false")
-@SQLDelete(sql = "UPDATE book SET is_deleted = true WHERE id = ?")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -45,7 +42,7 @@ public class BookEntity extends BaseEntity {
     private String thumbnailUrl;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-    private List<BookHashtagEntity> bookHashTags = new ArrayList<>();
+    private List<BookHashtagEntity> bookHashtags = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<ReviewEntity> reviews = new ArrayList<>();
@@ -82,23 +79,22 @@ public class BookEntity extends BaseEntity {
         BigDecimal sum = reviews.stream()
                 .map(ReviewEntity::getScore)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal average = sum.divide(BigDecimal.valueOf(reviews.size()), 3, RoundingMode.HALF_UP);
-        return average;
+        return sum.divide(BigDecimal.valueOf(reviews.size()), 3, RoundingMode.HALF_UP);
     }
 
     public void addHashtag(HashtagEntity hashtag) {
         BookHashtagEntity bookHashtag = BookHashtagEntity.of(this, hashtag);
-        bookHashTags.add(bookHashtag);
+        bookHashtags.add(bookHashtag);
     }
 
-    public void update(BookUpdateRequest bookUpdateRequest) {
-        this.title = bookUpdateRequest.getTitle();
-        this.author = bookUpdateRequest.getAuthor();
-        this.thumbnailUrl = bookUpdateRequest.getThumbnailUrl();
+    public void update(BookEntity updateBook) {
+        this.title = updateBook.getTitle(); //todo: 확인 필요: 엔티티에서 Command 객체 사용해도 되는가?
+        this.author = updateBook.getAuthor();
+        this.thumbnailUrl = updateBook.getThumbnailUrl();
     }
 
-    public void clearHashTags() {
-        this.bookHashTags.clear();
+    public void clearHashtags() {
+        this.bookHashtags.clear();
     }
 
     public String getThumbnailUrl() {

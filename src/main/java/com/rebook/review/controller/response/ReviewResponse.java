@@ -16,7 +16,7 @@ public class ReviewResponse {
     private BigDecimal starRate;
     private ZonedDateTime createdAt;
 
-    public static ReviewResponse fromDTO(ReviewDto review) {
+    public static ReviewResponse fromDto(ReviewDto review) {
         return new ReviewResponse(
                 review.getId(),
                 review.getContent(),

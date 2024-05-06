@@ -1,9 +1,8 @@
-package com.rebook.book.dto.response;
+package com.rebook.book.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rebook.book.domain.entity.BookEntity;
-import com.rebook.book.domain.entity.BookHashtagEntity;
-import com.rebook.hashtag.domain.HashtagEntity;
+import com.rebook.book.service.dto.BookDto;
+import com.rebook.hashtag.service.dto.HashtagDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -21,15 +20,14 @@ public class BookResponse {
     private List<String> hashtags;
     private BigDecimal rating;
 
-    public static BookResponse from(final BookEntity book) {
+    public static BookResponse from(final BookDto book) {
         return new BookResponse(
                 book.getId(),
                 book.getTitle(),
                 book.getAuthor(),
                 book.getThumbnailUrl(),
-                book.getBookHashTags().stream()
-                        .map(BookHashtagEntity::getHashTag)
-                        .map(HashtagEntity::getName)
+                book.getHashtags().stream()
+                        .map(HashtagDto::getName)
                         .toList(),
                 book.getRating()
         );

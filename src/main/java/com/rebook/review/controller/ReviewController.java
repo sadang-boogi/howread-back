@@ -33,7 +33,7 @@ public class ReviewController {
 
         SaveReviewCommand reviewCommand = SaveReviewCommand.from(bookId, reviewRequest);
         ReviewDto savedReview = reviewService.save(reviewCommand);
-        ReviewResponse reviewResponse = ReviewResponse.fromDTO(savedReview);
+        ReviewResponse reviewResponse = ReviewResponse.fromDto(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));
         return ResponseEntity.created(location).body(reviewResponse);
     }
@@ -43,7 +43,7 @@ public class ReviewController {
     public ResponseEntity<ListResponse<ReviewResponse>> getReviews(@PathVariable("bookId") Long bookId) {
         final List<ReviewDto> reviewDtos = reviewService.getReviewsWithBookId(bookId);
         List<ReviewResponse> reviewResponses = reviewDtos.stream()
-                .map(ReviewResponse::fromDTO)
+                .map(ReviewResponse::fromDto)
                 .toList();
         ListResponse<ReviewResponse> responses = new ListResponse<>(reviewResponses);
         return ResponseEntity.ok().body(responses);
@@ -57,17 +57,14 @@ public class ReviewController {
             @Valid @RequestBody final ReviewRequest reviewRequest) {
         UpdateReviewCommand reviewCommand = UpdateReviewCommand.from(bookId, reviewId, reviewRequest);
         ReviewDto updatedReview = reviewService.update(reviewCommand);
-        ReviewResponse reviewResponse = ReviewResponse.fromDTO(updatedReview);
+        ReviewResponse reviewResponse = ReviewResponse.fromDto(updatedReview);
         return ResponseEntity.ok(reviewResponse);
     }
 
     @DeleteMapping("/{reviewId}")
     @Operation(summary = "Delete a Review for a Book", description = "해당 책의 특정 리뷰를 삭제한다.")
-    public ResponseEntity<Void> softDeleteReview(
-            @PathVariable("reviewId") Long reviewId) {
+    public ResponseEntity<Void> softDeleteReview(@PathVariable("reviewId") Long reviewId) {
         reviewService.softDelete(reviewId);
         return ResponseEntity.noContent().build();
     }
-
-
 }

@@ -1,8 +1,9 @@
 package com.rebook.book.service;
 
-import com.rebook.book.dto.request.BookCreateRequest;
-import com.rebook.book.dto.request.BookUpdateRequest;
-import com.rebook.book.dto.response.BookResponse;
+import com.rebook.book.controller.request.BookUpdateRequest;
+import com.rebook.book.service.command.BookCreateCommand;
+import com.rebook.book.service.command.BookUpdateCommand;
+import com.rebook.book.service.dto.BookDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,33 +20,33 @@ class BookServiceTest {
     @Autowired
     private BookService bookService;
 
-    @DisplayName("책 등록 후 등록한 책의 id를 반환한다.")
+    @DisplayName("책 제목, 저자, 썸네일 이미지, 해시태그 아이디를 등록 후 등록한 책의 id를 반환한다.")
     @Test
     void saveBookWithoutHashtag() {
         // given
-        BookCreateRequest bookCreateRequest = new BookCreateRequest("객사오", "조영호", null, null);
+        BookCreateCommand bookCreateCommand = new BookCreateCommand("객사오", "조영호", null, null);
 
         // when
-        BookResponse bookResponse = bookService.save(bookCreateRequest);
+        BookDto bookDto = bookService.save(bookCreateCommand);
 
         // then
-        assertThat(bookResponse.getTitle()).isEqualTo("객사오");
+        assertThat(bookDto.getTitle()).isEqualTo("객사오");
     }
 
-    @DisplayName("책 정보를 수정한다.")
+    @DisplayName("책의 제목, 저자, 썸네일 이미지, 해시태그 아이디로 책 정보를 수정한다.")
     @Test
     void updateBook() {
         // given
-        BookCreateRequest bookCreateRequest = new BookCreateRequest("객사오", "조영호", null, null);
-        BookResponse bookResponse = bookService.save(bookCreateRequest);
+        BookCreateCommand bookCreateRequest = new BookCreateCommand("객사오", "조영호", null, null);
+        BookDto bookDto = bookService.save(bookCreateRequest);
 
-        BookUpdateRequest bookUpdateRequest = new BookUpdateRequest("객객", "김수용", null, null);
+        BookUpdateCommand updateBook = BookUpdateCommand.from(new BookUpdateRequest("수정", "김수용", null, null));
 
         // when
-        bookService.updateBook(bookResponse.getId(), bookUpdateRequest);
+        bookService.updateBook(bookDto.getId(), updateBook);
 
         // then
-        BookResponse book = bookService.getBook(bookResponse.getId());
-        assertThat(book.getTitle()).isEqualTo("객객");
+        BookDto book = bookService.getBook(bookDto.getId());
+        assertThat(book.getTitle()).isEqualTo("수정");
     }
 }

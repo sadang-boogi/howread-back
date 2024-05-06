@@ -1,9 +1,12 @@
 package com.rebook.book.controller;
 
-import com.rebook.book.dto.request.BookCreateRequest;
-import com.rebook.book.dto.request.BookUpdateRequest;
-import com.rebook.book.dto.response.BookResponse;
+import com.rebook.book.controller.request.BookCreateRequest;
+import com.rebook.book.controller.request.BookUpdateRequest;
+import com.rebook.book.controller.response.BookResponse;
 import com.rebook.book.service.BookService;
+import com.rebook.book.service.command.BookCreateCommand;
+import com.rebook.book.service.command.BookUpdateCommand;
+import com.rebook.book.service.dto.BookDto;
 import com.rebook.common.schema.ListResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,20 +27,24 @@ public class BookController {
     public ResponseEntity<BookResponse> saveBook(
             @RequestBody @Valid final BookCreateRequest bookCreateRequest
     ) {
-        BookResponse book = bookService.save(bookCreateRequest);
+        BookResponse book = BookResponse.from(bookService.save(BookCreateCommand.from(bookCreateRequest)));
+
         return ResponseEntity.created(URI.create("/api/v1/books/" + book.getId())).body(book);
     }
 
     @GetMapping
     public ResponseEntity<ListResponse<BookResponse>> getBooks() {
-        final List<BookResponse> books = bookService.getBooks();
-        ListResponse<BookResponse> response = new ListResponse<>(books);
+        List<BookDto> books = bookService.getBooks();
+        List<BookResponse> bookResponses = books.stream()
+                .map(BookResponse::from)
+                .toList();
+        ListResponse<BookResponse> response = new ListResponse<>(bookResponses);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{bookId}")
     public ResponseEntity<BookResponse> getBook(@PathVariable Long bookId) {
-        BookResponse book = bookService.getBook(bookId);
+        BookResponse book = BookResponse.from(bookService.getBook(bookId));
 
         return ResponseEntity.ok()
                 .body(book);
@@ -48,7 +55,7 @@ public class BookController {
             @PathVariable Long bookId,
             @RequestBody BookUpdateRequest bookUpdateRequest
     ) {
-        bookService.updateBook(bookId, bookUpdateRequest);
+        bookService.updateBook(bookId, BookUpdateCommand.from(bookUpdateRequest));
         return ResponseEntity.ok()
                 .build();
     }

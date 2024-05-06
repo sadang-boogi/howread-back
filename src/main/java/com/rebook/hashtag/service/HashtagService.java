@@ -2,9 +2,9 @@ package com.rebook.hashtag.service;
 
 import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
-import com.rebook.hashtag.dto.requeest.HashtagRequest;
-import com.rebook.hashtag.dto.response.HashtagResponse;
 import com.rebook.hashtag.repository.HashtagRepository;
+import com.rebook.hashtag.service.command.HashtagCommand;
+import com.rebook.hashtag.service.dto.HashtagDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,46 +20,44 @@ public class HashtagService {
     private final HashtagRepository hashtagRepository;
 
     @Transactional
-    public HashtagResponse create(final HashtagRequest hashtagCreateRequest) {
-        HashtagEntity hashtag = HashtagEntity.of(
-                hashtagCreateRequest.getName()
-        );
+    public HashtagDto create(final HashtagCommand hashtagCommand) {
+        HashtagEntity hashtag = HashtagEntity.of(hashtagCommand.getName());
         HashtagEntity createdHashtag = hashtagRepository.save(hashtag);
 
-        return HashtagResponse.of(createdHashtag);
+        return HashtagDto.fromEntity(createdHashtag);
     }
 
     @Transactional(readOnly = true)
-    public List<HashtagResponse> getHashtags() {
+    public List<HashtagDto> getHashtags() {
         List<HashtagEntity> hashtags = hashtagRepository.findAll();
 
         return hashtags.stream()
-                .map(HashtagResponse::of)
+                .map(HashtagDto::fromEntity)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public HashtagResponse getHashtag(final Long hashtagId) {
+    public HashtagDto getHashtag(final Long hashtagId) {
         HashtagEntity hashtag = hashtagRepository.findById(hashtagId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_HASHTAG_ID));
 
-        return HashtagResponse.of(hashtag);
+        return HashtagDto.fromEntity(hashtag);
     }
 
     @Transactional
-    public void update(final Long hashtagId, final HashtagRequest hashtagUpdateRequest) {
+    public void update(final Long hashtagId, final HashtagCommand hashtagUpdateCommand) {
         HashtagEntity hashtagEntity = hashtagRepository.findById(hashtagId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_HASHTAG_ID));
 
-        hashtagEntity.changeName(hashtagUpdateRequest);
+        hashtagEntity.changeName(hashtagUpdateCommand.getName());
     }
 
     @Transactional
-    public void delete(final Long hashtagId) {
+    public void softDelete(final Long hashtagId) {
         HashtagEntity hashtagEntity = hashtagRepository.findById(hashtagId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_HASHTAG_ID));
 
-        hashtagRepository.delete(hashtagEntity);
+        hashtagEntity.softDelete();
     }
 
 }

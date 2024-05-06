@@ -1,10 +1,10 @@
 package com.rebook.review.service;
 
-import com.rebook.book.domain.entity.BookEntity;
+import com.rebook.book.domain.BookEntity;
 import com.rebook.book.repository.BookRepository;
 import com.rebook.review.domain.ReviewEntity;
-import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.review.repository.ReviewRepository;
+import com.rebook.review.service.dto.ReviewDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +31,6 @@ class ReviewServiceTest {
 
     @InjectMocks
     private ReviewService reviewService;
-
 
     @DisplayName("bookId로 리뷰 목록 조회")
     @Test
@@ -54,7 +53,6 @@ class ReviewServiceTest {
         when(bookRepository.findById(bookEntity.getId())).thenReturn(Optional.of(bookEntity));
         //bookId로 리뷰 목록 조회시 reviews 반환
         when(reviewRepository.findByBookIdOrderByCreatedAtAsc(bookEntity.getId())).thenReturn(reviews);
-
 
         // When
         List<ReviewDto> result = reviewService.getReviewsWithBookId(bookEntity.getId());

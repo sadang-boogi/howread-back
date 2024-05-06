@@ -1,4 +1,4 @@
-package com.rebook.book.domain.entity;
+package com.rebook.book.domain;
 
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.hashtag.domain.HashtagEntity;
@@ -6,11 +6,9 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 
-@Where(clause = "is_deleted = false")
-@SQLDelete(sql = "UPDATE book_hashtag SET is_deleted = true WHERE id = ?")
+@SQLRestriction(value = "is_deleted = false")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "book_hashtag")
@@ -27,11 +25,11 @@ public class BookHashtagEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hashtag_id")
-    private HashtagEntity hashTag;
+    private HashtagEntity hashtag;
 
-    private BookHashtagEntity(BookEntity book, HashtagEntity hashTag) {
+    private BookHashtagEntity(BookEntity book, HashtagEntity hashtag) {
         this.book = book;
-        this.hashTag = hashTag;
+        this.hashtag = hashtag;
     }
 
     public static BookHashtagEntity of(BookEntity book, HashtagEntity hashtag) {

@@ -1,10 +1,10 @@
 package com.rebook.book.service;
 
-import com.rebook.book.domain.entity.BookEntity;
-import com.rebook.book.dto.request.BookCreateRequest;
-import com.rebook.book.dto.request.BookUpdateRequest;
-import com.rebook.book.dto.response.BookResponse;
+import com.rebook.book.domain.BookEntity;
 import com.rebook.book.repository.BookRepository;
+import com.rebook.book.service.command.BookCreateCommand;
+import com.rebook.book.service.command.BookUpdateCommand;
+import com.rebook.book.service.dto.BookDto;
 import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.hashtag.repository.HashtagRepository;
@@ -24,48 +24,54 @@ public class BookService {
     private final HashtagRepository hashtagRepository;
 
     @Transactional
-    public BookResponse save(final BookCreateRequest bookCreateRequest) {
+    public BookDto save(final BookCreateCommand bookCreateCommand) {
         BookEntity book = BookEntity.of(
-                bookCreateRequest.getTitle(),
-                bookCreateRequest.getAuthor(),
-                bookCreateRequest.getThumbnailUrl()
+                bookCreateCommand.getTitle(),
+                bookCreateCommand.getAuthor(),
+                bookCreateCommand.getThumbnailUrl()
         );
 
-        if (bookCreateRequest.getHashtagIds() != null && !bookCreateRequest.getHashtagIds().isEmpty()) {
-            List<HashtagEntity> hashtags = hashtagRepository.findByIds(bookCreateRequest.getHashtagIds());
+        if (bookCreateCommand.getHashtagIds() != null && !bookCreateCommand.getHashtagIds().isEmpty()) {
+            List<HashtagEntity> hashtags = hashtagRepository.findByIds(bookCreateCommand.getHashtagIds());
             hashtags.forEach(book::addHashtag);
         }
 
-        return BookResponse.from(bookRepository.save(book));
+        return BookDto.fromEntity(bookRepository.save(book));
     }
 
     @Transactional(readOnly = true)
-    public List<BookResponse> getBooks() {
+    public List<BookDto> getBooks() {
         List<BookEntity> books = bookRepository.findAll();
 
         return books.stream()
-                .map(BookResponse::from)
+                .map(BookDto::fromEntity)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public BookResponse getBook(final Long bookId) {
+    public BookDto getBook(final Long bookId) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
-        return BookResponse.from(book);
+        return BookDto.fromEntity(book);
     }
 
     @Transactional
-    public void updateBook(Long bookId, BookUpdateRequest bookUpdateRequest) {
+    public void updateBook(Long bookId, BookUpdateCommand bookUpdateCommand) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
-        book.update(bookUpdateRequest);
-        book.clearHashTags();
+        BookEntity updateBookCommand = BookEntity.of(
+                bookUpdateCommand.getTitle(),
+                bookUpdateCommand.getAuthor(),
+                bookUpdateCommand.getThumbnailUrl()
+        );
 
-        if (bookUpdateRequest.getHashtagIds() != null && !bookUpdateRequest.getHashtagIds().isEmpty()) {
-            List<HashtagEntity> hashtags = hashtagRepository.findByIds(bookUpdateRequest.getHashtagIds());
+        book.update(updateBookCommand);
+        book.clearHashtags();
+
+        if (bookUpdateCommand.getHashtagIds() != null && !bookUpdateCommand.getHashtagIds().isEmpty()) {
+            List<HashtagEntity> hashtags = hashtagRepository.findByIds(bookUpdateCommand.getHashtagIds());
             hashtags.forEach(book::addHashtag);
         }
     }

@@ -1,6 +1,6 @@
 package com.rebook.review.service.dto;
 
-import com.rebook.book.domain.entity.BookEntity;
+import com.rebook.book.domain.BookEntity;
 import com.rebook.review.domain.ReviewEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

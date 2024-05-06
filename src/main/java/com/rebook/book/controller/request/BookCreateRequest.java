@@ -1,10 +1,11 @@
-package com.rebook.book.dto.request;
+package com.rebook.book.controller.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -20,5 +21,5 @@ public class BookCreateRequest {
 
     private String thumbnailUrl;
 
-    private List<Long> hashtagIds;
+    private List<Long> hashtagIds = new ArrayList<>();
 }
