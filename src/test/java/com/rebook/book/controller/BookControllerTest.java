@@ -57,7 +57,7 @@ class BookControllerTest {
 //                .andExpect(header().string(LOCATION, "books/1"));
 //    }
 
-    @DisplayName("책 제목을 입력하지 않으면 에러가 발생한다.")
+    @DisplayName("책 저장 시 책 제목을 입력하지 않으면 에러가 발생한다.")
     @Test
     void saveBookWithOutTitle() throws Exception {
         // given
@@ -76,6 +76,29 @@ class BookControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
                 .andExpect(jsonPath("$.message").value("책 제목을 입력해주세요."));
+    }
+
+    @DisplayName("책 저장 시 책 저자를 입력하지 않으면 에러가 발생한다.")
+    @Test
+    void saveBookWithOutAuthor() throws Exception {
+        // given
+        BookCreateRequest badRequest = BookCreateRequest.builder()
+                .title("책 제목")
+                .author(null)
+                .thumbnailUrl("책 표지")
+                .hashtagIds(List.of(1L, 2L))
+                .build();
+        // when, then
+        mockMvc.perform(
+                        post("/api/v1/books")
+                                .content(objectMapper.writeValueAsString(badRequest))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.message").value("저자를 입력해주세요."));
     }
 }
