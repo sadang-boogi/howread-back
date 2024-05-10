@@ -56,7 +56,9 @@ class BookControllerTest {
                         .author("저자")
                         .thumbnailUrl("책 표지")
                         .rating(BigDecimal.ONE)
-                        .hashtags(List.of(HashtagDto.builder().id(1L).name("해시태그1").build()))
+                        .hashtags(List.of(HashtagDto.builder()
+                                .id(1L)
+                                .name("해시태그1").build()))
                         .build());
 
         // when, then
