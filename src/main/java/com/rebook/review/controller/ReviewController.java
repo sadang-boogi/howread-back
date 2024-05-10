@@ -31,7 +31,7 @@ public class ReviewController {
             @PathVariable("bookId") Long bookId,
             @Valid @RequestBody final ReviewRequest reviewRequest) {
 
-        SaveReviewCommand reviewCommand = SaveReviewCommand.from(bookId, reviewRequest);
+        SaveReviewCommand reviewCommand = SaveReviewCommand.from(bookId, reviewRequest.getContent(), reviewRequest.getScore());
         ReviewDto savedReview = reviewService.save(reviewCommand);
         ReviewResponse reviewResponse = ReviewResponse.fromDto(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));
@@ -55,7 +55,7 @@ public class ReviewController {
             @PathVariable("bookId") Long bookId,
             @PathVariable("reviewId") Long reviewId,
             @Valid @RequestBody final ReviewRequest reviewRequest) {
-        UpdateReviewCommand reviewCommand = UpdateReviewCommand.from(bookId, reviewId, reviewRequest);
+        UpdateReviewCommand reviewCommand = UpdateReviewCommand.from(bookId, reviewId, reviewRequest.getContent(), reviewRequest.getScore());
         ReviewDto updatedReview = reviewService.update(reviewCommand);
         ReviewResponse reviewResponse = ReviewResponse.fromDto(updatedReview);
         return ResponseEntity.ok(reviewResponse);

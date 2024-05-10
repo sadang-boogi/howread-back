@@ -13,10 +13,10 @@ public class SaveReviewCommand {
     private String content;
     private BigDecimal score;
 
-    public static SaveReviewCommand from(Long bookId, ReviewRequest reviewRequest) {
+    public static SaveReviewCommand from(Long bookId, String content, BigDecimal score) {
         return new SaveReviewCommand(
                 bookId,
-                reviewRequest.getContent(),
-                reviewRequest.getScore());
+                content,
+                score);
     }
 }

@@ -14,12 +14,12 @@ public class UpdateReviewCommand {
     private String content;
     private BigDecimal score;
 
-    public static UpdateReviewCommand from(Long bookId, Long reviewId, ReviewRequest reviewRequest) {
+    public static UpdateReviewCommand from(Long bookId, Long reviewId, String content, BigDecimal score) {
         return new UpdateReviewCommand(
                 bookId,
                 reviewId,
-                reviewRequest.getContent(),
-                reviewRequest.getScore());
+                content,
+                score);
     }
 
 }
