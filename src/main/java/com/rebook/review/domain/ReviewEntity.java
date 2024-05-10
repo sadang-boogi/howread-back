@@ -51,4 +51,9 @@ public class ReviewEntity extends BaseEntity {
                 score);
     }
 
+    @Override
+    public void softDelete() {
+        super.softDelete();
+    }
+
 }
