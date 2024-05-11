@@ -1,6 +1,7 @@
 package com.rebook.user.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.rebook.user.config.OAuth2ClientProperties;
 import com.rebook.user.service.dto.LoggedInUser;
 import com.rebook.user.service.dto.UserCommand;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class LoginService {
 
-    private final Environment env;
+    private final OAuth2ClientProperties oauth2Properties;
     private final RestTemplate restTemplate = new RestTemplate();
     private final UserService userService;
 
@@ -26,17 +27,14 @@ public class LoginService {
         LoggedInUser user = userService.createUser(userCommand);
     }
 
-
     private String getAccessToken(String authorizationCode, String registrationId) {
-        String clientIdKey = "spring.security.oauth2.client.registration." + registrationId + ".client-id";
-        String clientSecretKey = "spring.security.oauth2.client.registration." + registrationId + ".client-secret";
-        String redirectUriKey = "spring.security.oauth2.client.registration." + registrationId + ".redirect-uri";
-        String tokenUriKey = "spring.security.oauth2.client.provider." + registrationId + ".token-uri";
+        OAuth2ClientProperties.Registration registration = oauth2Properties.getRegistration().get(registrationId);
+        OAuth2ClientProperties.Provider provider = oauth2Properties.getProvider().get(registrationId);
 
-        String clientId = env.getProperty(clientIdKey);
-        String clientSecret = env.getProperty(clientSecretKey);
-        String redirectUri = env.getProperty(redirectUriKey);
-        String tokenUri = env.getProperty(tokenUriKey);
+        String clientId = registration.getClientId();
+        String clientSecret = registration.getClientSecret();
+        String redirectUri = registration.getRedirectUri();
+        String tokenUri = provider.getTokenUri();
 
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -45,7 +43,6 @@ public class LoginService {
         params.add("client_secret", clientSecret);
         params.add("redirect_uri", redirectUri);
         params.add("grant_type", "authorization_code");
-
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -59,12 +56,11 @@ public class LoginService {
 
 
     private JsonNode getUserResource(String accessToken, String registrationId) {
-        String resourceUri = env.getProperty("spring.security.oauth2.client.provider." + registrationId + ".user-info-uri");
-
+        OAuth2ClientProperties.Provider provider = oauth2Properties.getProvider().get(registrationId);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         HttpEntity entity = new HttpEntity(headers);
-        return restTemplate.exchange(resourceUri, HttpMethod.GET, entity, JsonNode.class).getBody();
+        return restTemplate.exchange(provider.getUserInfoUri(), HttpMethod.GET, entity, JsonNode.class).getBody();
     }
 
     private UserCommand getUserProfile(String accessToken, String registrationId) {
@@ -72,7 +68,6 @@ public class LoginService {
         String id = userResource.get("sub").asText();
         String email = userResource.get("email").asText();
         String name = userResource.get("name").asText();
-        System.out.println("registrationId = " + registrationId);
         return UserCommand.builder()
                 .name(name)
                 .email(email)
