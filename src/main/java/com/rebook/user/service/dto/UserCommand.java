@@ -13,5 +13,4 @@ public class UserCommand {
     String email;
     String socialId;
     String socialType;
-
 }

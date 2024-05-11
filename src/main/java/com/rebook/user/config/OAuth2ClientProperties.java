@@ -45,6 +45,4 @@ public class OAuth2ClientProperties {
         private String tokenUri;
         private String userInfoUri;
     }
-
-
 }

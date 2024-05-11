@@ -36,7 +36,6 @@ public class LoginService {
         String redirectUri = registration.getRedirectUri();
         String tokenUri = provider.getTokenUri();
 
-
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", authorizationCode);
         params.add("client_id", clientId);

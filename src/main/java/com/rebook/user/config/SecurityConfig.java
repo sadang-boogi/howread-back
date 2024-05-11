@@ -50,12 +50,10 @@ public class SecurityConfig {
                         .requestMatchers(ALLOWED_URLS).permitAll() // 명시된 URL들에 대한 접근 허용
                         .anyRequest().authenticated());
 
-
         //세션 설정 : STATELESS
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
 
         return http.build();
     }
