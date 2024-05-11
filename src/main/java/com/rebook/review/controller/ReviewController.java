@@ -1,10 +1,11 @@
 package com.rebook.review.controller;
 
 import com.rebook.common.schema.ListResponse;
-import com.rebook.review.controller.request.ReviewRequest;
+import com.rebook.review.controller.request.ReviewSaveRequest;
+import com.rebook.review.controller.request.ReviewUpdateRequest;
 import com.rebook.review.controller.response.ReviewResponse;
-import com.rebook.review.service.command.SaveReviewCommand;
-import com.rebook.review.service.command.UpdateReviewCommand;
+import com.rebook.review.service.command.ReviewSaveCommand;
+import com.rebook.review.service.command.ReviewUpdateCommand;
 import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,9 +30,8 @@ public class ReviewController {
     @Operation(summary = "Create Review for a Book", description = "해당 책에 리뷰를 작성한다.")
     public ResponseEntity<ReviewResponse> saveReview(
             @PathVariable("bookId") Long bookId,
-            @Valid @RequestBody final ReviewRequest reviewRequest) {
-
-        SaveReviewCommand reviewCommand = SaveReviewCommand.from(bookId, reviewRequest.getContent(), reviewRequest.getScore());
+            @Valid @RequestBody final ReviewSaveRequest reviewRequest) {
+        ReviewSaveCommand reviewCommand = reviewRequest.toCommand(bookId, reviewRequest);
         ReviewDto savedReview = reviewService.save(reviewCommand);
         ReviewResponse reviewResponse = ReviewResponse.fromDto(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));
@@ -54,8 +54,8 @@ public class ReviewController {
     public ResponseEntity<ReviewResponse> updateReview(
             @PathVariable("bookId") Long bookId,
             @PathVariable("reviewId") Long reviewId,
-            @Valid @RequestBody final ReviewRequest reviewRequest) {
-        UpdateReviewCommand reviewCommand = UpdateReviewCommand.from(bookId, reviewId, reviewRequest.getContent(), reviewRequest.getScore());
+            @Valid @RequestBody final ReviewUpdateRequest reviewRequest) {
+        ReviewUpdateCommand reviewCommand = reviewRequest.toCommand(bookId, reviewId, reviewRequest);
         ReviewDto updatedReview = reviewService.update(reviewCommand);
         ReviewResponse reviewResponse = ReviewResponse.fromDto(updatedReview);
         return ResponseEntity.ok(reviewResponse);
