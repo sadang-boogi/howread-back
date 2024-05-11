@@ -32,6 +32,12 @@ springdoc:
   cache:
     disabled: true
 
+
+jwt:
+  header: Authorization
+  secret: { JWT_SECRET_KEY }
+  token-validity-in-seconds: 86400 # ttl (초)
+
 ---
 
 spring:

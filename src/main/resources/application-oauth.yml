@@ -11,3 +11,7 @@ spring:
             scope:
               - email
               - profile
+        provider:
+          google:
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
