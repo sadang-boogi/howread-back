@@ -8,6 +8,7 @@ import com.rebook.book.service.dto.BookDto;
 import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.hashtag.repository.HashtagRepository;
+import com.rebook.review.domain.ReviewEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,6 +81,7 @@ public class BookService {
     public void deleteBook(Long bookId) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
+        book.getReviews().forEach(ReviewEntity::softDelete);
         book.softDelete();
     }
 }

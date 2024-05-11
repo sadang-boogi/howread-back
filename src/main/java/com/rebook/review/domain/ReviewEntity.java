@@ -50,5 +50,4 @@ public class ReviewEntity extends BaseEntity {
                 content,
                 score);
     }
-
 }

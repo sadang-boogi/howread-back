@@ -6,8 +6,8 @@ import com.rebook.common.exception.ExceptionCode;
 import com.rebook.common.exception.NotFoundException;
 import com.rebook.review.domain.ReviewEntity;
 import com.rebook.review.repository.ReviewRepository;
-import com.rebook.review.service.command.SaveReviewCommand;
-import com.rebook.review.service.command.UpdateReviewCommand;
+import com.rebook.review.service.command.ReviewSaveCommand;
+import com.rebook.review.service.command.ReviewUpdateCommand;
 import com.rebook.review.service.dto.ReviewDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewDto save(SaveReviewCommand reviewCommand) {
+    public ReviewDto save(ReviewSaveCommand reviewCommand) {
         BookEntity book = bookRepository.findById(reviewCommand.getBookId())
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_BOOK_ID));
         ReviewEntity reviewEntity = ReviewEntity.of(book, reviewCommand.getContent(), reviewCommand.getScore());
@@ -43,7 +43,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewDto update(UpdateReviewCommand reviewCommand) {
+    public ReviewDto update(ReviewUpdateCommand reviewCommand) {
 
         // 존재하는 책인지 확인
         BookEntity bookEntity = bookRepository.findById(reviewCommand.getBookId())
