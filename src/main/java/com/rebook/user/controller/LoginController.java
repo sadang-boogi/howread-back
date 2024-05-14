@@ -1,6 +1,5 @@
 package com.rebook.user.controller;
 
-import com.rebook.user.controller.response.JwtResponse;
 import com.rebook.user.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
