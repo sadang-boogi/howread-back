@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -26,18 +25,10 @@ public class LoginController {
             }
     )
     @PostMapping("/{provider}")
-    public ResponseEntity<JwtResponse> socialLogin(
+    public void socialLoginFront(
             @RequestBody String code, @PathVariable String provider) {
-        String token = loginService.socialLogin(code, provider);
-        return ResponseEntity.ok(new JwtResponse(token));
+        loginService.socialLogin(code, provider);
     }
-
-//    @GetMapping("/{provider}")
-//    public ResponseEntity<JwtResponse> socialLogin(
-//            @RequestParam String code, @PathVariable String provider) {
-//        String token = loginService.socialLogin(code, provider);
-//        return ResponseEntity.ok(new JwtResponse(token));
-//    }
 
 
 }
