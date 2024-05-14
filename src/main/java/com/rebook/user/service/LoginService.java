@@ -2,6 +2,8 @@ package com.rebook.user.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.rebook.user.config.OAuth2ClientProperties;
+import com.rebook.user.controller.response.JwtResponse;
+import com.rebook.user.service.dto.JwtUtil;
 import com.rebook.user.service.dto.LoggedInUser;
 import com.rebook.user.service.dto.UserCommand;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +23,11 @@ public class LoginService {
     private final UserService userService;
 
 
-    public void socialLogin(String code, String registrationId) {
+    public LoggedInUser socialLogin(String code, String registrationId) {
         String accessToken = getAccessToken(code, registrationId);
         UserCommand userCommand = getUserProfile(accessToken, registrationId);
-        LoggedInUser user = userService.createUser(userCommand);
+        LoggedInUser loggedInUser = userService.createUser(userCommand);
+        return loggedInUser;
     }
 
     private String getAccessToken(String authorizationCode, String registrationId) {
