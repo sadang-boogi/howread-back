@@ -34,8 +34,7 @@ springdoc:
 
 
 jwt:
-  header: Authorization
-  secret: { JWT_SECRET_KEY }
+  secret: ${JWT_SECRET_KEY}
   token-validity-in-seconds: 86400 # ttl (초)
 
 ---

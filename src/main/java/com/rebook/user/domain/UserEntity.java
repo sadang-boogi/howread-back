@@ -34,8 +34,6 @@ public class UserEntity extends BaseEntity {
 
     private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
-    private String refreshToken; // 리프레시 토큰
-
     @Builder
     public UserEntity(Long id, String nickname, String email, Role role, SocialType socialType, String socialId) {
         this.id = id;

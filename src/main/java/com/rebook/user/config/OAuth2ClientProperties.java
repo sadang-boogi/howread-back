@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
 import java.util.Map;
 
+@Getter
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "spring.security.oauth2.client")
 public class OAuth2ClientProperties {
@@ -20,14 +21,6 @@ public class OAuth2ClientProperties {
     public OAuth2ClientProperties(Map<String, Registration> registration, Map<String, Provider> provider) {
         this.registration = registration;
         this.provider = provider;
-    }
-
-    public Map<String, Registration> getRegistration() {
-        return registration;
-    }
-
-    public Map<String, Provider> getProvider() {
-        return provider;
     }
 
     @Getter
