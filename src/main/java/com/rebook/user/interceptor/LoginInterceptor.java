@@ -1,7 +1,6 @@
 package com.rebook.user.interceptor;
 
 import com.rebook.user.exception.TokenException;
-import com.rebook.user.exception.TokenExceptionCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
