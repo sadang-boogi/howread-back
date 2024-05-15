@@ -33,15 +33,12 @@ public class JwtUtil {
     }
 
     public String createToken(LoggedInUser loggedInUser, Instant currentDate) {
-        String token = JWT.create()
-                //userId로 user 식별
+        return JWT.create()
                 .withSubject(String.valueOf(loggedInUser.getUserId()))
                 .withExpiresAt(currentDate.plusMillis(expirationTimeMillis))
                 .withClaim("email", loggedInUser.getEmail())
                 .withClaim("username", loggedInUser.getName())
                 .sign(Algorithm.HMAC512(secret));
-
-        return tokenPrefix.concat(token);
     }
 
     public boolean isTokenExpired(String token) {
