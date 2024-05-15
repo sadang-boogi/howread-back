@@ -23,12 +23,11 @@ public class CommonExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception);
     }
 
-    @ExceptionHandler(HttpClientErrorException.Unauthorized.class)
+    @ExceptionHandler(TokenException.class)
     public ResponseEntity<Object> handleUnauthorizedException(TokenException e) {
         log.error("errorMessage: {}", e.getMessage());
 
         AuthExceptionResponse exception = new AuthExceptionResponse(LocalDateTime.now(), e.getCode(), e.getTitle(), e.getMessage());
-
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception);
     }
 }

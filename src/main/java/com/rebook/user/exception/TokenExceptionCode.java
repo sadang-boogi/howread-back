@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum TokenExceptionCode {
 
-
     TOKEN_MISSING("TOKEN_MISSING", "로그인 실패", "인증 토큰이 누락되었습니다. 다시 로그인 해주세요."),
     TOKEN_INVALID("TOKEN_INVALID", "로그인 실패", "인증 토큰이 유효하지 않습니다. 다시 로그인 해주세요.");
 
