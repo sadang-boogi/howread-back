@@ -35,7 +35,7 @@ springdoc:
 
 jwt:
   secret: ${JWT_SECRET_KEY}
-  token-validity-in-seconds: 86400 # ttl (초)
+  token-validity-in-seconds: 1209600 # ttl (초)
 
 ---
 
