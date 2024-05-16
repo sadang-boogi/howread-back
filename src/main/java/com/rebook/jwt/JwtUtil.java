@@ -12,18 +12,26 @@ import java.util.LinkedHashMap;
 import com.rebook.user.service.dto.LoggedInUser;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JwtUtil {
-    @Value("${jwt.secret}")
-    private String secret;
+
+    @Autowired
+    private Environment environment;
+
     @Value("${jwt.token-validity-in-seconds}")
     private int expirationTimeMillis;
     private String tokenPrefix = "Bearer ";
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    private String getSecret() {
+        return environment.getProperty("jwt.secret");
+    }
 
     public boolean isIncludeTokenPrefix(String header) {
         return header.split(" ")[0].equals(tokenPrefix.trim());
@@ -39,11 +47,11 @@ public class JwtUtil {
                 .withExpiresAt(currentDate.plusMillis(expirationTimeMillis))
                 .withClaim("email", loggedInUser.getEmail())
                 .withClaim("username", loggedInUser.getName())
-                .sign(Algorithm.HMAC512(secret));
+                .sign(Algorithm.HMAC512(getSecret()));
     }
 
     public boolean isTokenExpired(String token) {
-        Instant expiredAt = JWT.require(Algorithm.HMAC512(secret))
+        Instant expiredAt = JWT.require(Algorithm.HMAC512(getSecret()))
                 .build().verify(token)
                 .getExpiresAtAsInstant();
 
@@ -51,10 +59,10 @@ public class JwtUtil {
     }
 
     public boolean isTokenNotManipulated(String token) {
-        return JWT.require(Algorithm.HMAC512(secret))
+        return JWT.require(Algorithm.HMAC512(getSecret()))
                 .build().verify(token)
                 .getSignature()
-                .equals(secret);
+                .equals(getSecret());
     }
 
     public LoggedInUser extractUserFromToken(String token) {
