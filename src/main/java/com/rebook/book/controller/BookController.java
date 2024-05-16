@@ -3,18 +3,24 @@ package com.rebook.book.controller;
 import com.rebook.book.controller.request.BookCreateRequest;
 import com.rebook.book.controller.request.BookUpdateRequest;
 import com.rebook.book.controller.response.BookResponse;
+import com.rebook.book.domain.BookEntity;
+import com.rebook.book.repository.BookRepository;
 import com.rebook.book.service.BookService;
 import com.rebook.book.service.command.BookCreateCommand;
 import com.rebook.book.service.command.BookUpdateCommand;
 import com.rebook.book.service.dto.BookDto;
-import com.rebook.common.schema.ListResponse;
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
+
+import static org.springframework.data.domain.Sort.Direction;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/books")
@@ -22,6 +28,7 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
+    private final BookRepository bookRepository;
 
     @PostMapping
     public ResponseEntity<BookResponse> saveBook(
@@ -33,13 +40,12 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<ListResponse<BookResponse>> getBooks() {
-        List<BookDto> books = bookService.getBooks();
-        List<BookResponse> bookResponses = books.stream()
-                .map(BookResponse::from)
-                .toList();
-        ListResponse<BookResponse> response = new ListResponse<>(bookResponses);
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<Page<BookDto>> getBooks(
+            @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable
+    ) {
+        Page<BookDto> books = bookService.getBooks(pageable);
+
+        return ResponseEntity.ok().body(books);
     }
 
     @GetMapping("/{bookId}")
@@ -65,5 +71,12 @@ public class BookController {
         bookService.deleteBook(bookId);
         return ResponseEntity.ok()
                 .build();
+    }
+
+    @PostConstruct
+    public void init() {
+        for (int i = 0; i < 100; i++) {
+            bookRepository.save(BookEntity.of("book" + i, "author" + i, "thumbnail" + i));
+        }
     }
 }

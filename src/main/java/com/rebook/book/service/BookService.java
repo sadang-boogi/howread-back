@@ -10,6 +10,8 @@ import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.hashtag.repository.HashtagRepository;
 import com.rebook.review.domain.ReviewEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,12 +43,9 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public List<BookDto> getBooks() {
-        List<BookEntity> books = bookRepository.findAll();
-
-        return books.stream()
-                .map(BookDto::fromEntity)
-                .toList();
+    public Page<BookDto> getBooks(Pageable pageable) {
+        Page<BookEntity> books = bookRepository.findAll(pageable);
+        return books.map(BookDto::fromEntity);
     }
 
     @Transactional(readOnly = true)
