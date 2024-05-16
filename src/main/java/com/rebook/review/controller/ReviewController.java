@@ -1,6 +1,7 @@
 package com.rebook.review.controller;
 
 import com.rebook.common.schema.ListResponse;
+import com.rebook.jwt.service.JwtService;
 import com.rebook.review.controller.request.ReviewSaveRequest;
 import com.rebook.review.controller.request.ReviewUpdateRequest;
 import com.rebook.review.controller.response.ReviewResponse;
@@ -9,6 +10,7 @@ import com.rebook.review.service.command.ReviewUpdateCommand;
 import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +27,20 @@ import java.util.List;
 @RestController
 public class ReviewController {
     private final ReviewService reviewService;
+    private final JwtService jwtService;
 
     @PostMapping
-    @Operation(summary = "Create Review for a Book", description = "해당 책에 리뷰를 작성한다.")
+    @Operation(summary = "Create Review for a Book", description = "userId로 해당 책에 리뷰를 작성한다.",
+            security = @SecurityRequirement(name = "Bearer Authentication")
+    )
     public ResponseEntity<ReviewResponse> saveReview(
             @PathVariable("bookId") Long bookId,
-            @Valid @RequestBody final ReviewSaveRequest reviewRequest) {
+            @Valid @RequestBody final ReviewSaveRequest reviewRequest,
+            @RequestHeader("Authorization") String authorizationHeader
+    ) {
         ReviewSaveCommand reviewCommand = reviewRequest.toCommand(bookId, reviewRequest);
-        ReviewDto savedReview = reviewService.save(reviewCommand);
+        Long userId = jwtService.getUserIdFromToken(authorizationHeader);
+        ReviewDto savedReview = reviewService.save(reviewCommand, userId);
         ReviewResponse reviewResponse = ReviewResponse.fromDto(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));
         return ResponseEntity.created(location).body(reviewResponse);

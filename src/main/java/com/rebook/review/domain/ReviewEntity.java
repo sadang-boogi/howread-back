@@ -29,6 +29,9 @@ public class ReviewEntity extends BaseEntity {
     @JoinColumn(name = "bookId")
     private BookEntity book;
 
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
     @Comment("리뷰 내용")
     @Column(name = "content", nullable = false)
     private String content;
@@ -37,17 +40,25 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "score", precision = 3, scale = 2)
     private BigDecimal score;
 
-    public ReviewEntity(Long id, String content, BigDecimal score) {
+    public ReviewEntity(Long id, Long userId, String content, BigDecimal score) {
         this.id = id;
         this.content = content;
         this.score = score;
     }
 
-    public static ReviewEntity of(BookEntity book, String content, BigDecimal score) {
+    public static ReviewEntity of(BookEntity book, Long userId, String content, BigDecimal score) {
         return new ReviewEntity(
                 null,
                 book,
+                userId,
                 content,
                 score);
+    }
+
+    public ReviewEntity update(BookEntity book, String content, BigDecimal score) {
+        this.book = book;
+        this.content = content;
+        this.score = score;
+        return this;
     }
 }

@@ -1,4 +1,4 @@
-package com.rebook.user.service.dto;
+package com.rebook.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 
+import com.rebook.user.service.dto.LoggedInUser;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,7 +70,7 @@ public class JwtUtil {
     private LoggedInUser parseUserFromJwt(String decodedPayload) {
         try {
             LinkedHashMap<String, Object> payloadMap = objectMapper.readValue(decodedPayload, LinkedHashMap.class);
-            Long userId = (Long) payloadMap.get("userId");
+            Long userId = Long.parseLong((String) payloadMap.get("sub"));
             String email = (String) payloadMap.get("email");
             String username = (String) payloadMap.get("username");
             return new LoggedInUser(userId, email, username);

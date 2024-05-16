@@ -2,12 +2,9 @@ package com.rebook.user.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.rebook.user.config.OAuth2ClientProperties;
-import com.rebook.user.controller.response.JwtResponse;
-import com.rebook.user.service.dto.JwtUtil;
 import com.rebook.user.service.dto.LoggedInUser;
 import com.rebook.user.service.dto.UserCommand;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;

@@ -2,9 +2,8 @@ package com.rebook.user.controller;
 
 import com.rebook.user.controller.response.JwtResponse;
 import com.rebook.user.service.LoginService;
-import com.rebook.user.service.dto.JwtUtil;
+import com.rebook.jwt.JwtUtil;
 import com.rebook.user.service.dto.LoggedInUser;
-import io.jsonwebtoken.Jwt;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;

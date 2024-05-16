@@ -18,7 +18,7 @@ public class LoggedInUser {
         return LoggedInUser.builder()
                 .userId(userEntity.getId())
                 .email(userEntity.getEmail())
-                .name(userEntity.getEmail())
+                .name(userEntity.getNickname())
                 .build();
     }
 }

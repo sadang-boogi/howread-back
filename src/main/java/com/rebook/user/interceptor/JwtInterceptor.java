@@ -2,7 +2,7 @@ package com.rebook.user.interceptor;
 
 import com.rebook.common.exception.NotFoundException;
 import com.rebook.user.exception.TokenException;
-import com.rebook.user.service.dto.JwtUtil;
+import com.rebook.jwt.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
