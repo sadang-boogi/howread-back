@@ -17,8 +17,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     public LoggedInUser createUser(UserCommand userCommand) {
-        String email = userCommand.getEmail();
-        Optional<UserEntity> existingUser = userRepository.findByEmail(email);
+        String socialId = userCommand.getSocialId();
+        Optional<UserEntity> existingUser = userRepository.findBySocialId(socialId);
 
         //존재하는 회원일 경우
         if (existingUser.isPresent()) {
@@ -27,7 +27,7 @@ public class UserService {
 
         //아닐 경우 신규 DB에 저장
         UserEntity newUser = UserEntity.builder()
-                .email(email)
+                .email(userCommand.getEmail())
                 .nickname(userCommand.getName())
                 .socialType(SocialType.valueOf(userCommand.getSocialType()))
                 .socialId(userCommand.getSocialId())
