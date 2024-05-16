@@ -7,8 +7,4 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email); // 중복 가입 확인
-
-    Optional<UserEntity> findByNickname(String nickname);
-
-    Optional<UserEntity> findByRefreshToken(String refreshToken);
 }
