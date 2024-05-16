@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JwtUtil {
-    @Value("${jwt.secret-key}")
+    @Value("${jwt.secret}")
     private String secret;
     @Value("${jwt.token-validity-in-seconds}")
     private int expirationTimeMillis;
