@@ -5,7 +5,6 @@ import com.rebook.user.config.OAuth2ClientProperties;
 import com.rebook.user.service.dto.LoggedInUser;
 import com.rebook.user.service.dto.UserCommand;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -21,10 +20,11 @@ public class LoginService {
     private final UserService userService;
 
 
-    public void socialLogin(String code, String registrationId) {
+    public LoggedInUser socialLogin(String code, String registrationId) {
         String accessToken = getAccessToken(code, registrationId);
         UserCommand userCommand = getUserProfile(accessToken, registrationId);
-        LoggedInUser user = userService.createUser(userCommand);
+        LoggedInUser loggedInUser = userService.createUser(userCommand);
+        return loggedInUser;
     }
 
     private String getAccessToken(String authorizationCode, String registrationId) {

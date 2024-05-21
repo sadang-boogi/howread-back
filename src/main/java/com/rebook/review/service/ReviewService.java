@@ -9,32 +9,29 @@ import com.rebook.review.repository.ReviewRepository;
 import com.rebook.review.service.command.ReviewSaveCommand;
 import com.rebook.review.service.command.ReviewUpdateCommand;
 import com.rebook.review.service.dto.ReviewDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final BookRepository bookRepository;
 
-    public ReviewService(ReviewRepository reviewRepository, BookRepository bookRepository) {
-        this.reviewRepository = reviewRepository;
-        this.bookRepository = bookRepository;
-    }
-
     @Transactional
-    public ReviewDto save(ReviewSaveCommand reviewCommand) {
+    public ReviewDto save(ReviewSaveCommand reviewCommand, Long userId) {
         BookEntity book = bookRepository.findById(reviewCommand.getBookId())
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_BOOK_ID));
-        ReviewEntity reviewEntity = ReviewEntity.of(book, reviewCommand.getContent(), reviewCommand.getScore());
+        ReviewEntity reviewEntity = ReviewEntity.of(book, userId, reviewCommand.getContent(), reviewCommand.getScore());
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
         return ReviewDto.fromEntity(savedReview);
     }
 
     public List<ReviewDto> getReviewsWithBookId(Long bookId) {
-        BookEntity book = bookRepository.findById(bookId)
+        bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_BOOK_ID));
         List<ReviewEntity> reviews = reviewRepository.findByBookIdOrderByCreatedAtAsc(bookId);
         return reviews.stream()
@@ -54,8 +51,7 @@ public class ReviewService {
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_REVIEW_ID));
 
         // 기존 리뷰 엔티티 업데이트
-        reviewEntity.setContent(reviewCommand.getContent());
-        reviewEntity.setScore(reviewCommand.getScore());
+        reviewEntity.update(bookEntity, reviewCommand.getContent(), reviewCommand.getScore());
 
         return ReviewDto.fromEntity(reviewEntity);
     }
