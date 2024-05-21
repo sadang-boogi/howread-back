@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class BookEntityTest {
 
-    @DisplayName("")
+    @DisplayName("책에 해시태그를 추가한다.")
     @Test
     void addHashtags() {
         // given
@@ -22,7 +22,7 @@ class BookEntityTest {
                 .extracting("name").isEqualTo("테스트용 해시태그");
     }
 
-    @DisplayName("BookEntity의 clearHashtags()")
+    @DisplayName("책의 해시태그들을 모두 삭제한다.")
     @Test
     void clearHashtags() {
         // given
@@ -36,5 +36,4 @@ class BookEntityTest {
         assertThat(book.getBookHashtags()).size()
                 .isZero();
     }
-
 }
