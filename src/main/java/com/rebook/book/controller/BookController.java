@@ -4,7 +4,6 @@ import com.rebook.book.controller.request.BookCreateRequest;
 import com.rebook.book.controller.request.BookUpdateRequest;
 import com.rebook.book.controller.response.BookResponse;
 import com.rebook.book.service.BookService;
-import com.rebook.book.service.command.BookCreateCommand;
 import com.rebook.book.service.command.BookUpdateCommand;
 import com.rebook.book.service.dto.BookDto;
 import com.rebook.common.schema.ListResponse;
@@ -27,7 +26,9 @@ public class BookController {
     public ResponseEntity<BookResponse> saveBook(
             @RequestBody @Valid final BookCreateRequest bookCreateRequest
     ) {
-        BookResponse book = BookResponse.from(bookService.save(BookCreateCommand.from(bookCreateRequest)));
+        BookResponse book = BookResponse.from(
+                bookService.save(bookCreateRequest.toCommand())
+        );
 
         return ResponseEntity.created(URI.create("/api/v1/books/" + book.getId())).body(book);
     }
