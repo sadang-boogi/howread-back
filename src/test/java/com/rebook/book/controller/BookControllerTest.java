@@ -6,6 +6,11 @@ import com.rebook.book.service.BookService;
 import com.rebook.book.service.command.BookCreateCommand;
 import com.rebook.book.service.dto.BookDto;
 import com.rebook.hashtag.service.dto.HashtagDto;
+import com.rebook.jwt.JwtUtil;
+import com.rebook.user.interceptor.JwtInterceptor;
+import com.rebook.user.interceptor.LoginInterceptor;
+import com.rebook.user.service.dto.LoggedInUser;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -29,14 +35,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = BookController.class)
 class BookControllerTest {
 
+    @MockBean
+    private LoginInterceptor loginInterceptor;
+    @MockBean
+    private JwtInterceptor jwtInterceptor;
+
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @MockBean
     private BookService bookService;
+
+
+    @BeforeEach
+    void setup() throws Exception {
+        //token 인증 부분 mocking
+        when(loginInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+        when(jwtInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+    }
 
     @DisplayName("새로운 책을 저장한다.")
     @Test
