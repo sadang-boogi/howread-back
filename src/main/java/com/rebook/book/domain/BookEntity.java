@@ -88,7 +88,7 @@ public class BookEntity extends BaseEntity {
     }
 
     public void update(BookEntity updateBook) {
-        this.title = updateBook.getTitle(); //todo: 확인 필요: 엔티티에서 Command 객체 사용해도 되는가?
+        this.title = updateBook.getTitle();
         this.author = updateBook.getAuthor();
         this.thumbnailUrl = updateBook.getThumbnailUrl();
     }
