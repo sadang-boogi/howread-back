@@ -3,14 +3,14 @@ version: '3'
 services:
   mysql:
     platform: linux/x86_64
-    image: mysql:latest
+    image: mysql:8.0.37
     environment:
       MYSQL_ROOT_PASSWORD: rebook
       MYSQL_DATABASE: rebook
       MYSQL_USER: rebook
       MYSQL_PASSWORD: rebook
     ports:
-      - "3306:3306"
+      - "31234:3306"
     volumes:
       - mysqldata:/var/lib/mysql
 
