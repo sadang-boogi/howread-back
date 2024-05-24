@@ -30,7 +30,7 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
 
         String errorMessage = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
 
-        ExceptionResponse exception = new ExceptionResponse(LocalDateTime.now(), "BAD_REQUEST", errorMessage);
+        ExceptionResponse exception = new ExceptionResponse(LocalDateTime.now(), "BAD_REQUEST", "잘못된 요청입니다.", errorMessage);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(exception);
@@ -40,7 +40,7 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleNotFoundException(NotFoundException e) {
         log.error("errorMessage: {}", e.getMessage());
 
-        ExceptionResponse exception = new ExceptionResponse(LocalDateTime.now(), e.getCode(), e.getMessage());
+        ExceptionResponse exception = new ExceptionResponse(LocalDateTime.now(), e.getCode(), e.getTitle(), e.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception);
     }
@@ -49,7 +49,7 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleUnauthorizedException(TokenException e) {
         log.error("errorMessage: {}", e.getMessage());
 
-        AuthExceptionResponse exception = new AuthExceptionResponse(LocalDateTime.now(), e.getCode(), e.getTitle(), e.getMessage());
+        ExceptionResponse exception = new ExceptionResponse(LocalDateTime.now(), e.getCode(), e.getTitle(), e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception);
     }
 
@@ -57,7 +57,7 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleBadRequestException(BadRequestException e) {
         log.error("errorMessage: {}", e.getMessage());
 
-        ExceptionResponse exception = new ExceptionResponse(LocalDateTime.now(), e.getCode(), e.getMessage());
+        ExceptionResponse exception = new ExceptionResponse(LocalDateTime.now(), e.getCode(), e.getTitle(), e.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception);
     }

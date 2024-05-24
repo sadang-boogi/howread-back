@@ -48,7 +48,7 @@ public class ReviewService {
 
         // 리뷰 id로 리뷰 조회
         ReviewEntity reviewEntity = reviewRepository.findById(reviewCommand.getBookId())
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_REVIEW_ID));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_REVIEW_UPDATE));
 
         // 기존 리뷰 엔티티 업데이트
         reviewEntity.update(bookEntity, reviewCommand.getContent(), reviewCommand.getScore());
@@ -59,7 +59,7 @@ public class ReviewService {
     @Transactional
     public void softDelete(Long reviewId) {
         ReviewEntity review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_REVIEW_ID));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_REVIEW_DELETE));
         review.softDelete();
     }
 }

@@ -1,6 +1,5 @@
 package com.rebook.user.exception;
 
-import com.rebook.common.exception.ExceptionCode;
 import lombok.Getter;
 
 @Getter
