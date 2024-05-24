@@ -6,9 +6,14 @@ import com.rebook.book.controller.response.BookResponse;
 import com.rebook.book.service.BookService;
 import com.rebook.book.service.command.BookUpdateCommand;
 import com.rebook.book.service.dto.BookDto;
-import com.rebook.common.schema.ListResponse;
+import com.rebook.common.domain.PageInfo;
+import com.rebook.common.schema.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,12 +39,19 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<ListResponse<BookResponse>> getBooks() {
-        List<BookDto> books = bookService.getBooks();
-        List<BookResponse> bookResponses = books.stream()
+    public ResponseEntity<PageResponse<BookResponse>> getBooks(
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Slice<BookDto> books = bookService.getBooks(pageable);
+        List<BookResponse> items = books.getContent()
+                .stream()
                 .map(BookResponse::from)
                 .toList();
-        ListResponse<BookResponse> response = new ListResponse<>(bookResponses);
+
+        PageInfo pageInfo = new PageInfo(books.getNumber(), books.getSize(), books.hasNext());
+
+        PageResponse<BookResponse> response = new PageResponse<>(items, pageInfo);
+
         return ResponseEntity.ok().body(response);
     }
 

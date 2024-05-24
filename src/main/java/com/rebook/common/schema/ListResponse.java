@@ -13,5 +13,4 @@ public class ListResponse<T> {
     public ListResponse(List<T> items) {
         this.items = items;
     }
-
 }
