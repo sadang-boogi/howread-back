@@ -14,4 +14,12 @@ public class NotFoundException extends RuntimeException {
         this.title = exceptionCode.getTitle();
         this.message = exceptionCode.getMessage();
     }
+
+    public NotFoundException(String title, String message) {
+        this.code = "NOT_FOUND";
+        this.title = title;
+        this.message = message;
+    }
+
+
 }
