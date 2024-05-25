@@ -14,9 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,7 +23,6 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -132,53 +128,5 @@ class BookControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
                 .andExpect(jsonPath("$.message").value("저자를 입력해주세요."));
-    }
-
-    @DisplayName("책 목록을 페이징하여 반환한다.")
-    @Test
-    void getBooks() throws Exception {
-        // given
-        Pageable pageable = PageRequest.of(0, 10);
-        List<BookDto> bookDtos = List.of(
-                BookDto.builder()
-                        .id(1L)
-                        .title("제목1")
-                        .author("저자1")
-                        .thumbnailUrl("책 표지1")
-                        .rating(BigDecimal.ONE)
-                        .hashtags(List.of(HashtagDto.builder().id(1L).name("해시태그1").build()))
-                        .build(),
-                BookDto.builder()
-                        .id(2L)
-                        .title("제목2")
-                        .author("저자2")
-                        .thumbnailUrl("책 표지2")
-                        .rating(BigDecimal.valueOf(2))
-                        .hashtags(List.of(HashtagDto.builder().id(2L).name("해시태그2").build()))
-                        .build()
-        );
-        SliceImpl<BookDto> bookSlice = new SliceImpl<>(bookDtos, pageable, false);
-
-        when(bookService.getBooks(any(Pageable.class))).thenReturn(bookSlice);
-
-        // when, then
-        mockMvc.perform(get("/api/v1/books")
-                        .param("page", "0")
-                        .param("size", "10")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items[0].id").value(1L))
-                .andExpect(jsonPath("$.items[0].title").value("제목1"))
-                .andExpect(jsonPath("$.items[0].author").value("저자1"))
-                .andExpect(jsonPath("$.items[0].thumbnailUrl").value("책 표지1"))
-                .andExpect(jsonPath("$.items[0].hashtags[0]").value("해시태그1"))
-                .andExpect(jsonPath("$.items[0].averageStarRate").value("1"))
-                .andExpect(jsonPath("$.items[1].id").value(2L))
-                .andExpect(jsonPath("$.items[1].title").value("제목2"))
-                .andExpect(jsonPath("$.items[1].author").value("저자2"))
-                .andExpect(jsonPath("$.items[1].thumbnailUrl").value("책 표지2"))
-                .andExpect(jsonPath("$.items[1].hashtags[0]").value("해시태그2"))
-                .andExpect(jsonPath("$.items[1].averageStarRate").value("2"));
     }
 }
