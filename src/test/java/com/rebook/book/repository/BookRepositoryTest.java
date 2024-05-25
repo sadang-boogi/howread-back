@@ -27,12 +27,7 @@ class BookRepositoryTest {
     @Test
     void findAllByPageable() {
         // given
-        List<BookEntity> bookList = new ArrayList<>();
-
-        for (int i = 0; i < 30; i++) {
-            BookEntity book = BookEntity.of(String.format("제목%d", i), String.format("저자%d", i), String.format("썸네일%d", i));
-            bookList.add(book);
-        }
+        List<BookEntity> bookList = createBookList(30);
 
         bookRepository.saveAll(bookList);
 
@@ -45,6 +40,16 @@ class BookRepositoryTest {
         assertThat(findAllByPageable.getContent()).hasSize(10);
         assertThat(findAllByPageable.getContent().get(0).getCreatedAt())
                 .isAfter(findAllByPageable.getContent().get(1).getCreatedAt());
+    }
+
+    private static List<BookEntity> createBookList(int saveCount) {
+        List<BookEntity> bookList = new ArrayList<>();
+
+        for (int i = 0; i < saveCount; i++) {
+            BookEntity book = BookEntity.of(String.format("제목%d", i), String.format("저자%d", i), String.format("썸네일%d", i));
+            bookList.add(book);
+        }
+        return bookList;
     }
 
 }
