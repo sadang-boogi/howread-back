@@ -36,6 +36,12 @@ jobs:
           GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
         run: echo "Environment variables set"
 
+      - name: Verify environment variables
+        run: |
+          echo "GOOGLE_OAUTH_CLIENT_ID=${GOOGLE_OAUTH_CLIENT_ID}"
+          echo "GOOGLE_OAUTH_CLIENT_SECRET=${GOOGLE_OAUTH_CLIENT_SECRET}"
+          echo "GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}"
+
       - name: Run tests
         run: ./gradlew --info test
 
