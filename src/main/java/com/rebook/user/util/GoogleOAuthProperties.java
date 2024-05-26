@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-
 public class GoogleOAuthProperties {
 
     private final String clientId;
@@ -20,9 +19,7 @@ public class GoogleOAuthProperties {
     private final String userInfoUri;
 
     @Autowired
-    private Environment environment;
-
-    public GoogleOAuthProperties() {
+    public GoogleOAuthProperties(Environment environment) {
         this.clientId = environment.getProperty("oauth.google.client-id");
         this.clientSecret = environment.getProperty("oauth.google.client-secret");
         this.redirectUri = environment.getProperty("oauth.google.redirect-uri");
