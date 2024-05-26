@@ -1,6 +1,5 @@
 package com.rebook.user.util;
 
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Component
+
 public class GoogleOAuthProperties {
 
     private final String clientId;
@@ -19,7 +19,10 @@ public class GoogleOAuthProperties {
     private final String tokenUri;
     private final String userInfoUri;
 
-    public GoogleOAuthProperties(Environment environment) {
+    @Autowired
+    private Environment environment;
+
+    public GoogleOAuthProperties() {
         this.clientId = environment.getProperty("oauth.google.client-id");
         this.clientSecret = environment.getProperty("oauth.google.client-secret");
         this.redirectUri = environment.getProperty("oauth.google.redirect-uri");
