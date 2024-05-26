@@ -19,9 +19,6 @@ public class GoogleOAuthProperties {
     private final String tokenUri;
     private final String userInfoUri;
 
-    @Autowired
-    private Environment environment;
-
     public GoogleOAuthProperties(Environment environment) {
         this.clientId = environment.getProperty("oauth.google.client-id");
         this.clientSecret = environment.getProperty("oauth.google.client-secret");
