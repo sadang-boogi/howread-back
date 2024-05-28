@@ -6,10 +6,8 @@ import com.rebook.book.service.BookService;
 import com.rebook.book.service.command.BookCreateCommand;
 import com.rebook.book.service.dto.BookDto;
 import com.rebook.hashtag.service.dto.HashtagDto;
-import com.rebook.jwt.JwtUtil;
 import com.rebook.user.interceptor.JwtInterceptor;
 import com.rebook.user.interceptor.LoginInterceptor;
-import com.rebook.user.service.dto.LoggedInUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
