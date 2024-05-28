@@ -1,6 +1,7 @@
 package com.rebook.user.controller;
 
 import com.rebook.user.controller.response.JwtResponse;
+import com.rebook.user.controller.response.UriResponse;
 import com.rebook.user.service.LoginService;
 import com.rebook.jwt.JwtUtil;
 import com.rebook.user.service.dto.LoggedInUser;
@@ -42,5 +43,16 @@ public class LoginController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-
+    @Operation(
+            summary = "OAuth URL 생성",
+            description = "OAuth 인증을 위한 URL을 반환합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OAuth 인증 URL을 반환합니다.")
+            }
+    )
+    @GetMapping("/{provider}/authorize")
+    public ResponseEntity<UriResponse> getAuthorizationUrl(@PathVariable String provider) {
+        String authorizationUrl = loginService.getAuthorizationUrl(provider);
+        return ResponseEntity.ok(new UriResponse(authorizationUrl));
+    }
 }
