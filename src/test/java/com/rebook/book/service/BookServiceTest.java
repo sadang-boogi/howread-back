@@ -13,12 +13,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("test")
 @Transactional
 @SpringBootTest
 class BookServiceTest {
@@ -61,16 +63,18 @@ class BookServiceTest {
     @Test
     void updateBook() {
         // given
-        BookCreateCommand bookCreateRequest = new BookCreateCommand("객사오", "조영호", null, null);
+        BookCreateCommand bookCreateRequest = new BookCreateCommand("제목1", "저자1", "썸네일1", List.of(1L, 2L, 3L));
         BookDto bookDto = bookService.save(bookCreateRequest);
 
-        BookUpdateCommand updateBook = BookUpdateCommand.from(new BookUpdateRequest("수정", "김수용", null, null));
+        BookUpdateCommand updateBook = BookUpdateCommand.from(new BookUpdateRequest("수정제목", "수정저자", "수정썸네일", List.of(1L)));
 
         // when
         bookService.updateBook(bookDto.getId(), updateBook);
 
         // then
         BookDto book = bookService.getBook(bookDto.getId());
-        assertThat(book.getTitle()).isEqualTo("수정");
+        assertThat(book.getTitle()).isEqualTo("수정제목");
+        assertThat(book.getAuthor()).isEqualTo("수정저자");
+        assertThat(book.getThumbnailUrl()).isEqualTo("수정썸네일");
     }
 }
