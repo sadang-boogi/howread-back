@@ -12,13 +12,12 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
 
     @Query("""
             SELECT book FROM BookEntity book
-            LEFT JOIN FETCH book.bookHashtags
             """)
     Slice<BookEntity> findAllByPageable(Pageable pageable);
 
     @Query("""
             SELECT DISTINCT book FROM BookEntity book
-            LEFT JOIN FETCH book.bookHashtags bookHashtag
+            WHERE book.id = :bookId
             """)
     Optional<BookEntity> findById(Long bookId);
 }
