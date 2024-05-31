@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +36,7 @@ class BookServiceTest {
     private HashtagService hashtagService;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         HashtagCommand hashtagCommand1 = HashtagCommand.of(new HashtagRequest("해시태그1"));
         HashtagCommand hashtagCommand2 = HashtagCommand.of(new HashtagRequest("해시태그2"));
         HashtagCommand hashtagCommand3 = HashtagCommand.of(new HashtagRequest("해시태그3"));
@@ -45,6 +46,7 @@ class BookServiceTest {
         hashtagService.create(hashtagCommand3);
     }
 
+    @DirtiesContext
     @DisplayName("책 제목, 저자, 썸네일 이미지, 해시태그 아이디를 등록 후 등록한 책의 id를 반환한다.")
     @Test
     void saveBookWithoutHashtag() {
@@ -59,6 +61,7 @@ class BookServiceTest {
         assertThat(bookDto.getHashtags().size()).isEqualTo(3);
     }
 
+    @DirtiesContext
     @DisplayName("책의 제목, 저자, 썸네일 이미지, 해시태그 아이디로 책 정보를 수정한다.")
     @Test
     void updateBook() {
