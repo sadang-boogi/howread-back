@@ -38,4 +38,8 @@ public class BookHashtagEntity extends BaseEntity {
                 hashtag
         );
     }
+
+    public void addBook(BookEntity book) {
+        this.book = book;
+    }
 }

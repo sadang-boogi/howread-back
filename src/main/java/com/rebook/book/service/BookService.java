@@ -1,15 +1,20 @@
 package com.rebook.book.service;
 
 import com.rebook.book.domain.BookEntity;
+import com.rebook.book.domain.BookHashtagEntity;
+import com.rebook.book.repository.BookHashtagRepository;
 import com.rebook.book.repository.BookRepository;
 import com.rebook.book.service.command.BookCreateCommand;
 import com.rebook.book.service.command.BookUpdateCommand;
 import com.rebook.book.service.dto.BookDto;
+import com.rebook.common.domain.BaseEntity;
 import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.hashtag.repository.HashtagRepository;
 import com.rebook.review.domain.ReviewEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +27,7 @@ import static com.rebook.common.exception.ExceptionCode.NOT_FOUND_BOOK_ID;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final BookHashtagRepository bookHashtagRepository;
     private final HashtagRepository hashtagRepository;
 
     @Transactional
@@ -34,19 +40,16 @@ public class BookService {
 
         if (bookCreateCommand.getHashtagIds() != null && !bookCreateCommand.getHashtagIds().isEmpty()) {
             List<HashtagEntity> hashtags = hashtagRepository.findByIds(bookCreateCommand.getHashtagIds());
-            hashtags.forEach(book::addHashtag);
+            setHashtag(hashtags, book);
         }
 
         return BookDto.fromEntity(bookRepository.save(book));
     }
 
     @Transactional(readOnly = true)
-    public List<BookDto> getBooks() {
-        List<BookEntity> books = bookRepository.findAll();
-
-        return books.stream()
-                .map(BookDto::fromEntity)
-                .toList();
+    public Slice<BookDto> getBooks(Pageable pageable) {
+        Slice<BookEntity> books = bookRepository.findAllByPageable(pageable);
+        return books.map(BookDto::fromEntity);
     }
 
     @Transactional(readOnly = true)
@@ -62,18 +65,20 @@ public class BookService {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
-        BookEntity updateBookCommand = BookEntity.of(
+        BookEntity updateBook = BookEntity.of(
                 bookUpdateCommand.getTitle(),
                 bookUpdateCommand.getAuthor(),
                 bookUpdateCommand.getThumbnailUrl()
         );
 
-        book.update(updateBookCommand);
-        book.clearHashtags();
+        book.update(updateBook);
+
+        List<BookHashtagEntity> findBookHashtags = bookHashtagRepository.findByBookId(bookId);
+        findBookHashtags.forEach(BaseEntity::softDelete);
 
         if (bookUpdateCommand.getHashtagIds() != null && !bookUpdateCommand.getHashtagIds().isEmpty()) {
             List<HashtagEntity> hashtags = hashtagRepository.findByIds(bookUpdateCommand.getHashtagIds());
-            hashtags.forEach(book::addHashtag);
+            setHashtag(hashtags, book);
         }
     }
 
@@ -83,5 +88,12 @@ public class BookService {
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
         book.getReviews().forEach(ReviewEntity::softDelete);
         book.softDelete();
+    }
+
+    private void setHashtag(List<HashtagEntity> hashtags, BookEntity book) {
+        for (HashtagEntity hashtag : hashtags) {
+            BookHashtagEntity bookHashtag = BookHashtagEntity.of(book, hashtag);
+            book.addHashtag(bookHashtag);
+        }
     }
 }
