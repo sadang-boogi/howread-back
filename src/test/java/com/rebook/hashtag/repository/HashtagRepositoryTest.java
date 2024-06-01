@@ -1,10 +1,12 @@
 package com.rebook.hashtag.repository;
 
+import com.rebook.common.domain.BaseEntity;
 import com.rebook.hashtag.domain.HashtagEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -19,7 +21,27 @@ class HashtagRepositoryTest {
     @Autowired
     private HashtagRepository hashtagRepository;
 
-    @DisplayName("해시태그 아이디들로 해시태그 목록을 조회한다. ")
+    @DirtiesContext
+    @DisplayName("해시태그를 모두 삭제한다.")
+    @Test
+    void deleteAll() {
+        // given
+        HashtagEntity hashtag1 = HashtagEntity.of("어려움");
+        HashtagEntity hashtag2 = HashtagEntity.of("적절함");
+
+        hashtagRepository.saveAll(List.of(hashtag1, hashtag2));
+        List<HashtagEntity> hashtags = hashtagRepository.findByIds(List.of(1L, 2L));
+        hashtags.forEach(BaseEntity::softDelete);
+
+        // when
+        List<HashtagEntity> all = hashtagRepository.findAll();
+
+        // then
+        assertThat(all.size()).isZero();
+    }
+
+    @DirtiesContext
+    @DisplayName("해시태그 아이디들로 해시태그 목록을 조회한다.")
     @Test
     void findByIds() {
         // given
@@ -39,5 +61,4 @@ class HashtagRepositoryTest {
                         tuple(2L, "적절함")
                 );
     }
-
 }
