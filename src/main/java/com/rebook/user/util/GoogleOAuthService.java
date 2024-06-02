@@ -9,6 +9,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 @RequiredArgsConstructor
 @Component
 public class GoogleOAuthService implements OAuthService {
@@ -35,7 +38,7 @@ public class GoogleOAuthService implements OAuthService {
         String tokenUri = googleOAuthProperties.getTokenUri();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("code", authorizationCode);
+        params.add("code", this.sanitizeAuthCode(authorizationCode));
         params.add("client_id", clientId);
         params.add("client_secret", clientSecret);
         params.add("redirect_uri", redirectUri);
@@ -49,6 +52,13 @@ public class GoogleOAuthService implements OAuthService {
         ResponseEntity<JsonNode> responseNode = restTemplate.exchange(tokenUri, HttpMethod.POST, entity, JsonNode.class);
         JsonNode accessTokenNode = responseNode.getBody();
         return accessTokenNode.get("access_token").asText();
+    }
+
+    /**
+     * Google OAuth 인증 코드가 URL Encode 되어 있으므로 디코딩하여 반환합니다.
+     */
+    private String sanitizeAuthCode(String authCode) {
+        return URLDecoder.decode(authCode, StandardCharsets.UTF_8);
     }
 
 
