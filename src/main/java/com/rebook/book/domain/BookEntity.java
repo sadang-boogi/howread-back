@@ -1,7 +1,6 @@
 package com.rebook.book.domain;
 
 import com.rebook.common.domain.BaseEntity;
-import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.review.domain.ReviewEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -82,19 +81,21 @@ public class BookEntity extends BaseEntity {
         return sum.divide(BigDecimal.valueOf(reviews.size()), 3, RoundingMode.HALF_UP);
     }
 
-    public void addHashtag(HashtagEntity hashtag) {
-        BookHashtagEntity bookHashtag = BookHashtagEntity.of(this, hashtag);
-        bookHashtags.add(bookHashtag);
+    public void addHashtag(BookHashtagEntity... hashtags) {
+        for (BookHashtagEntity hashtag : hashtags) {
+            this.bookHashtags.add(hashtag);
+            hashtag.addBook(this);
+        }
+    }
+
+    public void clearHashtag() {
+        this.bookHashtags.clear();
     }
 
     public void update(BookEntity updateBook) {
-        this.title = updateBook.getTitle(); //todo: 확인 필요: 엔티티에서 Command 객체 사용해도 되는가?
+        this.title = updateBook.getTitle();
         this.author = updateBook.getAuthor();
         this.thumbnailUrl = updateBook.getThumbnailUrl();
-    }
-
-    public void clearHashtags() {
-        this.bookHashtags.clear();
     }
 
     public String getThumbnailUrl() {

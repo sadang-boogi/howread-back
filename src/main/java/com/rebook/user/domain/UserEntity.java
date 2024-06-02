@@ -24,12 +24,12 @@ public class UserEntity extends BaseEntity {
     @Column(name = "email", nullable = false)
     private String email;
 
-
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "role", columnDefinition = "varchar(255)")
     private Role role;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "social_type", columnDefinition = "varchar(255)")
     private SocialType socialType;
 
     private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)

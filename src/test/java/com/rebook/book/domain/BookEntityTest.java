@@ -13,13 +13,14 @@ class BookEntityTest {
     void addHashtags() {
         // given
         BookEntity book = BookEntity.of("테스트", "테스트", null);
+        HashtagEntity hashtag = HashtagEntity.of("해시태그1");
 
         // when
-        book.addHashtag(HashtagEntity.of("테스트용 해시태그"));
+        book.addHashtag(BookHashtagEntity.of(book, hashtag));
 
         // then
         assertThat(book.getBookHashtags().get(0).getHashtag())
-                .extracting("name").isEqualTo("테스트용 해시태그");
+                .extracting("name").isEqualTo("해시태그1");
     }
 
     @DisplayName("책의 해시태그들을 모두 삭제한다.")
@@ -27,10 +28,12 @@ class BookEntityTest {
     void clearHashtags() {
         // given
         BookEntity book = BookEntity.of("테스트", "테스트", null);
-        book.addHashtag(HashtagEntity.of("테스트용 해시태그"));
+        HashtagEntity hashtag = HashtagEntity.of("해시태그1");
+
+        book.addHashtag(BookHashtagEntity.of(book, hashtag));
 
         // when
-        book.clearHashtags();
+        book.clearHashtag();
 
         // then
         assertThat(book.getBookHashtags()).size()
