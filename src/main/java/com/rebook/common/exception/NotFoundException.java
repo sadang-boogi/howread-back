@@ -3,13 +3,15 @@ package com.rebook.common.exception;
 import lombok.Getter;
 
 @Getter
-public class NotFoundException extends RuntimeException {
-
-    private final String code;
-    private final String message;
+public class NotFoundException extends BaseException {
 
     public NotFoundException(ExceptionCode exceptionCode) {
-        this.code = exceptionCode.getCode();
-        this.message = exceptionCode.getMessage();
+        super(exceptionCode);
     }
+
+    public NotFoundException(String title, String message) {
+        super("NOT_FOUND", title, message);
+    }
+
+
 }

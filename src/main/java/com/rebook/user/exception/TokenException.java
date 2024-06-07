@@ -1,18 +1,17 @@
 package com.rebook.user.exception;
 
+import com.rebook.common.exception.BaseException;
 import com.rebook.common.exception.ExceptionCode;
 import lombok.Getter;
 
 @Getter
-public class TokenException extends RuntimeException {
+public class TokenException extends BaseException {
 
-    private final String code;
-    private final String title;
-    private final String message;
+    public TokenException(ExceptionCode exceptionCode) {
+        super(exceptionCode);
+    }
 
-    public TokenException(TokenExceptionCode exceptionCode) {
-        this.code = exceptionCode.getCode();
-        this.title = exceptionCode.getTitle();
-        this.message = exceptionCode.getMessage();
+    public TokenException(String code, String title, String message) {
+        super(code, title, message);
     }
 }
