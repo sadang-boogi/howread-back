@@ -1,5 +1,6 @@
 package com.rebook.user.interceptor;
 
+import com.rebook.common.exception.ExceptionCode;
 import com.rebook.user.exception.TokenException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -8,7 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import static com.rebook.user.exception.TokenExceptionCode.TOKEN_MISSING;
+import static com.rebook.common.exception.ExceptionCode.TOKEN_MISSING;
 
 @Component
 @RequiredArgsConstructor

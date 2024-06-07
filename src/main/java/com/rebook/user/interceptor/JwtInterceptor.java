@@ -10,8 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import static com.rebook.common.exception.ExceptionCode.TOKEN_INVALID;
 import static com.rebook.common.exception.ExceptionCode.TOKEN_MISSING;
-import static com.rebook.user.exception.TokenExceptionCode.TOKEN_INVALID;
 
 @Component
 @RequiredArgsConstructor
