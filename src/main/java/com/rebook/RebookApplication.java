@@ -1,5 +1,6 @@
 package com.rebook;
 
+import com.rebook.jwt.service.JwtProperties;
 import com.rebook.user.util.GoogleOAuthProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +14,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
                 @Server(url = "/", description = "Default Server URL")
         }
 )
-@EnableConfigurationProperties(GoogleOAuthProperties.class)
+@EnableConfigurationProperties({GoogleOAuthProperties.class, JwtProperties.class})
 @SpringBootApplication
 public class RebookApplication {
 

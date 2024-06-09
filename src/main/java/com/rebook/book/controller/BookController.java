@@ -1,5 +1,6 @@
 package com.rebook.book.controller;
 
+import com.rebook.auth.annotation.LoginRequired;
 import com.rebook.book.controller.request.BookCreateRequest;
 import com.rebook.book.controller.request.BookUpdateRequest;
 import com.rebook.book.controller.response.BookResponse;
@@ -27,6 +28,7 @@ public class BookController {
 
     private final BookService bookService;
 
+    @LoginRequired
     @PostMapping
     public ResponseEntity<BookResponse> saveBook(
             @RequestBody @Valid final BookCreateRequest bookCreateRequest
@@ -37,6 +39,7 @@ public class BookController {
 
         return ResponseEntity.created(URI.create("/api/v1/books/" + book.getId())).body(book);
     }
+
 
     @GetMapping
     public ResponseEntity<PageResponse<BookResponse>> getBooks(
@@ -63,6 +66,7 @@ public class BookController {
                 .body(book);
     }
 
+    @LoginRequired
     @PutMapping("/{bookId}")
     public ResponseEntity<Void> updateBook(
             @PathVariable Long bookId,
@@ -73,6 +77,7 @@ public class BookController {
                 .build();
     }
 
+    @LoginRequired
     @DeleteMapping("/{bookId}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long bookId) {
         bookService.deleteBook(bookId);

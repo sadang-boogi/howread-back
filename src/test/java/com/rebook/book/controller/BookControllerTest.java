@@ -1,55 +1,64 @@
 package com.rebook.book.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rebook.auth.aspect.LoginAspect;
 import com.rebook.book.controller.request.BookCreateRequest;
 import com.rebook.book.service.BookService;
 import com.rebook.book.service.command.BookCreateCommand;
 import com.rebook.book.service.dto.BookDto;
 import com.rebook.hashtag.service.dto.HashtagDto;
-import com.rebook.user.interceptor.JwtInterceptor;
-import com.rebook.user.interceptor.LoginInterceptor;
+import com.rebook.jwt.filter.JwtTokenFilter;
+import com.rebook.user.service.dto.LoggedInUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @WebMvcTest(controllers = BookController.class)
 class BookControllerTest {
 
-    @MockBean
-    private LoginInterceptor loginInterceptor;
-    @MockBean
-    private JwtInterceptor jwtInterceptor;
-
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private LoginAspect loginAspect;
+
+    @MockBean
+    private JwtTokenFilter jwtTokenFilter;
+
+
     @MockBean
     private BookService bookService;
 
 
-    @BeforeEach
-    void setup() throws Exception {
-        //token 인증 부분 mocking
-        when(loginInterceptor.preHandle(any(), any(), any())).thenReturn(true);
-        when(jwtInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+    private RequestPostProcessor loggedInUser() {
+        return request -> {
+            request.setAttribute("loggedInUser", new LoggedInUser(1L, "test-email", "test-user"));
+            return request;
+        };
     }
 
     @DisplayName("새로운 책을 저장한다.")
@@ -80,6 +89,7 @@ class BookControllerTest {
                         post("/api/v1/books")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .with(loggedInUser())
                 )
                 .andDo(print())
                 .andExpect(status().isCreated());
@@ -101,6 +111,8 @@ class BookControllerTest {
                         post("/api/v1/books")
                                 .content(objectMapper.writeValueAsString(badRequest))
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .with(loggedInUser())
+                                .with(loggedInUser())
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -123,6 +135,7 @@ class BookControllerTest {
                         post("/api/v1/books")
                                 .content(objectMapper.writeValueAsString(badRequest))
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .with(loggedInUser())
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())

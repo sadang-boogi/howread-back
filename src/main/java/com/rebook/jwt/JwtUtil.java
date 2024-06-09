@@ -2,6 +2,7 @@ package com.rebook.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -9,29 +10,24 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 
+import com.rebook.jwt.service.JwtProperties;
 import com.rebook.user.service.dto.LoggedInUser;
+import io.jsonwebtoken.Jwts;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class JwtUtil {
 
-    @Autowired
-    private Environment environment;
-
-    @Value("${jwt.token-validity-in-seconds}")
-    private int expirationTimeMillis;
+    private final JwtProperties jwtProperties;
     private String tokenPrefix = "Bearer ";
     private ObjectMapper objectMapper = new ObjectMapper();
-
-    private String getSecret() {
-        return environment.getProperty("jwt.secret");
-    }
 
     public boolean isIncludeTokenPrefix(String header) {
         return header.split(" ")[0].equals(tokenPrefix.trim());
@@ -44,25 +40,29 @@ public class JwtUtil {
     public String createToken(LoggedInUser loggedInUser, Instant currentDate) {
         return JWT.create()
                 .withSubject(String.valueOf(loggedInUser.getUserId()))
-                .withExpiresAt(currentDate.plusMillis(expirationTimeMillis))
+                .withExpiresAt(currentDate.plusSeconds(jwtProperties.getTokenValidityInSeconds()))
                 .withClaim("email", loggedInUser.getEmail())
                 .withClaim("username", loggedInUser.getName())
-                .sign(Algorithm.HMAC512(getSecret()));
+                .sign(Algorithm.HMAC512(jwtProperties.getSecret()));
     }
 
     public boolean isTokenExpired(String token) {
-        Instant expiredAt = JWT.require(Algorithm.HMAC512(getSecret()))
+        Instant expiredAt = JWT.require(Algorithm.HMAC512(jwtProperties.getSecret()))
                 .build().verify(token)
                 .getExpiresAtAsInstant();
-
         return expiredAt.isBefore(Instant.now());
     }
 
     public boolean isTokenNotManipulated(String token) {
-        return JWT.require(Algorithm.HMAC512(getSecret()))
-                .build().verify(token)
-                .getSignature()
-                .equals(getSecret());
+        try {
+            JWT.require(Algorithm.HMAC512(jwtProperties.getSecret()))
+                    .build()
+                    .verify(token);
+            return true;
+        } catch (JWTVerificationException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public LoggedInUser extractUserFromToken(String token) {
