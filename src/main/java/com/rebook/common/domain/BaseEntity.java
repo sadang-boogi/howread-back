@@ -12,10 +12,10 @@ import java.time.ZonedDateTime;
 @MappedSuperclass
 public abstract class BaseEntity {
 
-    @Column(updatable = false, columnDefinition = "datetime(6) default now()")
+    @Column(updatable = false, columnDefinition = "datetime(6) default current_timestamp(6)")
     private ZonedDateTime createdAt;
 
-    @Column(columnDefinition = "datetime(6) default now() on update now()")
+    @Column(columnDefinition = "datetime(6) default current_timestamp(6)")
     private ZonedDateTime updatedAt;
 
     @Column(nullable = false, columnDefinition = "boolean default false")
