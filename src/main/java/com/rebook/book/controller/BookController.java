@@ -48,7 +48,6 @@ public class BookController {
     }
 
     @Operation(summary = "Get All Books", description = "등록된 모든 책을 조회한다.")
-
     @GetMapping
     public ResponseEntity<PageResponse<BookResponse>> getBooks(
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
