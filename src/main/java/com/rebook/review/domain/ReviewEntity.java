@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "review")
 @AllArgsConstructor
-@SQLRestriction("is_deleted is false")
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor
 public class ReviewEntity extends BaseEntity {
     @Id
