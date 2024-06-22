@@ -10,10 +10,7 @@ import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<BookEntity, Long> {
 
-    @Query("""
-            SELECT book FROM BookEntity book
-            """)
-    Slice<BookEntity> findAllByPageable(Pageable pageable);
+    Slice<BookEntity> findAllBy(Pageable pageable);
 
     @Query("""
             SELECT DISTINCT book FROM BookEntity book

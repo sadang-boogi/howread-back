@@ -34,7 +34,7 @@ class BookRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
 
         // when
-        Slice<BookEntity> findAllByPageable = bookRepository.findAllByPageable(pageable);
+        Slice<BookEntity> findAllByPageable = bookRepository.findAllBy(pageable);
 
         // then
         assertThat(findAllByPageable.getContent()).hasSize(10);

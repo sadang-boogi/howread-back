@@ -13,10 +13,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,8 +48,10 @@ public class BookController {
     @Operation(summary = "Get All Books", description = "등록된 모든 책을 조회한다.")
     @GetMapping
     public ResponseEntity<PageResponse<BookResponse>> getBooks(
-            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Slice<BookDto> books = bookService.getBooks(pageable);
         List<BookResponse> items = books.getContent()
                 .stream()
