@@ -26,7 +26,7 @@ public class ReviewEntity extends BaseEntity {
 
     @Comment("리뷰 도서")
     @ManyToOne
-    @JoinColumn(name = "bookId")
+    @JoinColumn(name = "book_id")
     private BookEntity book;
 
     @Column(name = "user_id", nullable = false)

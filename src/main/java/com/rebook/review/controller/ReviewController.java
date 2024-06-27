@@ -44,8 +44,10 @@ public class ReviewController {
             @CurrentUser LoggedInUser user
 
     ) {
-        ReviewSaveCommand reviewCommand = reviewRequest.toCommand(bookId, reviewRequest);
-        ReviewDto savedReview = reviewService.save(reviewCommand, user.getUserId());
+        ReviewDto savedReview = reviewService.save(
+                reviewRequest.toCommand(bookId, reviewRequest),
+                user.getUserId()
+        );
         ReviewResponse reviewResponse = ReviewResponse.fromDto(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));
         return ResponseEntity.created(location).body(reviewResponse);
@@ -71,8 +73,10 @@ public class ReviewController {
             @Valid @RequestBody final ReviewUpdateRequest reviewRequest,
             @CurrentUser LoggedInUser user
     ) {
-        ReviewUpdateCommand reviewCommand = reviewRequest.toCommand(bookId, reviewId, reviewRequest);
-        ReviewDto updatedReview = reviewService.update(reviewCommand, user.getUserId());
+        ReviewDto updatedReview = reviewService.update(
+                reviewRequest.toCommand(bookId, reviewId, reviewRequest),
+                user.getUserId()
+        );
         ReviewResponse reviewResponse = ReviewResponse.fromDto(updatedReview);
         return ResponseEntity.ok(reviewResponse);
     }

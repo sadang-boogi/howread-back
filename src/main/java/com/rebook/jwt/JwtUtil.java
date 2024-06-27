@@ -5,21 +5,14 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rebook.jwt.service.JwtProperties;
+import com.rebook.user.service.dto.LoggedInUser;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.Base64;
 import java.util.LinkedHashMap;
-
-import com.rebook.jwt.service.JwtProperties;
-import com.rebook.user.service.dto.LoggedInUser;
-import io.jsonwebtoken.Jwts;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -85,5 +78,22 @@ public class JwtUtil {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    public Long extractSubjectId(String authorizationParameters) {
+        String payload = JWT.decode(authorizationParameters)
+                .getPayload();
+
+        byte[] decodedBytes = Base64.getDecoder().decode(payload);
+        String decodedPayload = new String(decodedBytes);
+
+        try {
+            LinkedHashMap<String, Object> payloadMap = objectMapper.readValue(decodedPayload, LinkedHashMap.class);
+            return Long.parseLong((String) payloadMap.get("sub"));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

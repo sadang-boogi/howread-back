@@ -1,10 +1,8 @@
 package com.rebook.jwt.service;
 
-import com.rebook.common.exception.ExceptionCode;
-import com.rebook.common.exception.NotFoundException;
 import com.rebook.jwt.JwtUtil;
-import com.rebook.user.exception.TokenException;
-import com.rebook.user.service.dto.LoggedInUser;
+import com.rebook.user.domain.UserEntity;
+import com.rebook.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +10,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public LoggedInUser getLongedInUser(String authorizationHeader) {
-        if (!jwtUtil.isIncludeTokenPrefix(authorizationHeader)) {
-            throw new TokenException(ExceptionCode.TOKEN_INVALID);
-        }
-        String token = jwtUtil.extractTokenFromHeader(authorizationHeader);
+    public UserEntity getLoggedInUser(String token) {
 
-        if (jwtUtil.isTokenExpired(token) || !jwtUtil.isTokenNotManipulated(token)) {
-            throw new TokenException(ExceptionCode.TOKEN_INVALID);
-        }
-
-        return jwtUtil.extractUserFromToken(token);
+        Long subjectId = jwtUtil.extractSubjectId(token);
+        UserEntity user = userRepository.findById(subjectId).orElseThrow();
+        return user;
     }
+
 
 }
