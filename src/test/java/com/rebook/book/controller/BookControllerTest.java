@@ -1,15 +1,13 @@
 package com.rebook.book.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rebook.auth.aspect.LoginAspect;
+import com.rebook.auth.interceptor.LoginCheckInterceptor;
 import com.rebook.book.controller.request.BookCreateRequest;
 import com.rebook.book.service.BookService;
 import com.rebook.book.service.command.BookCreateCommand;
 import com.rebook.book.service.dto.BookDto;
 import com.rebook.hashtag.service.dto.HashtagDto;
-import com.rebook.jwt.filter.JwtTokenFilter;
 import com.rebook.user.service.dto.LoggedInUser;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -44,10 +41,7 @@ class BookControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private LoginAspect loginAspect;
-
-    @MockBean
-    private JwtTokenFilter jwtTokenFilter;
+    private LoginCheckInterceptor loginCheckInterceptor;
 
 
     @MockBean
