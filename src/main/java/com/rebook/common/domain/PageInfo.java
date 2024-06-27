@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class PageInfo {
-    private int page;
-    private int size;
+    private int currentPage;
+    private int pageSize;
     private boolean hasNext;
 }
