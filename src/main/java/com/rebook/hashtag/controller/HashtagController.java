@@ -1,5 +1,6 @@
 package com.rebook.hashtag.controller;
 
+import com.rebook.auth.annotation.LoginRequiredForController;
 import com.rebook.hashtag.controller.requeest.HashtagRequest;
 import com.rebook.hashtag.controller.response.HashtagResponse;
 import com.rebook.hashtag.service.HashtagService;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Tag(name = "Hashtag", description = "Hashtag API")
 @RequiredArgsConstructor
+@LoginRequiredForController
 @RequestMapping("/api/v1/hashtags")
 @RestController
 public class HashtagController {

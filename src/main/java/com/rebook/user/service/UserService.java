@@ -3,7 +3,7 @@ package com.rebook.user.service;
 import com.rebook.user.domain.Role;
 import com.rebook.user.domain.SocialType;
 import com.rebook.user.domain.UserEntity;
-import com.rebook.user.service.dto.LoggedInUser;
+import com.rebook.user.service.dto.AuthClaims;
 import com.rebook.user.service.dto.UserCommand;
 import com.rebook.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +16,13 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public LoggedInUser createUser(UserCommand userCommand) {
+    public AuthClaims createUser(UserCommand userCommand) {
         String socialId = userCommand.getSocialId();
         Optional<UserEntity> existingUser = userRepository.findBySocialId(socialId);
 
         //존재하는 회원일 경우
         if (existingUser.isPresent()) {
-            return LoggedInUser.fromEntity(existingUser.get());
+            return AuthClaims.fromEntity(existingUser.get());
         }
 
         //아닐 경우 신규 DB에 저장
@@ -33,6 +33,7 @@ public class UserService {
                 .socialId(userCommand.getSocialId())
                 .role(Role.USER)
                 .build();
-        return LoggedInUser.fromEntity(userRepository.save(newUser));
+
+        return AuthClaims.fromEntity(userRepository.save(newUser));
     }
 }

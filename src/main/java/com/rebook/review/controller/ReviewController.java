@@ -1,15 +1,17 @@
 package com.rebook.review.controller;
 
+import com.rebook.auth.annotation.Authenticated;
+import com.rebook.auth.annotation.LoginRequired;
 import com.rebook.common.schema.ListResponse;
 import com.rebook.jwt.service.JwtService;
 import com.rebook.review.controller.request.ReviewSaveRequest;
 import com.rebook.review.controller.request.ReviewUpdateRequest;
 import com.rebook.review.controller.response.ReviewResponse;
-import com.rebook.review.service.command.ReviewSaveCommand;
-import com.rebook.review.service.command.ReviewUpdateCommand;
 import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.review.service.ReviewService;
+import com.rebook.user.service.dto.AuthClaims;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -30,17 +32,20 @@ public class ReviewController {
     private final JwtService jwtService;
 
     @PostMapping
+    @LoginRequired
     @Operation(summary = "Create Review for a Book", description = "userId로 해당 책에 리뷰를 작성한다.",
             security = @SecurityRequirement(name = "Bearer Authentication")
     )
     public ResponseEntity<ReviewResponse> saveReview(
             @PathVariable("bookId") Long bookId,
             @Valid @RequestBody final ReviewSaveRequest reviewRequest,
-            @RequestHeader("Authorization") String authorizationHeader
+            @Parameter(hidden = true) @Authenticated AuthClaims claims
+
     ) {
-        ReviewSaveCommand reviewCommand = reviewRequest.toCommand(bookId, reviewRequest);
-        Long userId = jwtService.getUserIdFromToken(authorizationHeader);
-        ReviewDto savedReview = reviewService.save(reviewCommand, userId);
+        ReviewDto savedReview = reviewService.save(
+                reviewRequest.toCommand(bookId, reviewRequest),
+                claims.getUserId()
+        );
         ReviewResponse reviewResponse = ReviewResponse.fromDto(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));
         return ResponseEntity.created(location).body(reviewResponse);
@@ -57,22 +62,31 @@ public class ReviewController {
         return ResponseEntity.ok().body(responses);
     }
 
+    @LoginRequired
     @PutMapping("/{reviewId}")
     @Operation(summary = "Update a Review for a Book", description = "해당 책의 특정 리뷰를 수정한다.")
     public ResponseEntity<ReviewResponse> updateReview(
             @PathVariable("bookId") Long bookId,
             @PathVariable("reviewId") Long reviewId,
-            @Valid @RequestBody final ReviewUpdateRequest reviewRequest) {
-        ReviewUpdateCommand reviewCommand = reviewRequest.toCommand(bookId, reviewId, reviewRequest);
-        ReviewDto updatedReview = reviewService.update(reviewCommand);
+            @Valid @RequestBody final ReviewUpdateRequest reviewRequest,
+            @Parameter(hidden = true) @Authenticated AuthClaims claims
+    ) {
+        ReviewDto updatedReview = reviewService.update(
+                reviewRequest.toCommand(bookId, reviewId, reviewRequest),
+                claims.getUserId()
+        );
         ReviewResponse reviewResponse = ReviewResponse.fromDto(updatedReview);
         return ResponseEntity.ok(reviewResponse);
     }
 
+    @LoginRequired
     @DeleteMapping("/{reviewId}")
     @Operation(summary = "Delete a Review for a Book", description = "해당 책의 특정 리뷰를 삭제한다.")
-    public ResponseEntity<Void> softDeleteReview(@PathVariable("reviewId") Long reviewId) {
-        reviewService.softDelete(reviewId);
+    public ResponseEntity<Void> softDeleteReview(
+            @PathVariable("reviewId") Long reviewId,
+            @Parameter(hidden = true) @Authenticated AuthClaims claims
+    ) {
+        reviewService.softDelete(reviewId, claims.getUserId());
         return ResponseEntity.noContent().build();
     }
 }

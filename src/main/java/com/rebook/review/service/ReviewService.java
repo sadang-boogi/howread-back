@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.rebook.common.exception.ExceptionCode.NOT_FOUND_BOOK_ID;
 
@@ -41,26 +42,33 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewDto update(ReviewUpdateCommand reviewCommand) {
+    public ReviewDto update(ReviewUpdateCommand reviewCommand, Long userId) {
 
         // 존재하는 책인지 확인
         BookEntity bookEntity = bookRepository.findById(reviewCommand.getBookId())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
         // 리뷰 id로 리뷰 조회
-        ReviewEntity reviewEntity = reviewRepository.findById(reviewCommand.getBookId())
+        ReviewEntity review = reviewRepository.findById(reviewCommand.getReviewId())
                 .orElseThrow(() -> new NotFoundException("리뷰 수정에 실패했습니다.", "리뷰를 찾을 수 없습니다."));
 
-        // 기존 리뷰 엔티티 업데이트
-        reviewEntity.update(bookEntity, reviewCommand.getContent(), reviewCommand.getScore());
+        if (!review.getUserId().equals(userId)) {
+            throw new NotFoundException("권한이 없습니다.", "리뷰를 수정할 권한이 없습니다.");
+        }
 
-        return ReviewDto.fromEntity(reviewEntity);
+        // 기존 리뷰 엔티티 업데이트
+        review.update(bookEntity, reviewCommand.getContent(), reviewCommand.getScore());
+
+        return ReviewDto.fromEntity(review);
     }
 
     @Transactional
-    public void softDelete(Long reviewId) {
+    public void softDelete(Long reviewId, Long userId) {
         ReviewEntity review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NotFoundException("리뷰 삭제에 실패했습니다.", "리뷰를 찾을 수 없습니다."));
+        if (!review.getUserId().equals(userId)) {
+            throw new NotFoundException("권한이 없습니다.", "리뷰를 삭제할 권한이 없습니다.");
+        }
         review.softDelete();
     }
 }
