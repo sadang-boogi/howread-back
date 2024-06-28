@@ -29,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @WebMvcTest(controllers = BookController.class)
 class BookControllerTest {
@@ -50,7 +49,7 @@ class BookControllerTest {
 
     private RequestPostProcessor loggedInUser() {
         return request -> {
-            request.setAttribute("loggedInUser", new LoggedInUser(1L, "test-email", "test-user"));
+            request.setAttribute("user", new LoggedInUser(1L, "test-email", "test-user"));
             return request;
         };
     }
@@ -65,6 +64,8 @@ class BookControllerTest {
                 .thumbnailUrl("책 표지")
                 .hashtagIds(List.of(1L, 2L))
                 .build();
+
+        when(loginCheckInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 
         when(bookService.save(any(BookCreateCommand.class)))
                 .thenReturn(BookDto.builder()
@@ -101,6 +102,9 @@ class BookControllerTest {
                 .build();
 
         // when, then
+
+        when(loginCheckInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+
         mockMvc.perform(
                         post("/api/v1/books")
                                 .content(objectMapper.writeValueAsString(badRequest))
@@ -125,6 +129,9 @@ class BookControllerTest {
                 .hashtagIds(List.of(1L, 2L))
                 .build();
         // when, then
+
+        when(loginCheckInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+
         mockMvc.perform(
                         post("/api/v1/books")
                                 .content(objectMapper.writeValueAsString(badRequest))
