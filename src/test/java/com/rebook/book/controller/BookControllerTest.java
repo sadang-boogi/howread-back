@@ -7,11 +7,10 @@ import com.rebook.book.service.BookService;
 import com.rebook.book.service.command.BookCreateCommand;
 import com.rebook.book.service.dto.BookDto;
 import com.rebook.hashtag.service.dto.HashtagDto;
-import com.rebook.user.service.dto.LoggedInUser;
+import com.rebook.user.service.dto.AuthClaims;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -49,7 +48,7 @@ class BookControllerTest {
 
     private RequestPostProcessor loggedInUser() {
         return request -> {
-            request.setAttribute("user", new LoggedInUser(1L, "test-email", "test-user"));
+            request.setAttribute("authClaims", new AuthClaims(1L, "test-email", "test-user"));
             return request;
         };
     }

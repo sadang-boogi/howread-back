@@ -1,21 +1,19 @@
 package com.rebook.review.controller;
 
-import com.rebook.auth.annotation.CurrentUser;
+import com.rebook.auth.annotation.Authenticated;
 import com.rebook.auth.annotation.LoginRequired;
 import com.rebook.common.schema.ListResponse;
 import com.rebook.jwt.service.JwtService;
 import com.rebook.review.controller.request.ReviewSaveRequest;
 import com.rebook.review.controller.request.ReviewUpdateRequest;
 import com.rebook.review.controller.response.ReviewResponse;
-import com.rebook.review.service.command.ReviewSaveCommand;
-import com.rebook.review.service.command.ReviewUpdateCommand;
 import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.review.service.ReviewService;
-import com.rebook.user.service.dto.LoggedInUser;
+import com.rebook.user.service.dto.AuthClaims;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,12 +39,12 @@ public class ReviewController {
     public ResponseEntity<ReviewResponse> saveReview(
             @PathVariable("bookId") Long bookId,
             @Valid @RequestBody final ReviewSaveRequest reviewRequest,
-            @CurrentUser LoggedInUser user
+            @Parameter(hidden = true) @Authenticated AuthClaims claims
 
     ) {
         ReviewDto savedReview = reviewService.save(
                 reviewRequest.toCommand(bookId, reviewRequest),
-                user.getUserId()
+                claims.getUserId()
         );
         ReviewResponse reviewResponse = ReviewResponse.fromDto(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));
@@ -71,11 +69,11 @@ public class ReviewController {
             @PathVariable("bookId") Long bookId,
             @PathVariable("reviewId") Long reviewId,
             @Valid @RequestBody final ReviewUpdateRequest reviewRequest,
-            @CurrentUser LoggedInUser user
+            @Parameter(hidden = true) @Authenticated AuthClaims claims
     ) {
         ReviewDto updatedReview = reviewService.update(
                 reviewRequest.toCommand(bookId, reviewId, reviewRequest),
-                user.getUserId()
+                claims.getUserId()
         );
         ReviewResponse reviewResponse = ReviewResponse.fromDto(updatedReview);
         return ResponseEntity.ok(reviewResponse);
@@ -86,9 +84,9 @@ public class ReviewController {
     @Operation(summary = "Delete a Review for a Book", description = "해당 책의 특정 리뷰를 삭제한다.")
     public ResponseEntity<Void> softDeleteReview(
             @PathVariable("reviewId") Long reviewId,
-            @CurrentUser LoggedInUser user
+            @Parameter(hidden = true) @Authenticated AuthClaims claims
     ) {
-        reviewService.softDelete(reviewId, user.getUserId());
+        reviewService.softDelete(reviewId, claims.getUserId());
         return ResponseEntity.noContent().build();
     }
 }

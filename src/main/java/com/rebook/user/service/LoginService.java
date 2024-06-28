@@ -1,7 +1,7 @@
 package com.rebook.user.service;
 
 import com.rebook.user.config.OAuthServiceProvider;
-import com.rebook.user.service.dto.LoggedInUser;
+import com.rebook.user.service.dto.AuthClaims;
 import com.rebook.user.service.dto.UserCommand;
 import com.rebook.user.util.OAuthService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ public class LoginService {
     private final UserService userService;
     private final OAuthServiceProvider oAuthServiceProvider;
 
-    public LoggedInUser socialLogin(String code, String registrationId) {
+    public AuthClaims socialLogin(String code, String registrationId) {
 
         OAuthService oauthProvider = oAuthServiceProvider.getService(registrationId.toLowerCase());
         if (oauthProvider == null) {

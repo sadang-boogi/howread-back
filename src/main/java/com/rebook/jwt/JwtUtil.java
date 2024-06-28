@@ -6,7 +6,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rebook.jwt.service.JwtProperties;
-import com.rebook.user.service.dto.LoggedInUser;
+import com.rebook.user.service.dto.AuthClaims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -30,12 +30,12 @@ public class JwtUtil {
         return header.replace(tokenPrefix, "");
     }
 
-    public String createToken(LoggedInUser loggedInUser, Instant currentDate) {
+    public String createToken(AuthClaims authClaims, Instant currentDate) {
         return JWT.create()
-                .withSubject(String.valueOf(loggedInUser.getUserId()))
+                .withSubject(String.valueOf(authClaims.getUserId()))
                 .withExpiresAt(currentDate.plusSeconds(jwtProperties.getTokenValidityInSeconds()))
-                .withClaim("email", loggedInUser.getEmail())
-                .withClaim("username", loggedInUser.getName())
+                .withClaim("email", authClaims.getEmail())
+                .withClaim("username", authClaims.getName())
                 .sign(Algorithm.HMAC512(jwtProperties.getSecret()));
     }
 
@@ -58,7 +58,7 @@ public class JwtUtil {
         }
     }
 
-    public LoggedInUser extractUserFromToken(String token) {
+    public AuthClaims extractClaimFromToken(String token) {
         String payload = JWT.decode(token)
                 .getPayload();
 
@@ -68,13 +68,13 @@ public class JwtUtil {
         return parseUserFromJwt(decodedPayload);
     }
 
-    private LoggedInUser parseUserFromJwt(String decodedPayload) {
+    private AuthClaims parseUserFromJwt(String decodedPayload) {
         try {
             LinkedHashMap<String, Object> payloadMap = objectMapper.readValue(decodedPayload, LinkedHashMap.class);
             Long userId = Long.parseLong((String) payloadMap.get("sub"));
             String email = (String) payloadMap.get("email");
             String username = (String) payloadMap.get("username");
-            return new LoggedInUser(userId, email, username);
+            return new AuthClaims(userId, email, username);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

@@ -8,14 +8,14 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 @Builder
-public class LoggedInUser {
+public class AuthClaims {
 
     private Long userId;
     private String email;
     private String name;
 
-    public static LoggedInUser fromEntity(UserEntity userEntity) {
-        return LoggedInUser.builder()
+    public static AuthClaims fromEntity(UserEntity userEntity) {
+        return AuthClaims.builder()
                 .userId(userEntity.getId())
                 .email(userEntity.getEmail())
                 .name(userEntity.getNickname())

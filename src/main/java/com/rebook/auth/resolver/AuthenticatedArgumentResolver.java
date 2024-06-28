@@ -1,6 +1,6 @@
 package com.rebook.auth.resolver;
 
-import com.rebook.auth.annotation.CurrentUser;
+import com.rebook.auth.annotation.Authenticated;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -11,15 +11,15 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 
 @Component
-public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolver {
+public class AuthenticatedArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterAnnotation(CurrentUser.class) != null;
+        return parameter.getParameterAnnotation(Authenticated.class) != null;
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        return request.getAttribute("loggedInUser");
+        return request.getAttribute("authClaims");
     }
 }

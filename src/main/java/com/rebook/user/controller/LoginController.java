@@ -4,7 +4,7 @@ import com.rebook.user.controller.response.JwtResponse;
 import com.rebook.user.controller.response.UriResponse;
 import com.rebook.user.service.LoginService;
 import com.rebook.jwt.JwtUtil;
-import com.rebook.user.service.dto.LoggedInUser;
+import com.rebook.user.service.dto.AuthClaims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class LoginController {
     @PostMapping("/{provider}")
     public ResponseEntity<JwtResponse> socialLogin(
             @RequestBody String code, @PathVariable String provider) {
-        LoggedInUser loggedInUser = loginService.socialLogin(code, provider);
+        AuthClaims loggedInUser = loginService.socialLogin(code, provider);
         String token = jwtUtil.createToken(loggedInUser, Instant.now());
         return ResponseEntity.ok(new JwtResponse(token));
     }
@@ -38,8 +38,8 @@ public class LoginController {
     @GetMapping("/{provider}")
     public ResponseEntity<JwtResponse> socialLoginTest(
             @RequestParam String code, @PathVariable String provider) {
-        LoggedInUser loggedInUser = loginService.socialLogin(code, provider);
-        String token = jwtUtil.createToken(loggedInUser, Instant.now());
+        AuthClaims auth = loginService.socialLogin(code, provider);
+        String token = jwtUtil.createToken(auth, Instant.now());
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
