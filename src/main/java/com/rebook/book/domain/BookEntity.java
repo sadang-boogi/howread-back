@@ -40,6 +40,9 @@ public class BookEntity extends BaseEntity {
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;
 
+    @Column(name = "isbn", nullable = false, unique = true)
+    private String isbn;
+
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<BookHashtagEntity> bookHashtags = new ArrayList<>();
 
