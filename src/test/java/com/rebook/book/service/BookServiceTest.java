@@ -51,7 +51,7 @@ class BookServiceTest {
     @Test
     void saveBookWithoutHashtag() {
         // given
-        BookCreateCommand bookCreateCommand = new BookCreateCommand("객사오", "조영호", "썸네일1", List.of(1L, 2L, 3L));
+        BookCreateCommand bookCreateCommand = new BookCreateCommand("객사오", "조영호", "썸네일1", "978-89-123456-0-0", List.of(1L, 2L, 3L));
 
         // when
         BookDto bookDto = bookService.save(bookCreateCommand);
@@ -66,7 +66,7 @@ class BookServiceTest {
     @Test
     void updateBook() {
         // given
-        BookCreateCommand bookCreateRequest = new BookCreateCommand("제목1", "저자1", "썸네일1", List.of(1L, 2L, 3L));
+        BookCreateCommand bookCreateRequest = new BookCreateCommand("제목1", "저자1", "썸네일1", "978-89-123456-0-0", List.of(1L, 2L, 3L));
         BookDto bookDto = bookService.save(bookCreateRequest);
 
         BookUpdateCommand updateBook = BookUpdateCommand.from(new BookUpdateRequest("수정제목", "수정저자", "수정썸네일", List.of(1L)));
