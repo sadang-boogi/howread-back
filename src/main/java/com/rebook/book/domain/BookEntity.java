@@ -53,24 +53,28 @@ public class BookEntity extends BaseEntity {
             final Long id,
             final String title,
             final String author,
-            final String thumbnailUrl
+            final String thumbnailUrl,
+            final String isbn
     ) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.thumbnailUrl = thumbnailUrl;
+        this.isbn = isbn;
     }
 
     public static BookEntity of(
             final String title,
             final String author,
-            final String thumbnailUrl
+            final String thumbnailUrl,
+            final String isbn
     ) {
         return new BookEntity(
                 null,
                 title,
                 author,
-                thumbnailUrl
+                thumbnailUrl,
+                isbn
         );
     }
 
