@@ -52,6 +52,10 @@ dependencies {
     implementation "org.flywaydb:flyway-core:10.13.0"
     implementation "org.flywaydb:flyway-mysql:10.13.0"
 
+    implementation platform('software.amazon.awssdk:bom:2.21.44')
+    implementation 'software.amazon.awssdk:secretsmanager'
+    implementation 'software.amazon.awssdk:regions'
+
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
