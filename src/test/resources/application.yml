@@ -1,18 +1,24 @@
 spring:
-  config:
-    activate:
-      on-profile: test
+  profiles:
+    active: test
 
   datasource:
-    url: ${LOCAL_DB_URL}
-    username: ${LOCAL_DB_USERNAME}
-    password: ${LOCAL_DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:tcp://localhost/~/howread
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
   jpa:
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
         show_sql: true
-        dialect: org.hibernate.d
+  flyway:
+    enabled: false
+
+jwt:
+  secret: test_secret_key
+  token-validity-in-seconds: 1209600
