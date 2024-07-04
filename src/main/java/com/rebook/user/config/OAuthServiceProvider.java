@@ -1,6 +1,5 @@
 package com.rebook.user.config;
 
-import com.rebook.user.util.GoogleOAuthService;
 import com.rebook.user.util.OAuthService;
 import com.rebook.user.util.SocialType;
 import org.springframework.context.ApplicationContext;

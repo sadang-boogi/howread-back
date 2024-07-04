@@ -41,10 +41,8 @@ class BookControllerTest {
     @MockBean
     private LoginCheckInterceptor loginCheckInterceptor;
 
-
     @MockBean
     private BookService bookService;
-
 
     private RequestPostProcessor loggedInUser() {
         return request -> {
