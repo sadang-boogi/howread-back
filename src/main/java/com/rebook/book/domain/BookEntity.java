@@ -3,10 +3,7 @@ package com.rebook.book.domain;
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.review.domain.ReviewEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -17,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 @SQLRestriction(value = "is_deleted = false")
+@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
