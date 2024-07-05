@@ -1,6 +1,7 @@
 package com.rebook.user.domain;
 
 import com.rebook.common.domain.BaseEntity;
+import com.rebook.user.util.SocialType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

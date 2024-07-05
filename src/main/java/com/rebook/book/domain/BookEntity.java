@@ -3,10 +3,7 @@ package com.rebook.book.domain;
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.review.domain.ReviewEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -17,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 @SQLRestriction(value = "is_deleted = false")
+@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -40,6 +38,9 @@ public class BookEntity extends BaseEntity {
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;
 
+    @Column(name = "isbn", nullable = false, unique = true)
+    private String isbn;
+
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<BookHashtagEntity> bookHashtags = new ArrayList<>();
 
@@ -50,24 +51,28 @@ public class BookEntity extends BaseEntity {
             final Long id,
             final String title,
             final String author,
-            final String thumbnailUrl
+            final String thumbnailUrl,
+            final String isbn
     ) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.thumbnailUrl = thumbnailUrl;
+        this.isbn = isbn;
     }
 
     public static BookEntity of(
             final String title,
             final String author,
-            final String thumbnailUrl
+            final String thumbnailUrl,
+            final String isbn
     ) {
         return new BookEntity(
                 null,
                 title,
                 author,
-                thumbnailUrl
+                thumbnailUrl,
+                isbn
         );
     }
 
@@ -96,6 +101,7 @@ public class BookEntity extends BaseEntity {
         this.title = updateBook.getTitle();
         this.author = updateBook.getAuthor();
         this.thumbnailUrl = updateBook.getThumbnailUrl();
+        this.isbn = updateBook.getIsbn();
     }
 
     public String getThumbnailUrl() {

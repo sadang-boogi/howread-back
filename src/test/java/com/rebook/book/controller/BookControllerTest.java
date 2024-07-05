@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -41,10 +41,8 @@ class BookControllerTest {
     @MockBean
     private LoginCheckInterceptor loginCheckInterceptor;
 
-
     @MockBean
     private BookService bookService;
-
 
     private RequestPostProcessor loggedInUser() {
         return request -> {
@@ -61,6 +59,7 @@ class BookControllerTest {
                 .title("제목")
                 .author("저자")
                 .thumbnailUrl("책 표지")
+                .isbn("9788912345600")
                 .hashtagIds(List.of(1L, 2L))
                 .build();
 
@@ -97,11 +96,11 @@ class BookControllerTest {
                 .title(null)
                 .author("저자")
                 .thumbnailUrl("책 표지")
+                .isbn("9788912345600")
                 .hashtagIds(List.of(1L, 2L))
                 .build();
 
         // when, then
-
         when(loginCheckInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 
         mockMvc.perform(
@@ -125,6 +124,7 @@ class BookControllerTest {
                 .title("책 제목")
                 .author(null)
                 .thumbnailUrl("책 표지")
+                .isbn("9788912345600")
                 .hashtagIds(List.of(1L, 2L))
                 .build();
         // when, then
