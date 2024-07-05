@@ -32,5 +32,4 @@ public class LoginService {
         }
         return oAuthService.getAuthorizationUrl();
     }
-
 }
