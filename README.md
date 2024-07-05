@@ -1,8 +1,8 @@
 <div align="center">
 
-# HowRead
+# 📖 HowRead
 
-![사당부기_고화질 (2)](https://github.com/sadang-boogi/howread-back/assets/120021021/d4e0b278-1512-4d40-9c1c-c4b007a1b51e)
+<img width="300px" src="https://github.com/sadang-boogi/howread-back/assets/120021021/3fafbae0-71a1-45e3-acb8-281f0c722c75" alt="HowRead"/>
 
 </div>
  
