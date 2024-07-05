@@ -101,7 +101,6 @@ class BookControllerTest {
                 .build();
 
         // when, then
-
         when(loginCheckInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 
         mockMvc.perform(
