@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rebook.jwt.dto.JwtPayload;
 import com.rebook.jwt.service.JwtProperties;
 import com.rebook.user.service.dto.AuthClaims;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.Base64;
-import java.util.LinkedHashMap;
 
 @Component
 @RequiredArgsConstructor
@@ -34,8 +34,6 @@ public class JwtUtil {
         return JWT.create()
                 .withSubject(String.valueOf(authClaims.getUserId()))
                 .withExpiresAt(currentDate.plusSeconds(jwtProperties.getTokenValidityInSeconds()))
-                .withClaim("email", authClaims.getEmail())
-                .withClaim("username", authClaims.getName())
                 .sign(Algorithm.HMAC512(jwtProperties.getSecret()));
     }
 
@@ -70,30 +68,12 @@ public class JwtUtil {
 
     private AuthClaims parseUserFromJwt(String decodedPayload) {
         try {
-            LinkedHashMap<String, Object> payloadMap = objectMapper.readValue(decodedPayload, LinkedHashMap.class);
-            Long userId = Long.parseLong((String) payloadMap.get("sub"));
-            String email = (String) payloadMap.get("email");
-            String username = (String) payloadMap.get("username");
-            return new AuthClaims(userId, email, username);
+            JwtPayload payload = objectMapper.readValue(decodedPayload, JwtPayload.class);
+            Long userId = payload.getSub();
+            return new AuthClaims(userId);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-
-    public Long extractSubjectId(String authorizationParameters) {
-        String payload = JWT.decode(authorizationParameters)
-                .getPayload();
-
-        byte[] decodedBytes = Base64.getDecoder().decode(payload);
-        String decodedPayload = new String(decodedBytes);
-
-        try {
-            LinkedHashMap<String, Object> payloadMap = objectMapper.readValue(decodedPayload, LinkedHashMap.class);
-            return Long.parseLong((String) payloadMap.get("sub"));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
 }
