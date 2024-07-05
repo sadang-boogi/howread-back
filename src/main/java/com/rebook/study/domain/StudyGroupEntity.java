@@ -12,9 +12,9 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name = "study")
+@Table(name = "study_group")
 @Entity
-public class StudyEntity extends BaseEntity {
+public class StudyGroupEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
