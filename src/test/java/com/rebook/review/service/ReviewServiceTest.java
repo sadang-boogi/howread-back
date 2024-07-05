@@ -38,7 +38,7 @@ class ReviewServiceTest {
 
         //given
         // 책 객체
-        BookEntity bookEntity = new BookEntity(1L, "오브젝트", "조영호", "test-image", Collections.emptyList(), Collections.emptyList());
+        BookEntity bookEntity = new BookEntity(1L, "오브젝트", "조영호", "test-image", "978-89-123456-0-0", Collections.emptyList(), Collections.emptyList());
 
         // 리뷰 객체
         List<ReviewEntity> reviews = new ArrayList<>();

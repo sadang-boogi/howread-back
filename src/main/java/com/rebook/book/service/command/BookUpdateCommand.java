@@ -17,13 +17,16 @@ public class BookUpdateCommand {
 
     private String thumbnailUrl;
 
+    private String isbn;
+
     private List<Long> hashtagIds;
 
     @Builder
-    private BookUpdateCommand(String title, String author, String thumbnailUrl, List<Long> hashtagIds) {
+    private BookUpdateCommand(String title, String author, String thumbnailUrl, String isbn, List<Long> hashtagIds) {
         this.title = title;
         this.author = author;
         this.thumbnailUrl = thumbnailUrl;
+        this.isbn = isbn;
         this.hashtagIds = hashtagIds;
     }
 
@@ -32,6 +35,7 @@ public class BookUpdateCommand {
                 .title(request.getTitle())
                 .author(request.getAuthor())
                 .thumbnailUrl(request.getThumbnailUrl())
+                .isbn(request.getIsbn())
                 .hashtagIds(request.getHashtagIds())
                 .build();
     }

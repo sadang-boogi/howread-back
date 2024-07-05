@@ -12,7 +12,7 @@ class BookEntityTest {
     @Test
     void addHashtags() {
         // given
-        BookEntity book = BookEntity.of("테스트", "테스트", null);
+        BookEntity book = BookEntity.of("테스트", "테스트", null, "isbn");
         HashtagEntity hashtag = HashtagEntity.of("해시태그1");
 
         // when
@@ -27,7 +27,7 @@ class BookEntityTest {
     @Test
     void clearHashtags() {
         // given
-        BookEntity book = BookEntity.of("테스트", "테스트", null);
+        BookEntity book = BookEntity.of("테스트", "테스트", null, "isbn");
         HashtagEntity hashtag = HashtagEntity.of("해시태그1");
 
         book.addHashtag(BookHashtagEntity.of(book, hashtag));

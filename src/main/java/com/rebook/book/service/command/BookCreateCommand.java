@@ -14,13 +14,15 @@ public class BookCreateCommand {
     private String title;
     private String author;
     private String thumbnailUrl;
+    private String isbn;
     private List<Long> hashtagIds;
 
     @Builder
-    public BookCreateCommand(String title, String author, String thumbnailUrl, List<Long> hashtagIds) {
+    public BookCreateCommand(String title, String author, String thumbnailUrl, String isbn ,List<Long> hashtagIds) {
         this.title = title;
         this.author = author;
         this.thumbnailUrl = thumbnailUrl;
+        this.isbn = isbn;
         this.hashtagIds = hashtagIds;
     }
 
