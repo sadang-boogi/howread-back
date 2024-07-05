@@ -1,6 +1,7 @@
 package com.rebook.book.controller.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,13 @@ public class BookUpdateRequest {
     private String author;
 
     private String thumbnailUrl;
+
+    @NotBlank(message = "ISBN 값을 입력해주세요.")
+    @Pattern(
+            regexp = "^(978|979)\\d{10}$",
+            message = "유효한 13자리 ISBN 형식을 입력해주세요."
+    )
+    private String isbn;
 
     private List<Long> hashtagIds = new ArrayList<>();
 }

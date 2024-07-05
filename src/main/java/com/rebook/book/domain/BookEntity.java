@@ -101,6 +101,7 @@ public class BookEntity extends BaseEntity {
         this.title = updateBook.getTitle();
         this.author = updateBook.getAuthor();
         this.thumbnailUrl = updateBook.getThumbnailUrl();
+        this.isbn = updateBook.getIsbn();
     }
 
     public String getThumbnailUrl() {

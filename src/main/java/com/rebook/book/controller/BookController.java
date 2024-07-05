@@ -32,7 +32,7 @@ public class BookController {
 
     private final BookService bookService;
 
-    @LoginRequired
+    //    @LoginRequired
     @Operation(summary = "Create Book", description = "책을 등록한다.",
             security = @SecurityRequirement(name = "Bearer Authentication")
     )
@@ -88,8 +88,8 @@ public class BookController {
                 .build();
     }
 
+    //    @LoginRequired
     @Operation(summary = "Delete Book", description = "bookId와 일치하는 책을 삭제한다.")
-    @LoginRequired
     @DeleteMapping("/{bookId}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long bookId) {
         bookService.deleteBook(bookId);

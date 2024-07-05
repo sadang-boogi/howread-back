@@ -1,7 +1,6 @@
 package com.rebook.book.service;
 
 import com.rebook.book.controller.request.BookUpdateRequest;
-import com.rebook.book.repository.BookRepository;
 import com.rebook.book.service.command.BookCreateCommand;
 import com.rebook.book.service.command.BookUpdateCommand;
 import com.rebook.book.service.dto.BookDto;
@@ -30,9 +29,6 @@ class BookServiceTest {
     private BookService bookService;
 
     @Autowired
-    private BookRepository bookRepository;
-
-    @Autowired
     private HashtagService hashtagService;
 
     @BeforeEach
@@ -51,7 +47,7 @@ class BookServiceTest {
     @Test
     void saveBookWithoutHashtag() {
         // given
-        BookCreateCommand bookCreateCommand = new BookCreateCommand("객사오", "조영호", "썸네일1", "978-89-123456-0-0", List.of(1L, 2L, 3L));
+        BookCreateCommand bookCreateCommand = new BookCreateCommand("객사오", "조영호", "썸네일1", "9788912345600", List.of(1L, 2L, 3L));
 
         // when
         BookDto bookDto = bookService.save(bookCreateCommand);
@@ -66,10 +62,10 @@ class BookServiceTest {
     @Test
     void updateBook() {
         // given
-        BookCreateCommand bookCreateRequest = new BookCreateCommand("제목1", "저자1", "썸네일1", "978-89-123456-0-0", List.of(1L, 2L, 3L));
+        BookCreateCommand bookCreateRequest = new BookCreateCommand("제목1", "저자1", "썸네일1", "9788912345600", List.of(1L, 2L, 3L));
         BookDto bookDto = bookService.save(bookCreateRequest);
 
-        BookUpdateCommand updateBook = BookUpdateCommand.from(new BookUpdateRequest("수정제목", "수정저자", "수정썸네일", List.of(1L)));
+        BookUpdateCommand updateBook = BookUpdateCommand.from(new BookUpdateRequest("수정제목", "수정저자", "수정썸네일", "9788912345700", List.of(1L)));
 
         // when
         bookService.updateBook(bookDto.getId(), updateBook);
@@ -79,5 +75,6 @@ class BookServiceTest {
         assertThat(book.getTitle()).isEqualTo("수정제목");
         assertThat(book.getAuthor()).isEqualTo("수정저자");
         assertThat(book.getThumbnailUrl()).isEqualTo("수정썸네일");
+        assertThat(book.getIsbn()).isEqualTo("9788912345700");
     }
 }

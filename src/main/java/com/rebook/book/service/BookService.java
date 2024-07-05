@@ -76,6 +76,7 @@ public class BookService {
                 .title(bookUpdateCommand.getTitle())
                 .author(bookUpdateCommand.getAuthor())
                 .thumbnailUrl(bookUpdateCommand.getThumbnailUrl())
+                .isbn(bookUpdateCommand.getIsbn())
                 .build();
 
         book.update(updateBook);
