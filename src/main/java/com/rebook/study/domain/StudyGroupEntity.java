@@ -30,7 +30,4 @@ public class StudyGroupEntity extends BaseEntity {
     @Comment("스터디 공개 여부")
     @Column(name = "is_public", nullable = false)
     private boolean isPublic;
-
-    @Column(name = "password")
-    private String password;
 }
