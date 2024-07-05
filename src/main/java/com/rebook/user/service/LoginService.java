@@ -4,6 +4,7 @@ import com.rebook.user.config.OAuthServiceProvider;
 import com.rebook.user.service.dto.AuthClaims;
 import com.rebook.user.service.dto.UserCommand;
 import com.rebook.user.util.OAuthService;
+import com.rebook.user.util.SocialType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,23 +14,22 @@ public class LoginService {
     private final UserService userService;
     private final OAuthServiceProvider oAuthServiceProvider;
 
-    public AuthClaims socialLogin(String code, String registrationId) {
+    public AuthClaims socialLogin(String code, SocialType type) {
 
-        OAuthService oauthProvider = oAuthServiceProvider.getService(registrationId.toLowerCase());
-        if (oauthProvider == null) {
-            throw new IllegalArgumentException("Unsupported registrationId: " + registrationId);
+        OAuthService oAuthService = oAuthServiceProvider.getService(type);
+        if (oAuthService == null) {
+            throw new IllegalArgumentException("Unsupported registrationId: " + type.name());
         }
-        String accessToken = oauthProvider.getAccessToken(code);
-        UserCommand userCommand = oauthProvider.getUserProfile(accessToken);
+        String accessToken = oAuthService.getAccessToken(code);
+        UserCommand userCommand = oAuthService.getUserProfile(accessToken);
         return userService.createUser(userCommand);
     }
 
-    public String getAuthorizationUrl(String registrationId) {
-        OAuthService oauthProvider = oAuthServiceProvider.getService(registrationId.toLowerCase());
-        if (oauthProvider == null) {
-            throw new IllegalArgumentException("Unsupported registrationId: " + registrationId);
+    public String getAuthorizationUrl(SocialType type) {
+        OAuthService oAuthService = oAuthServiceProvider.getService(type);
+        if (oAuthService == null) {
+            throw new IllegalArgumentException("Unsupported registrationId: " + type.name());
         }
-        return oauthProvider.getAuthorizationUrl();
+        return oAuthService.getAuthorizationUrl();
     }
-
 }
