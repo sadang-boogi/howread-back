@@ -23,6 +23,8 @@ public class BookDto {
 
     private String thumbnailUrl;
 
+    private String isbn;
+
     private List<HashtagDto> hashtags;
 
     private List<ReviewDto> reviews;
@@ -30,11 +32,12 @@ public class BookDto {
     private BigDecimal rating;
 
     @Builder
-    private BookDto(Long id, String title, String author, String thumbnailUrl, List<HashtagDto> hashtags, List<ReviewDto> reviews, BigDecimal rating) {
+    private BookDto(Long id, String title, String author, String thumbnailUrl, String isbn, List<HashtagDto> hashtags, List<ReviewDto> reviews, BigDecimal rating) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.thumbnailUrl = thumbnailUrl;
+        this.isbn = isbn;
         this.hashtags = hashtags;
         this.reviews = reviews;
         this.rating = rating;
@@ -46,6 +49,7 @@ public class BookDto {
                 .title(bookEntity.getTitle())
                 .author(bookEntity.getAuthor())
                 .thumbnailUrl(bookEntity.getThumbnailUrl())
+                .isbn(bookEntity.getIsbn())
                 .hashtags(bookEntity.getBookHashtags().stream()
                         .map(BookHashtagEntity::getHashtag)
                         .map(HashtagDto::fromEntity)

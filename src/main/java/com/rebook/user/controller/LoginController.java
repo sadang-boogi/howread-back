@@ -6,6 +6,7 @@ import com.rebook.user.controller.response.UriResponse;
 import com.rebook.user.service.LoginService;
 import com.rebook.jwt.JwtUtil;
 import com.rebook.user.service.dto.AuthClaims;
+import com.rebook.user.util.SocialType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class LoginController {
             }
     )
     @GetMapping("/{provider}/authorize")
-    public ResponseEntity<UriResponse> getAuthorizationUrl(@PathVariable String provider) {
+    public ResponseEntity<UriResponse> getAuthorizationUrl(@PathVariable SocialType provider) {
         String authorizationUrl = loginService.getAuthorizationUrl(provider);
         return ResponseEntity.ok(new UriResponse(authorizationUrl));
     }
@@ -45,7 +46,7 @@ public class LoginController {
     )
     @PostMapping("/{provider}")
     public ResponseEntity<JwtResponse> socialLogin(
-            @RequestBody SocialLoginRequest body, @PathVariable String provider) {
+            @RequestBody SocialLoginRequest body, @PathVariable SocialType provider) {
         AuthClaims auth = loginService.socialLogin(body.getCode(), provider);
         String token = jwtUtil.createToken(auth, Instant.now());
         return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(token));
