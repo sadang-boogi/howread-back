@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Objects;
@@ -59,5 +60,15 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
         ExceptionResponse exception = new ExceptionResponse(e.getCode(), e.getTitle(), e.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentTypeMismatchException(BadRequestException e, WebRequest request) {
+        log.error("errorMessage: {}", e.getMessage());
+
+        ExceptionResponse exception = new ExceptionResponse(e.getCode(), e.getTitle(), e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(exception);
     }
 }

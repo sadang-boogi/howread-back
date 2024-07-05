@@ -1,5 +1,6 @@
 package com.rebook.user.util;
 
+import com.rebook.common.exception.BadRequestException;
 import lombok.Getter;
 
 public enum SocialType {
@@ -18,6 +19,6 @@ public enum SocialType {
                 return type;
             }
         }
-        throw new IllegalArgumentException("지원 하지 않는 소셜 로그인입니다 : " + value);
+        throw new BadRequestException("URL 반환 실패", "지원하지 않는 소셜 로그인 입니다");
     }
 }

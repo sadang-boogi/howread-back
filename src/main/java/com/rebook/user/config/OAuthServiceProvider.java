@@ -1,5 +1,6 @@
 package com.rebook.user.config;
 
+import com.rebook.common.exception.BadRequestException;
 import com.rebook.user.util.OAuthService;
 import com.rebook.user.util.SocialType;
 import org.springframework.context.ApplicationContext;
@@ -26,6 +27,6 @@ public class OAuthServiceProvider {
         if (serviceClass != null) {
             return applicationContext.getBean(serviceClass);
         }
-        throw new IllegalArgumentException("지원하지 않는 소셜 로그인입니다. " + type.name());
+        throw new BadRequestException("", "지원하지 않는 소셜 로그인입니다. " + type.name());
     }
 }
