@@ -33,10 +33,15 @@ springdoc:
   cache:
     disabled: true
 
-
 jwt:
   secret: ${JWT_SECRET_KEY}
   token-validity-in-seconds: 1209600 # ttl (초)
+
+app:
+  cors:
+    allow-hosts:
+      - "https://howread.net"
+      - "http://localhost:3000"
 
 ---
 
