@@ -20,10 +20,10 @@ public class GoogleOAuthService implements OAuthService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
-    public String getAuthorizationUrl() {
+    public String getAuthorizationUrl(String redirectUri) {
         return googleOAuthProperties.getEndPoint() +
                 "?client_id=" + googleOAuthProperties.getClientId() +
-                "&redirect_uri=" + googleOAuthProperties.getRedirectUri() +
+                "&redirect_uri=" + redirectUri +
                 "&response_type=code" +
                 "&scope=" + googleOAuthProperties.getScopes();
     }
