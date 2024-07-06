@@ -44,6 +44,7 @@ public class UserService {
         return AuthClaims.fromEntity(userRepository.save(newUser));
     }
 
+    @Transactional(readOnly = true)
     public List<UserDto> getAllUsers() {
         List<UserEntity> users = userRepository.findAll();
 
@@ -52,6 +53,7 @@ public class UserService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public UserDto getUserById(Long userId) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("사용자 정보 조회 실패", "해당 유저가 존재하지 않습니다."));
