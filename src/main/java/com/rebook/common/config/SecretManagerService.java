@@ -47,9 +47,5 @@ public class SecretManagerService {
         System.setProperty("DB_PASSWORD", secrets.getDbPassword());
         System.setProperty("JWT_SECRET_KEY", secrets.getJwtSecretKey());
 
-
-        log.info("GOOGLE_OAUTH_CLIENT_SECRET: " + System.getProperty("GOOGLE_OAUTH_CLIENT_SECRET"));
-        log.info("DB_PASSWORD: " + System.getProperty("DB_PASSWORD"));
-        log.info("JWT_SECRET_KEY: " + System.getProperty("JWT_SECRET_KEY"));
     }
 }
