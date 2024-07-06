@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class ReviewSaveCommand {
     private Long bookId;
+    private Long userId;
     private String content;
     private BigDecimal score;
 }

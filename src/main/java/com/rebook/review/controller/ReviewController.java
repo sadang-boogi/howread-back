@@ -3,12 +3,11 @@ package com.rebook.review.controller;
 import com.rebook.auth.annotation.Authenticated;
 import com.rebook.auth.annotation.LoginRequired;
 import com.rebook.common.schema.ListResponse;
-import com.rebook.jwt.service.JwtService;
 import com.rebook.review.controller.request.ReviewSaveRequest;
 import com.rebook.review.controller.request.ReviewUpdateRequest;
 import com.rebook.review.controller.response.ReviewResponse;
-import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.review.service.ReviewService;
+import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.user.service.dto.AuthClaims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,7 +28,6 @@ import java.util.List;
 @RestController
 public class ReviewController {
     private final ReviewService reviewService;
-    private final JwtService jwtService;
 
     @PostMapping
     @LoginRequired
@@ -43,8 +41,7 @@ public class ReviewController {
 
     ) {
         ReviewDto savedReview = reviewService.save(
-                reviewRequest.toCommand(bookId, reviewRequest),
-                claims.getUserId()
+                reviewRequest.toCommand(bookId, reviewRequest, claims.getUserId())
         );
         ReviewResponse reviewResponse = ReviewResponse.fromDto(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));
@@ -60,6 +57,16 @@ public class ReviewController {
                 .toList();
         ListResponse<ReviewResponse> responses = new ListResponse<>(reviewResponses);
         return ResponseEntity.ok().body(responses);
+    }
+
+    @GetMapping("/{reviewId}")
+    @Operation(summary = "Get a Review by ID", description = "리뷰 ID로 특정 리뷰를 조회한다.")
+    public ResponseEntity<ReviewResponse> getReviewById(
+            @PathVariable("reviewId") Long reviewId
+    ) {
+        ReviewDto reviewDto = reviewService.getReviewById(reviewId);
+        ReviewResponse reviewResponse = ReviewResponse.fromDto(reviewDto);
+        return ResponseEntity.ok(reviewResponse);
     }
 
     @LoginRequired

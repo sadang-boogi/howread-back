@@ -5,6 +5,9 @@ import com.rebook.book.repository.BookRepository;
 import com.rebook.review.domain.ReviewEntity;
 import com.rebook.review.repository.ReviewRepository;
 import com.rebook.review.service.dto.ReviewDto;
+import com.rebook.user.domain.Role;
+import com.rebook.user.domain.UserEntity;
+import com.rebook.user.util.SocialType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,8 +45,9 @@ class ReviewServiceTest {
 
         // 리뷰 객체
         List<ReviewEntity> reviews = new ArrayList<>();
-        ReviewEntity reviewEntity = ReviewEntity.of(bookEntity, 1L, "first content", BigDecimal.valueOf(4.5));
-        ReviewEntity reviewEntity2 = ReviewEntity.of(bookEntity, 1L, "second content", BigDecimal.valueOf(3.5));
+        UserEntity user = new UserEntity(1L, "test", "test", Role.USER, SocialType.GOOGLE, "1212");
+        ReviewEntity reviewEntity = ReviewEntity.of(bookEntity, user, "first content", BigDecimal.valueOf(4.5));
+        ReviewEntity reviewEntity2 = ReviewEntity.of(bookEntity, user, "second content", BigDecimal.valueOf(3.5));
 
         reviews.add(reviewEntity);
         reviews.add(reviewEntity2);
@@ -51,7 +55,7 @@ class ReviewServiceTest {
         //bookId로 책 조회시 bookEntity 반환
         when(bookRepository.findById(bookEntity.getId())).thenReturn(Optional.of(bookEntity));
         //bookId로 리뷰 목록 조회시 reviews 반환
-        when(reviewRepository.findByBookIdOrderByCreatedAtAsc(bookEntity.getId())).thenReturn(reviews);
+        when(reviewRepository.findReviewsByBookId(bookEntity.getId())).thenReturn(reviews);
 
         // When
         List<ReviewDto> result = reviewService.getReviewsWithBookId(bookEntity.getId());

@@ -14,8 +14,10 @@ import java.time.ZonedDateTime;
 @Getter
 public class ReviewDto {
     private BookEntity book;
-    private Long id;
+    private Long id; // 리뷰의 아이디
     private String content;
+    private Long userId;
+    private String userName;
     private BigDecimal score;
     private ZonedDateTime createdAt;
 
@@ -23,6 +25,8 @@ public class ReviewDto {
         return new ReviewDto(reviewEntity.getBook(),
                 reviewEntity.getId(),
                 reviewEntity.getContent(),
+                reviewEntity.getUser().getId(),
+                reviewEntity.getUser().getNickname(),
                 reviewEntity.getScore(),
                 reviewEntity.getCreatedAt());
     }

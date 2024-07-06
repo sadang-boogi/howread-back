@@ -17,12 +17,13 @@ public class ReviewSaveRequest {
     @NotBlank(message = "리뷰 내용을 입력해주세요.")
     private String content;
 
-    @NotNull(message = "별점을 등록해주세요.")
+    @NotNull(message = "점수를 등록해주세요.")
     private BigDecimal score;
 
-    public ReviewSaveCommand toCommand(Long reviewId, ReviewSaveRequest reviewRequest) {
+    public ReviewSaveCommand toCommand(Long reviewId, ReviewSaveRequest reviewRequest, Long userId) {
         return new ReviewSaveCommand(
                 reviewId,
+                userId,
                 reviewRequest.getContent(),
                 reviewRequest.getScore());
     }
