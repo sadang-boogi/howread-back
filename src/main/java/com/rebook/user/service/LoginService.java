@@ -25,11 +25,11 @@ public class LoginService {
         return userService.createUser(userCommand);
     }
 
-    public String getAuthorizationUrl(SocialType type) {
+    public String getAuthorizationUrl(SocialType type, String redirectUri) {
         OAuthService oAuthService = oAuthServiceProvider.getService(type);
         if (oAuthService == null) {
             throw new IllegalArgumentException("Unsupported registrationId: " + type.name());
         }
-        return oAuthService.getAuthorizationUrl();
+        return oAuthService.getAuthorizationUrl(redirectUri);
     }
 }

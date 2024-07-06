@@ -32,8 +32,11 @@ public class LoginController {
             }
     )
     @GetMapping("/{provider}/authorize")
-    public ResponseEntity<UriResponse> getAuthorizationUrl(@PathVariable SocialType provider) {
-        String authorizationUrl = loginService.getAuthorizationUrl(provider);
+    public ResponseEntity<UriResponse> getAuthorizationUrl(
+            @PathVariable SocialType provider,
+            @RequestParam String redirectUri
+    ) {
+        String authorizationUrl = loginService.getAuthorizationUrl(provider, redirectUri);
         return ResponseEntity.ok(new UriResponse(authorizationUrl));
     }
 
