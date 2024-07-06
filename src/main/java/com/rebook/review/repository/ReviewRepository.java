@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
 
@@ -16,11 +15,5 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
             ORDER BY re.createdAt ASC
             """)
     List<ReviewEntity> findReviewsByBookId(Long bookId);
-
-
-    @Query("""
-            SELECT DISTINCT review From ReviewEntity review
-            WHERE review.id = :reviewId
-            """)
-    Optional<ReviewEntity> findById(Long reviewId);
+    
 }

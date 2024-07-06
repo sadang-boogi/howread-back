@@ -38,6 +38,7 @@ public class ReviewService {
         return ReviewDto.fromEntity(savedReview);
     }
 
+    @Transactional(readOnly = true)
     public List<ReviewDto> getReviewsWithBookId(Long bookId) {
         bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
