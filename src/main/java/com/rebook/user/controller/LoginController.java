@@ -49,8 +49,10 @@ public class LoginController {
     )
     @PostMapping("/{provider}")
     public ResponseEntity<JwtResponse> socialLogin(
-            @RequestBody SocialLoginRequest body, @PathVariable SocialType provider) {
-        AuthClaims auth = loginService.socialLogin(body.getCode(), provider);
+            @RequestBody SocialLoginRequest body,
+            @PathVariable SocialType provider
+    ) {
+        AuthClaims auth = loginService.socialLogin(body.getCode(), provider, body.getRedirectUri());
         String token = jwtUtil.createToken(auth, Instant.now());
         return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(token));
     }

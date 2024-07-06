@@ -30,11 +30,10 @@ public class GoogleOAuthService implements OAuthService {
 
 
     @Override
-    public String getAccessToken(String authorizationCode) {
+    public String getAccessToken(String authorizationCode, String redirectUri) {
 
         String clientId = googleOAuthProperties.getClientId();
         String clientSecret = googleOAuthProperties.getClientSecret();
-        String redirectUri = googleOAuthProperties.getRedirectUri();
         String tokenUri = googleOAuthProperties.getTokenUri();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
