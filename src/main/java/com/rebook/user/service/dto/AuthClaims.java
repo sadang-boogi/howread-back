@@ -11,14 +11,10 @@ import lombok.Getter;
 public class AuthClaims {
 
     private Long userId;
-    private String email;
-    private String name;
 
     public static AuthClaims fromEntity(UserEntity userEntity) {
         return AuthClaims.builder()
                 .userId(userEntity.getId())
-                .email(userEntity.getEmail())
-                .name(userEntity.getNickname())
                 .build();
     }
 }

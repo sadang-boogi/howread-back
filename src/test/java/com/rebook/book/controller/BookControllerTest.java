@@ -46,7 +46,7 @@ class BookControllerTest {
 
     private RequestPostProcessor loggedInUser() {
         return request -> {
-            request.setAttribute("authClaims", new AuthClaims(1L, "test-email", "test-user"));
+            request.setAttribute("authClaims", new AuthClaims(1L));
             return request;
         };
     }
