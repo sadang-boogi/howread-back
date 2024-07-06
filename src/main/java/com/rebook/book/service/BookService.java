@@ -36,7 +36,8 @@ public class BookService {
         BookEntity book = BookEntity.of(
                 bookCreateCommand.getTitle(),
                 bookCreateCommand.getAuthor(),
-                bookCreateCommand.getThumbnailUrl()
+                bookCreateCommand.getThumbnailUrl(),
+                bookCreateCommand.getIsbn()
         );
 
         if (bookCreateCommand.getHashtagIds() != null && !bookCreateCommand.getHashtagIds().isEmpty()) {
@@ -71,11 +72,12 @@ public class BookService {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
-        BookEntity updateBook = BookEntity.of(
-                bookUpdateCommand.getTitle(),
-                bookUpdateCommand.getAuthor(),
-                bookUpdateCommand.getThumbnailUrl()
-        );
+        BookEntity updateBook = BookEntity.builder()
+                .title(bookUpdateCommand.getTitle())
+                .author(bookUpdateCommand.getAuthor())
+                .thumbnailUrl(bookUpdateCommand.getThumbnailUrl())
+                .isbn(bookUpdateCommand.getIsbn())
+                .build();
 
         book.update(updateBook);
 
@@ -94,6 +96,8 @@ public class BookService {
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
         book.getReviews().forEach(ReviewEntity::softDelete);
         book.softDelete();
+        book.getBookHashtags()
+                .forEach(BaseEntity::softDelete);
     }
 
     private void setHashtag(List<HashtagEntity> hashtags, BookEntity book) {

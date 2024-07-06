@@ -1,9 +1,7 @@
 package com.rebook.jwt.service;
 
 import com.rebook.jwt.JwtUtil;
-import com.rebook.user.domain.UserEntity;
 import com.rebook.user.exception.TokenException;
-import com.rebook.user.repository.UserRepository;
 import com.rebook.user.service.dto.AuthClaims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

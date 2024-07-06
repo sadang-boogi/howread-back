@@ -1,11 +1,11 @@
 package com.rebook.user.service;
 
 import com.rebook.user.domain.Role;
-import com.rebook.user.domain.SocialType;
 import com.rebook.user.domain.UserEntity;
 import com.rebook.user.service.dto.AuthClaims;
 import com.rebook.user.service.dto.UserCommand;
 import com.rebook.user.repository.UserRepository;
+import com.rebook.user.util.SocialType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

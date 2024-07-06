@@ -46,7 +46,7 @@ class BookRepositoryTest {
         List<BookEntity> bookList = new ArrayList<>();
 
         for (int i = 0; i < saveCount; i++) {
-            BookEntity book = BookEntity.of(String.format("제목%d", i), String.format("저자%d", i), String.format("썸네일%d", i));
+            BookEntity book = BookEntity.of(String.format("제목%d", i), String.format("저자%d", i), String.format("978891234560%d", i), String.format("썸네일%d", i));
             bookList.add(book);
         }
         return bookList;
