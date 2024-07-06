@@ -41,5 +41,6 @@ jwt:
 app:
   cors:
     allow-hosts:
+      - "https://www.howread.net"
       - "https://howread.net"
       - "http://localhost:3000"
