@@ -11,6 +11,9 @@ import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.user.domain.UserEntity;
 import com.rebook.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,17 +38,23 @@ public class ReviewService {
 
         ReviewEntity reviewEntity = ReviewEntity.of(book, user, reviewCommand.getContent(), reviewCommand.getScore());
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
+
         return ReviewDto.fromEntity(savedReview);
     }
 
     @Transactional(readOnly = true)
-    public List<ReviewDto> getReviewsWithBookId(Long bookId) {
+    public Slice<ReviewDto> getReviewsWithBookId(Long bookId, Pageable pageable) {
         bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
-        List<ReviewEntity> reviews = reviewRepository.findReviewsByBookId(bookId);
-        return reviews.stream()
+
+        Slice<ReviewEntity> reviewEntities = reviewRepository.findAllBy(bookId, pageable);
+
+        List<ReviewDto> reviewDtos = reviewEntities.getContent()
+                .stream()
                 .map(ReviewDto::fromEntity)
                 .toList();
+
+        return new SliceImpl<>(reviewDtos, pageable, reviewEntities.hasNext());
     }
 
     @Transactional

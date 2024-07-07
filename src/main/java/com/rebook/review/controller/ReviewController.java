@@ -2,7 +2,8 @@ package com.rebook.review.controller;
 
 import com.rebook.auth.annotation.Authenticated;
 import com.rebook.auth.annotation.LoginRequired;
-import com.rebook.common.schema.ListResponse;
+import com.rebook.common.domain.PageInfo;
+import com.rebook.common.schema.PageResponse;
 import com.rebook.review.controller.request.ReviewSaveRequest;
 import com.rebook.review.controller.request.ReviewUpdateRequest;
 import com.rebook.review.controller.response.ReviewResponse;
@@ -15,6 +16,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,12 +55,23 @@ public class ReviewController {
 
     @GetMapping
     @Operation(summary = "Get All Reviews for a Book", description = "해당 책의 작성리뷰를 조회한다.")
-    public ResponseEntity<ListResponse<ReviewResponse>> getReviews(@PathVariable("bookId") Long bookId) {
-        final List<ReviewDto> reviewDtos = reviewService.getReviewsWithBookId(bookId);
-        List<ReviewResponse> reviewResponses = reviewDtos.stream()
+    public ResponseEntity<PageResponse<ReviewResponse>> getReviews(
+            @PathVariable("bookId") Long bookId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
+
+        Slice<ReviewDto> reviews = reviewService.getReviewsWithBookId(bookId, pageable);
+
+        List<ReviewResponse> items = reviews.stream()
                 .map(ReviewResponse::fromDto)
                 .toList();
-        ListResponse<ReviewResponse> responses = new ListResponse<>(reviewResponses);
+
+        PageInfo pageInfo = new PageInfo(reviews.getNumber(), reviews.getSize(), reviews.hasNext());
+
+        PageResponse<ReviewResponse> responses = new PageResponse<>(items, pageInfo);
+
         return ResponseEntity.ok().body(responses);
     }
 
