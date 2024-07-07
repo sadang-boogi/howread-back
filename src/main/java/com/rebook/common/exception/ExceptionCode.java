@@ -13,7 +13,6 @@ public enum ExceptionCode {
     TOKEN_INVALID("TOKEN_ERROR", "로그인 실패", "로그인에 실패했습니다. 다시 로그인 해주세요."),
     LOGIN_REQUIRED("LOGIN_REQUIRED", "로그인 필요", "이 기능을 이용하려면 로그인이 필요합니다.");
 
-
     private final String code;
     private final String title;
     private final String message;
