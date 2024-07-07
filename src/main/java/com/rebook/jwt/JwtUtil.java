@@ -60,7 +60,7 @@ public class JwtUtil {
         String payload = JWT.decode(token)
                 .getPayload();
 
-        byte[] decodedBytes = Base64.getDecoder().decode(payload);
+        byte[] decodedBytes = Base64.getUrlDecoder().decode(payload);
         String decodedPayload = new String(decodedBytes);
 
         return parseUserFromJwt(decodedPayload);
@@ -75,5 +75,4 @@ public class JwtUtil {
             throw new RuntimeException(e);
         }
     }
-
 }
