@@ -52,10 +52,8 @@ public class UserEntity extends BaseEntity {
         this.socialId = socialId;
     }
 
-    public UserEntity update(String nickname, String email, Role role) {
+    public UserEntity update(String nickname) {
         this.nickname = nickname;
-        this.email = email;
-        this.role = role;
         return this;
     }
 

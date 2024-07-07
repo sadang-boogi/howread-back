@@ -67,9 +67,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("사용자 정보 수정 실패", "해당 유저가 존재하지 않습니다."));
 
         user.update(
-                command.getNickname(),
-                command.getEmail(),
-                command.getRole()
+                command.getNickname()
         );
 
         return UserDto.fromEntity(user);
@@ -78,7 +76,7 @@ public class UserService {
     @Transactional
     public void softDelete(Long userId) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("사용자 삭제에 실패했습니다.", "사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("사용자 삭제 실패.", "사용자를 찾을 수 없습니다."));
 
         user.getReviews().forEach(ReviewEntity::softDelete);
         user.softDelete();

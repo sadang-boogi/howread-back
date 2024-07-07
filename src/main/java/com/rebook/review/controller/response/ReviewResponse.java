@@ -22,7 +22,7 @@ public class ReviewResponse {
                 review.getId(),
                 review.getContent(),
                 review.getScore(),
-                new ReviewerResponse(review.getUserId(), review.getUserName()),
+                ReviewerResponse.from(review.getReviewer()),
                 review.getCreatedAt()
         );
     }
