@@ -35,10 +35,7 @@ public class UserController {
     public ResponseEntity<UserResponse> updateUser(
             @Parameter(hidden = true) @Authenticated AuthClaims authClaims,
             @RequestBody UserUpdateRequest request) {
-
         UserDto updatedUser = userService.updateUser(UserUpdateCommand.from(request, authClaims.getUserId()));
-
         return ResponseEntity.ok(UserResponse.fromDto(updatedUser));
     }
-
 }

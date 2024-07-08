@@ -25,12 +25,12 @@ public class UserService {
         String socialId = userCommand.getSocialId();
         Optional<UserEntity> existingUser = userRepository.findBySocialId(socialId);
 
-        //존재하는 회원일 경우
+        // 존재하는 회원일 경우
         if (existingUser.isPresent()) {
             return AuthClaims.fromEntity(existingUser.get());
         }
 
-        //아닐 경우 신규 DB에 저장
+        // 아닐 경우 신규 DB에 저장
         UserEntity newUser = UserEntity.builder()
                 .email(userCommand.getEmail())
                 .nickname(userCommand.getName())
@@ -51,15 +51,11 @@ public class UserService {
 
     @Transactional
     public UserDto updateUser(UserUpdateCommand command) {
-
         UserEntity user = userRepository.findById(command.getUserId())
                 .orElseThrow(() -> new NotFoundException("사용자 정보 수정 실패", "해당 유저가 존재하지 않습니다."));
 
-        user.update(
-                command.getNickname()
-        );
+        user.update(command.getNickname());
 
         return UserDto.fromEntity(user);
     }
-
 }
