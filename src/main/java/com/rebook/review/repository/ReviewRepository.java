@@ -13,7 +13,7 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
 
     @Query("""
             SELECT re FROM ReviewEntity re 
-            LEFT JOIN FETCH re.user  
+            JOIN FETCH re.user  
             WHERE re.book.id = :bookId 
             ORDER BY re.updatedAt DESC
             """)
@@ -21,7 +21,9 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
 
     @Query("""
             SELECT r FROM ReviewEntity r 
+            JOIN FETCH r.user
             WHERE r.id = :reviewId AND r.user.id = :userId        
             """)
     Optional<ReviewEntity> findByIdAndUserId(@Param("reviewId") Long reviewId, @Param("userId") Long userId);
+
 }
