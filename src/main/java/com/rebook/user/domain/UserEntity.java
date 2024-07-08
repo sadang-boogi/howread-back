@@ -16,7 +16,10 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "users")
+@Table(
+        name = "users",
+        uniqueConstraints = {@UniqueConstraint(name = "uk_user_social_type_social_id", columnNames = {"social_type", "social_id"})}
+)
 public class UserEntity extends BaseEntity {
 
     @Id

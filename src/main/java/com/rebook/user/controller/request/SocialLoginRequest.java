@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SocialLoginRequest {
     private String code;
+    private String redirectUri;
 }
