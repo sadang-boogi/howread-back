@@ -10,6 +10,7 @@ import com.rebook.user.service.dto.AuthClaims;
 import com.rebook.user.service.dto.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class UserController {
     @LoginRequired
     @GetMapping("/me")
     @Operation(summary = "현재 사용자가 자신의 정보 조회", description = "AuthClaims 의 userId로 유저를 조회한다.")
-    public ResponseEntity<UserResponse> getUserById(
+    public ResponseEntity<UserResponse> getMe(
             @Parameter(hidden = true) @Authenticated AuthClaims authClaims) {
         UserDto user = userService.getUserById(authClaims.getUserId());
         return ResponseEntity.ok(UserResponse.fromDto(user));
@@ -32,10 +33,10 @@ public class UserController {
     @LoginRequired
     @PutMapping("/me")
     @Operation(summary = "현재 사용자가 자신의 정보 수정", description = "AuthClaims 의 userId로 유저를 수정한다.")
-    public ResponseEntity<UserResponse> updateUser(
+    public ResponseEntity<UserResponse> updateMe(
             @Parameter(hidden = true) @Authenticated AuthClaims authClaims,
-            @RequestBody UserUpdateRequest request) {
-        UserDto updatedUser = userService.updateUser(UserUpdateCommand.from(request, authClaims.getUserId()));
+            @Valid @RequestBody UserUpdateRequest body) {
+        UserDto updatedUser = userService.updateUser(UserUpdateCommand.from(body, authClaims.getUserId()));
         return ResponseEntity.ok(UserResponse.fromDto(updatedUser));
     }
 }

@@ -80,13 +80,12 @@ public class ReviewController {
     @PutMapping("/{reviewId}")
     @Operation(summary = "Update a Review for a Book", description = "해당 책의 특정 리뷰를 수정한다.")
     public ResponseEntity<ReviewResponse> updateReview(
-            @PathVariable("bookId") Long bookId,
             @PathVariable("reviewId") Long reviewId,
             @Valid @RequestBody final ReviewUpdateRequest reviewRequest,
             @Parameter(hidden = true) @Authenticated AuthClaims claims
     ) {
         ReviewDto updatedReview = reviewService.update(
-                reviewRequest.toCommand(bookId, reviewId, reviewRequest),
+                reviewRequest.toCommand(reviewId),
                 claims.getUserId()
         );
         ReviewResponse reviewResponse = ReviewResponse.fromDto(updatedReview);
