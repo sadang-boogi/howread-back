@@ -45,9 +45,6 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public Slice<ReviewDto> getReviewsWithBookId(Long bookId, Pageable pageable) {
-        bookRepository.findById(bookId)
-                .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
-
         Slice<ReviewEntity> reviewEntities = reviewRepository.findAllBy(bookId, pageable);
 
         List<ReviewDto> reviewDtos = reviewEntities.getContent()

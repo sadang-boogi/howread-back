@@ -22,7 +22,6 @@ import org.springframework.data.domain.SliceImpl;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -56,9 +55,7 @@ class ReviewServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         SliceImpl<ReviewEntity> reviewSlice = new SliceImpl<>(reviews, pageable, false);
 
-        //bookId로 책 조회시 bookEntity 반환
-        when(bookRepository.findById(bookEntity.getId())).thenReturn(Optional.of(bookEntity));
-        //bookId로 리뷰 목록 조회시 reviews 반환
+        // bookId로 리뷰 목록 조회시 reviews 반환
         when(reviewRepository.findAllBy(bookEntity.getId(), pageable)).thenReturn(reviewSlice);
 
         // When
