@@ -46,7 +46,8 @@ public class ReviewController {
 
     ) {
         ReviewDto savedReview = reviewService.save(
-                reviewRequest.toCommand(bookId, claims.getUserId())
+                reviewRequest.toCommand(bookId),
+                claims.getUserId()
         );
         ReviewResponse reviewResponse = ReviewResponse.fromDto(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));

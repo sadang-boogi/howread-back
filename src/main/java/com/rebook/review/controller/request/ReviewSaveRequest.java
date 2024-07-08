@@ -20,10 +20,9 @@ public class ReviewSaveRequest {
     @NotNull(message = "점수를 등록해주세요.")
     private BigDecimal score;
 
-    public ReviewSaveCommand toCommand(Long reviewId, Long userId) {
+    public ReviewSaveCommand toCommand(Long reviewId) {
         return new ReviewSaveCommand(
                 reviewId,
-                userId,
                 this.content,
                 this.score);
     }

@@ -20,6 +20,7 @@ public class ReviewUpdateRequest {
     @NotNull(message = "점수를 등록해주세요.")
     private BigDecimal score;
 
+
     public ReviewUpdateCommand toCommand(Long reviewId) {
         return new ReviewUpdateCommand(
                 reviewId,

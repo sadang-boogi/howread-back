@@ -30,11 +30,11 @@ public class ReviewService {
     private final BookRepository bookRepository;
 
     @Transactional
-    public ReviewDto save(ReviewSaveCommand reviewCommand) {
+    public ReviewDto save(ReviewSaveCommand reviewCommand, Long userId) {
         BookEntity book = bookRepository.findById(reviewCommand.getBookId())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
-        UserEntity user = userRepository.findById(reviewCommand.getUserId())
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_USER_ID));
 
         ReviewEntity reviewEntity = ReviewEntity.of(book, user, reviewCommand.getContent(), reviewCommand.getScore());
