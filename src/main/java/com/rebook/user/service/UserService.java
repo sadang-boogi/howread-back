@@ -1,7 +1,6 @@
 package com.rebook.user.service;
 
 import com.rebook.common.exception.NotFoundException;
-import com.rebook.review.domain.ReviewEntity;
 import com.rebook.user.domain.Role;
 import com.rebook.user.domain.UserEntity;
 import com.rebook.user.repository.UserRepository;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -45,15 +43,6 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserDto> getAllUsers() {
-        List<UserEntity> users = userRepository.findAll();
-
-        return users.stream()
-                .map(UserDto::fromEntity)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
     public UserDto getUserById(Long userId) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("사용자 정보 조회 실패", "해당 유저가 존재하지 않습니다."));
@@ -73,12 +62,4 @@ public class UserService {
         return UserDto.fromEntity(user);
     }
 
-    @Transactional
-    public void softDelete(Long userId) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("사용자 삭제 실패.", "사용자를 찾을 수 없습니다."));
-
-        user.getReviews().forEach(ReviewEntity::softDelete);
-        user.softDelete();
-    }
 }

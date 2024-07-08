@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/me")
+@RequestMapping("/api/v1/users")
 public class UserController {
     private final UserService userService;
 
     @LoginRequired
-    @GetMapping
+    @GetMapping("/me")
     @Operation(summary = "현재 사용자가 자신의 정보 조회", description = "AuthClaims 의 userId로 유저를 조회한다.")
     public ResponseEntity<UserResponse> getUserById(
             @Parameter(hidden = true) @Authenticated AuthClaims authClaims) {
@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @LoginRequired
-    @PutMapping
+    @PutMapping("/me")
     @Operation(summary = "현재 사용자가 자신의 정보 수정", description = "AuthClaims 의 userId로 유저를 수정한다.")
     public ResponseEntity<UserResponse> updateUser(
             @Parameter(hidden = true) @Authenticated AuthClaims authClaims,

@@ -19,7 +19,7 @@ import java.time.Instant;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/api/v1/login/oauth2", produces = "application/json")
+@RequestMapping(value = "/api/v1/login/oauth", produces = "application/json")
 public class LoginController {
     private final LoginService loginService;
     private final JwtUtil jwtUtil;
