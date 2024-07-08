@@ -1,12 +1,16 @@
 package com.rebook.user.domain;
 
 import com.rebook.common.domain.BaseEntity;
+import com.rebook.review.domain.ReviewEntity;
 import com.rebook.user.util.SocialType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -36,6 +40,9 @@ public class UserEntity extends BaseEntity {
     @Column(name = "social_type", columnDefinition = "varchar(255)")
     private SocialType socialType;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ReviewEntity> reviews = new ArrayList<>();
+
     private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
     @Builder
@@ -48,9 +55,19 @@ public class UserEntity extends BaseEntity {
         this.socialId = socialId;
     }
 
-    public UserEntity update(String nickname, String email) {
+    public UserEntity update(String nickname) {
         this.nickname = nickname;
-        this.email = email;
         return this;
+    }
+
+    // 연관관계 편의 메서드
+    public void addReview(ReviewEntity review) {
+        reviews.add(review);
+        review.setUser(this);
+    }
+
+    public void removeReview(ReviewEntity review) {
+        reviews.remove(review);
+        review.softDelete();
     }
 }

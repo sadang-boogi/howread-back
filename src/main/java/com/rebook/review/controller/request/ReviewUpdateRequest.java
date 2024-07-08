@@ -17,14 +17,14 @@ public class ReviewUpdateRequest {
     @NotBlank(message = "리뷰 내용을 입력해주세요.")
     private String content;
 
-    @NotNull(message = "별점을 등록해주세요.")
+    @NotNull(message = "점수를 등록해주세요.")
     private BigDecimal score;
 
-    public ReviewUpdateCommand toCommand(Long bookId, Long reviewId, ReviewUpdateRequest reviewRequest) {
+
+    public ReviewUpdateCommand toCommand(Long reviewId) {
         return new ReviewUpdateCommand(
-                bookId,
                 reviewId,
-                reviewRequest.getContent(),
-                reviewRequest.getScore());
+                this.content,
+                this.score);
     }
 }

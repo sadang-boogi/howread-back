@@ -2,13 +2,13 @@ package com.rebook.review.controller;
 
 import com.rebook.auth.annotation.Authenticated;
 import com.rebook.auth.annotation.LoginRequired;
-import com.rebook.common.schema.ListResponse;
-import com.rebook.jwt.service.JwtService;
+import com.rebook.common.domain.PageInfo;
+import com.rebook.common.schema.PageResponse;
 import com.rebook.review.controller.request.ReviewSaveRequest;
 import com.rebook.review.controller.request.ReviewUpdateRequest;
 import com.rebook.review.controller.response.ReviewResponse;
-import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.review.service.ReviewService;
+import com.rebook.review.service.dto.ReviewDto;
 import com.rebook.user.service.dto.AuthClaims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,6 +16,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +33,6 @@ import java.util.List;
 @RestController
 public class ReviewController {
     private final ReviewService reviewService;
-    private final JwtService jwtService;
 
     @PostMapping
     @LoginRequired
@@ -43,7 +46,7 @@ public class ReviewController {
 
     ) {
         ReviewDto savedReview = reviewService.save(
-                reviewRequest.toCommand(bookId, reviewRequest),
+                reviewRequest.toCommand(bookId),
                 claims.getUserId()
         );
         ReviewResponse reviewResponse = ReviewResponse.fromDto(savedReview);
@@ -53,26 +56,37 @@ public class ReviewController {
 
     @GetMapping
     @Operation(summary = "Get All Reviews for a Book", description = "해당 책의 작성리뷰를 조회한다.")
-    public ResponseEntity<ListResponse<ReviewResponse>> getReviews(@PathVariable("bookId") Long bookId) {
-        final List<ReviewDto> reviewDtos = reviewService.getReviewsWithBookId(bookId);
-        List<ReviewResponse> reviewResponses = reviewDtos.stream()
+    public ResponseEntity<PageResponse<ReviewResponse>> getReviews(
+            @PathVariable("bookId") Long bookId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "100") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
+
+        Slice<ReviewDto> reviews = reviewService.getReviewsWithBookId(bookId, pageable);
+
+        List<ReviewResponse> items = reviews.stream()
                 .map(ReviewResponse::fromDto)
                 .toList();
-        ListResponse<ReviewResponse> responses = new ListResponse<>(reviewResponses);
+
+        PageInfo pageInfo = new PageInfo(reviews.getNumber(), reviews.getSize(), reviews.hasNext());
+
+        PageResponse<ReviewResponse> responses = new PageResponse<>(items, pageInfo);
+
         return ResponseEntity.ok().body(responses);
     }
+
 
     @LoginRequired
     @PutMapping("/{reviewId}")
     @Operation(summary = "Update a Review for a Book", description = "해당 책의 특정 리뷰를 수정한다.")
     public ResponseEntity<ReviewResponse> updateReview(
-            @PathVariable("bookId") Long bookId,
             @PathVariable("reviewId") Long reviewId,
             @Valid @RequestBody final ReviewUpdateRequest reviewRequest,
             @Parameter(hidden = true) @Authenticated AuthClaims claims
     ) {
         ReviewDto updatedReview = reviewService.update(
-                reviewRequest.toCommand(bookId, reviewId, reviewRequest),
+                reviewRequest.toCommand(reviewId),
                 claims.getUserId()
         );
         ReviewResponse reviewResponse = ReviewResponse.fromDto(updatedReview);

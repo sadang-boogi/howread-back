@@ -13,7 +13,8 @@ import java.time.ZonedDateTime;
 public class ReviewResponse {
     private Long id;
     private String content;
-    private BigDecimal starRate;
+    private BigDecimal score;
+    private ReviewerResponse reviewer;
     private ZonedDateTime createdAt;
 
     public static ReviewResponse fromDto(ReviewDto review) {
@@ -21,11 +22,13 @@ public class ReviewResponse {
                 review.getId(),
                 review.getContent(),
                 review.getScore(),
-                review.getCreatedAt());
+                ReviewerResponse.from(review.getReviewer()),
+                review.getCreatedAt()
+        );
     }
 
-    @JsonProperty("starRate")
-    public String getStarRate() {
-        return starRate.toString();
+    @JsonProperty("score")
+    public String getScore() {
+        return score.toString();
     }
 }

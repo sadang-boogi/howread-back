@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 @Getter
 @AllArgsConstructor
 public class ReviewUpdateCommand {
-    private Long bookId;
     private Long reviewId;
     private String content;
     private BigDecimal score;

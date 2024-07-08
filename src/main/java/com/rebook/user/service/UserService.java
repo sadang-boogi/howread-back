@@ -1,13 +1,17 @@
 package com.rebook.user.service;
 
+import com.rebook.common.exception.NotFoundException;
 import com.rebook.user.domain.Role;
 import com.rebook.user.domain.UserEntity;
+import com.rebook.user.repository.UserRepository;
+import com.rebook.user.service.command.UserUpdateCommand;
 import com.rebook.user.service.dto.AuthClaims;
 import com.rebook.user.service.dto.UserCommand;
-import com.rebook.user.repository.UserRepository;
+import com.rebook.user.service.dto.UserDto;
 import com.rebook.user.util.SocialType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -16,16 +20,17 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
+    @Transactional
     public AuthClaims createUser(UserCommand userCommand) {
         String socialId = userCommand.getSocialId();
         Optional<UserEntity> existingUser = userRepository.findBySocialId(socialId);
 
-        //존재하는 회원일 경우
+        // 존재하는 회원일 경우
         if (existingUser.isPresent()) {
             return AuthClaims.fromEntity(existingUser.get());
         }
 
-        //아닐 경우 신규 DB에 저장
+        // 아닐 경우 신규 DB에 저장
         UserEntity newUser = UserEntity.builder()
                 .email(userCommand.getEmail())
                 .nickname(userCommand.getName())
@@ -35,5 +40,22 @@ public class UserService {
                 .build();
 
         return AuthClaims.fromEntity(userRepository.save(newUser));
+    }
+
+    @Transactional(readOnly = true)
+    public UserDto getUserById(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("사용자 정보 조회 실패", "해당 유저가 존재하지 않습니다."));
+        return UserDto.fromEntity(user);
+    }
+
+    @Transactional
+    public UserDto updateUser(UserUpdateCommand command) {
+        UserEntity user = userRepository.findById(command.getUserId())
+                .orElseThrow(() -> new NotFoundException("사용자 정보 수정 실패", "해당 유저가 존재하지 않습니다."));
+
+        user.update(command.getNickname());
+
+        return UserDto.fromEntity(user);
     }
 }

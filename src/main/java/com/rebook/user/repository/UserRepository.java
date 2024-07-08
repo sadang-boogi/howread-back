@@ -9,4 +9,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
 
     Optional<UserEntity> findBySocialId(String socialId); // 중복 가입 확인
+
 }
