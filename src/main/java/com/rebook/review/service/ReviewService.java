@@ -33,6 +33,7 @@ public class ReviewService {
     public ReviewDto save(ReviewSaveCommand reviewCommand) {
         BookEntity book = bookRepository.findById(reviewCommand.getBookId())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
+
         UserEntity user = userRepository.findById(reviewCommand.getUserId())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_USER_ID));
 
@@ -60,38 +61,22 @@ public class ReviewService {
     @Transactional
     public ReviewDto update(ReviewUpdateCommand reviewCommand, Long userId) {
 
-        // 존재하는 책인지 확인
-        BookEntity bookEntity = bookRepository.findById(reviewCommand.getBookId())
-                .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
-
-        // 리뷰 id로 리뷰 조회
-        ReviewEntity review = reviewRepository.findById(reviewCommand.getReviewId())
-                .orElseThrow(() -> new NotFoundException("리뷰 수정에 실패했습니다.", "리뷰를 찾을 수 없습니다."));
-
-        if (!review.getUser().getId().equals(userId)) {
-            throw new NotFoundException("권한이 없습니다.", "리뷰를 수정할 권한이 없습니다.");
-        }
+        // 사용자 ID와 리뷰 ID로 리뷰 조회
+        ReviewEntity review = reviewRepository.findByIdAndUserId(reviewCommand.getReviewId(), userId)
+                .orElseThrow(() -> new NotFoundException("리뷰 수정 실패", "리뷰를 찾을 수 없습니다."));
 
         // 기존 리뷰 엔티티 업데이트
-        review.update(bookEntity, reviewCommand.getContent(), reviewCommand.getScore());
+        review.update(review.getBook(), reviewCommand.getContent(), reviewCommand.getScore());
 
         return ReviewDto.fromEntity(review);
     }
 
     @Transactional
     public void softDelete(Long reviewId, Long userId) {
-        ReviewEntity review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new NotFoundException("리뷰 삭제에 실패했습니다.", "리뷰를 찾을 수 없습니다."));
-        if (!review.getUser().getId().equals(userId)) {
-            throw new NotFoundException("권한이 없습니다.", "리뷰를 삭제할 권한이 없습니다.");
-        }
+        ReviewEntity review = reviewRepository.findByIdAndUserId(reviewId, userId)
+                .orElseThrow(() -> new NotFoundException("리뷰 삭제 실패", "리뷰를 찾을 수 없습니다."));
+
         review.softDelete();
     }
 
-    @Transactional(readOnly = true)
-    public ReviewDto getReviewById(Long reviewId) {
-        ReviewEntity review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new NotFoundException("리뷰 조회 실패", "리뷰를 찾을 수 없습니다."));
-        return ReviewDto.fromEntity(review);
-    }
 }

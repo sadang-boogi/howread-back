@@ -46,7 +46,7 @@ public class ReviewController {
 
     ) {
         ReviewDto savedReview = reviewService.save(
-                reviewRequest.toCommand(bookId, reviewRequest, claims.getUserId())
+                reviewRequest.toCommand(bookId, claims.getUserId())
         );
         ReviewResponse reviewResponse = ReviewResponse.fromDto(savedReview);
         URI location = URI.create(String.format("/api/v1/books/%d/reviews/%d", bookId, savedReview.getId()));
@@ -58,7 +58,7 @@ public class ReviewController {
     public ResponseEntity<PageResponse<ReviewResponse>> getReviews(
             @PathVariable("bookId") Long bookId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "100") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
 
@@ -75,15 +75,6 @@ public class ReviewController {
         return ResponseEntity.ok().body(responses);
     }
 
-    @GetMapping("/{reviewId}")
-    @Operation(summary = "Get a Review by ID", description = "리뷰 ID로 특정 리뷰를 조회한다.")
-    public ResponseEntity<ReviewResponse> getReviewById(
-            @PathVariable("reviewId") Long reviewId
-    ) {
-        ReviewDto reviewDto = reviewService.getReviewById(reviewId);
-        ReviewResponse reviewResponse = ReviewResponse.fromDto(reviewDto);
-        return ResponseEntity.ok(reviewResponse);
-    }
 
     @LoginRequired
     @PutMapping("/{reviewId}")
