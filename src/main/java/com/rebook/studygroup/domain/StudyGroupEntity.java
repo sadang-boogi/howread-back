@@ -3,14 +3,16 @@ package com.rebook.studygroup.domain;
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.user.domain.UserEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 
 @SQLRestriction(value = "is_deleted = false")
 @Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Table(name = "study_group")
 @Entity
 public class StudyGroupEntity extends BaseEntity {
