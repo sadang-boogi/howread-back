@@ -1,4 +1,4 @@
-package com.rebook.study.service.dto;
+package com.rebook.studygroup.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

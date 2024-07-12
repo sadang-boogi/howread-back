@@ -1,4 +1,4 @@
-package com.rebook.study.domain;
+package com.rebook.studygroup.domain;
 
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.user.domain.UserEntity;

@@ -1,8 +1,8 @@
-package com.rebook.study.service;
+package com.rebook.studygroup.service;
 
-import com.rebook.study.repository.StudyGroupRepository;
-import com.rebook.study.service.command.StudyGroupCommand;
-import com.rebook.study.service.dto.StudyGroupDto;
+import com.rebook.studygroup.repository.StudyGroupRepository;
+import com.rebook.studygroup.service.command.StudyGroupCommand;
+import com.rebook.studygroup.service.dto.StudyGroupDto;
 import com.rebook.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
