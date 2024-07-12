@@ -28,5 +28,24 @@ public class StudyGroupEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "leader_id", nullable = false)
     private UserEntity leader;
-}
 
+    private StudyGroupEntity(
+            Long id,
+            String name,
+            int maxMembers,
+            UserEntity leader
+    ) {
+        this.id = id;
+        this.name = name;
+        this.maxMembers = maxMembers;
+        this.leader = leader;
+    }
+
+    public static StudyGroupEntity of(
+            final String name,
+            final int maxMembers,
+            final UserEntity leader
+    ) {
+        return new StudyGroupEntity(null, name, maxMembers, leader);
+    }
+}

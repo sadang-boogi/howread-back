@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -41,7 +40,7 @@ public class UserEntity extends BaseEntity {
     private SocialType socialType;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<ReviewEntity> reviews = new ArrayList<>();
+    private final List<ReviewEntity> reviews = new ArrayList<>();
 
     private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
