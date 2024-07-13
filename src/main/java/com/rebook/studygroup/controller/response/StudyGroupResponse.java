@@ -24,7 +24,7 @@ public class StudyGroupResponse {
     }
 
     @Builder
-    private StudyGroupResponse(Long id, String name, int maxMembers, Long leaderId) {
+    public StudyGroupResponse(Long id, String name, int maxMembers, Long leaderId) {
         this.id = id;
         this.name = name;
         this.maxMembers = maxMembers;
