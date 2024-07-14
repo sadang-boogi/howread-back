@@ -1,6 +1,5 @@
 package com.rebook.book.controller.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rebook.book.service.dto.BookDto;
 import com.rebook.hashtag.service.dto.HashtagDto;
 import lombok.AllArgsConstructor;
@@ -33,8 +32,4 @@ public class BookResponse {
         );
     }
 
-    @JsonProperty("averageStarRate")
-    public String getRating() {
-        return rating.toString();
-    }
 }

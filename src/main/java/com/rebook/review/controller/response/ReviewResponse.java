@@ -1,6 +1,5 @@
 package com.rebook.review.controller.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rebook.review.service.dto.ReviewDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,8 +26,4 @@ public class ReviewResponse {
         );
     }
 
-    @JsonProperty("score")
-    public String getScore() {
-        return score.toString();
-    }
 }
