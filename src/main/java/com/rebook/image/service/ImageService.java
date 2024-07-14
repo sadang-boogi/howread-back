@@ -20,9 +20,9 @@ public class ImageService {
         }
 
         ImageFile imageFile = new ImageFile(image);
-        String imageUrl = imageUploader.uploadImage(imageFile);
+        String imageName = imageUploader.uploadImage(imageFile);
 
-        return ImagesResponse.of(imageUrl);
+        return ImagesResponse.of(imageName);
     }
 
 }
