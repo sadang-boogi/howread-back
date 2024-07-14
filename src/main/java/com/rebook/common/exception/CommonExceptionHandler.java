@@ -71,4 +71,14 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(exception);
     }
+
+    @ExceptionHandler(UnAuthorizedException.class)
+    public ResponseEntity<ExceptionResponse> handleUnAuthorizedException(UnAuthorizedException e) {
+        log.error("errorMessage: {}", e.getMessage());
+
+        ExceptionResponse exception = new ExceptionResponse(e.getCode(), e.getTitle(), e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(exception);
+    }
 }
