@@ -2,6 +2,7 @@ package com.rebook.user.domain;
 
 import com.rebook.common.domain.BaseEntity;
 import com.rebook.review.domain.ReviewEntity;
+import com.rebook.studygroup.domain.StudyGroupMemberEntity;
 import com.rebook.user.util.SocialType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -42,6 +43,9 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private final List<ReviewEntity> reviews = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private final List<StudyGroupMemberEntity> studyGroupMembers = new ArrayList<>();
+
     private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
     @Builder
@@ -68,5 +72,13 @@ public class UserEntity extends BaseEntity {
     public void removeReview(ReviewEntity review) {
         reviews.remove(review);
         review.softDelete();
+    }
+
+    public void addStudyGroupMember(StudyGroupMemberEntity member) {
+        studyGroupMembers.add(member);
+    }
+
+    public void removeStudyGroupMember(StudyGroupMemberEntity member) {
+        studyGroupMembers.remove(member);
     }
 }

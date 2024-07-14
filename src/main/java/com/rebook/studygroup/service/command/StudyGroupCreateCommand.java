@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class StudyGroupCommand {
+public class StudyGroupCreateCommand {
 
     private String name;
     private Integer maxMembers;
     private Long leaderId;
 
     @Builder
-    public StudyGroupCommand(String name, Integer maxMembers, Long leaderId) {
+    public StudyGroupCreateCommand(String name, Integer maxMembers, Long leaderId) {
         this.name = name;
         this.maxMembers = maxMembers;
         this.leaderId = leaderId;

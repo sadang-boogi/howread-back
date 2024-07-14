@@ -4,9 +4,12 @@ import com.rebook.auth.annotation.Authenticated;
 import com.rebook.auth.annotation.LoginRequired;
 import com.rebook.common.domain.PageInfo;
 import com.rebook.common.schema.PageResponse;
+import com.rebook.studygroup.controller.request.StudyGroupApplicationRequest;
 import com.rebook.studygroup.controller.request.StudyGroupCreateRequest;
+import com.rebook.studygroup.controller.response.StudyGroupApplicationResponse;
 import com.rebook.studygroup.controller.response.StudyGroupResponse;
 import com.rebook.studygroup.service.StudyGroupService;
+import com.rebook.studygroup.service.dto.StudyGroupApplicationDto;
 import com.rebook.studygroup.service.dto.StudyGroupDto;
 import com.rebook.user.service.dto.AuthClaims;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,12 +19,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/studygroups")
@@ -37,7 +40,7 @@ public class StudyGroupController {
             @Parameter(hidden = true) @Authenticated AuthClaims leader
     ) {
 
-        StudyGroupResponse studyGroupResponse = StudyGroupResponse.fromDto(studyGroupService.create(request.toCommand(), leader.getUserId()));
+        StudyGroupResponse studyGroupResponse = StudyGroupResponse.from(studyGroupService.create(request.toCommand(), leader.getUserId()));
 
         return ResponseEntity.created(URI.create("/api/v1/studygroups/" + studyGroupResponse.getId())).body(studyGroupResponse);
     }
@@ -52,8 +55,8 @@ public class StudyGroupController {
 
         List<StudyGroupResponse> items = studyGroups.getContent()
                 .stream()
-                .map(StudyGroupResponse::fromDto)
-                .collect(Collectors.toList());
+                .map(StudyGroupResponse::from)
+                .toList();
 
         PageInfo pageInfo = new PageInfo(studyGroups.getNumber(), studyGroups.getSize(), studyGroups.hasNext());
 
@@ -64,8 +67,37 @@ public class StudyGroupController {
 
     @GetMapping("/{studyGroupId}")
     public ResponseEntity<StudyGroupResponse> getStudyGroup(@PathVariable Long studyGroupId) {
-        StudyGroupResponse studyGroup = StudyGroupResponse.fromDto(studyGroupService.getStudyGroup(studyGroupId));
+        StudyGroupResponse studyGroup = StudyGroupResponse.from(studyGroupService.getStudyGroup(studyGroupId));
         return ResponseEntity.ok().body(studyGroup);
     }
 
+    @PostMapping("/{studyGroupId}/applications")
+    public ResponseEntity<StudyGroupApplicationResponse> applyToStudyGroup(
+            @PathVariable Long studyGroupId,
+            @RequestBody @Valid final StudyGroupApplicationRequest request,
+            @Authenticated final AuthClaims user
+    ) {
+        StudyGroupApplicationDto applicationDto = studyGroupService.applyToStudyGroup(request.toCommand(studyGroupId, user.getUserId()));
+        StudyGroupApplicationResponse response = StudyGroupApplicationResponse.from(applicationDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PatchMapping("/applications/{applicationId}/accept")
+    public ResponseEntity<Void> acceptStudyGroupApplication(
+            @PathVariable Long applicationId,
+            @Authenticated final AuthClaims leader
+    ) {
+        studyGroupService.acceptStudyGroupApplication(leader.getUserId(), applicationId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/applications/{applicationId}/reject")
+    public ResponseEntity<Void> rejectStudyGroupApplication(
+            @PathVariable Long applicationId,
+            @Authenticated final AuthClaims leader
+    ) {
+        studyGroupService.rejectStudyGroupApplication(leader.getUserId(), applicationId);
+        return ResponseEntity.ok().build();
+    }
 }

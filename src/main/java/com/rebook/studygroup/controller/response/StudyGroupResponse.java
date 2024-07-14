@@ -14,7 +14,7 @@ public class StudyGroupResponse {
     private int maxMembers;
     private Long leaderId;
 
-    public static StudyGroupResponse fromDto(StudyGroupDto studyGroupDto) {
+    public static StudyGroupResponse from(StudyGroupDto studyGroupDto) {
         return StudyGroupResponse.builder()
                 .id(studyGroupDto.getId())
                 .name(studyGroupDto.getName())

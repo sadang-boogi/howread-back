@@ -1,6 +1,6 @@
 package com.rebook.studygroup.controller.request;
 
-import com.rebook.studygroup.service.command.StudyGroupCommand;
+import com.rebook.studygroup.service.command.StudyGroupCreateCommand;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,8 +25,8 @@ public class StudyGroupCreateRequest {
         this.maxMembers = maxMembers;
     }
 
-    public StudyGroupCommand toCommand() {
-        return StudyGroupCommand.builder()
+    public StudyGroupCreateCommand toCommand() {
+        return StudyGroupCreateCommand.builder()
                 .name(name)
                 .maxMembers(maxMembers)
                 .build();

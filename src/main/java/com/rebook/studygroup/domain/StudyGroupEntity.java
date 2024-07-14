@@ -4,14 +4,17 @@ import com.rebook.common.domain.BaseEntity;
 import com.rebook.user.domain.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SQLRestriction(value = "is_deleted = false")
-@Builder
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "study_group")
 @Entity
@@ -31,12 +34,16 @@ public class StudyGroupEntity extends BaseEntity {
     @JoinColumn(name = "leader_id", nullable = false)
     private UserEntity leader;
 
+    @OneToMany(mappedBy = "studyGroup", cascade = CascadeType.ALL)
+    private List<StudyGroupMemberEntity> members = new ArrayList<>();
+
     private StudyGroupEntity(
             Long id,
             String name,
             int maxMembers,
             UserEntity leader
     ) {
+
         this.id = id;
         this.name = name;
         this.maxMembers = maxMembers;
@@ -49,5 +56,13 @@ public class StudyGroupEntity extends BaseEntity {
             final UserEntity leader
     ) {
         return new StudyGroupEntity(null, name, maxMembers, leader);
+    }
+
+    public void addMember(StudyGroupMemberEntity member) {
+        members.add(member);
+    }
+
+    public void removeMember(StudyGroupMemberEntity member) {
+        members.remove(member);
     }
 }
