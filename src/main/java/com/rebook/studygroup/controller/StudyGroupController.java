@@ -4,11 +4,11 @@ import com.rebook.auth.annotation.Authenticated;
 import com.rebook.auth.annotation.LoginRequired;
 import com.rebook.common.domain.PageInfo;
 import com.rebook.common.schema.PageResponse;
-import com.rebook.studygroup.controller.request.StudyGroupApplicationRequest;
 import com.rebook.studygroup.controller.request.StudyGroupCreateRequest;
 import com.rebook.studygroup.controller.response.StudyGroupApplicationResponse;
 import com.rebook.studygroup.controller.response.StudyGroupResponse;
 import com.rebook.studygroup.service.StudyGroupService;
+import com.rebook.studygroup.service.command.StudyGroupApplicationCommand;
 import com.rebook.studygroup.service.dto.StudyGroupApplicationDto;
 import com.rebook.studygroup.service.dto.StudyGroupDto;
 import com.rebook.user.service.dto.AuthClaims;
@@ -74,19 +74,22 @@ public class StudyGroupController {
     @PostMapping("/{studyGroupId}/applications")
     public ResponseEntity<StudyGroupApplicationResponse> applyToStudyGroup(
             @PathVariable Long studyGroupId,
-            @RequestBody @Valid final StudyGroupApplicationRequest request,
-            @Authenticated final AuthClaims user
+            @Parameter(hidden = true) @Authenticated final AuthClaims user
     ) {
-        StudyGroupApplicationDto applicationDto = studyGroupService.applyToStudyGroup(request.toCommand(studyGroupId, user.getUserId()));
-        StudyGroupApplicationResponse response = StudyGroupApplicationResponse.from(applicationDto);
+        StudyGroupApplicationCommand command = StudyGroupApplicationCommand.builder()
+                .studyGroupId(studyGroupId)
+                .userId(user.getUserId())
+                .build();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        StudyGroupApplicationDto applicationDto = studyGroupService.applyToStudyGroup(command);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(StudyGroupApplicationResponse.from(applicationDto));
     }
 
     @PatchMapping("/applications/{applicationId}/accept")
     public ResponseEntity<Void> acceptStudyGroupApplication(
             @PathVariable Long applicationId,
-            @Authenticated final AuthClaims leader
+            @Parameter(hidden = true) @Authenticated final AuthClaims leader
     ) {
         studyGroupService.acceptStudyGroupApplication(leader.getUserId(), applicationId);
         return ResponseEntity.ok().build();
@@ -95,7 +98,7 @@ public class StudyGroupController {
     @PatchMapping("/applications/{applicationId}/reject")
     public ResponseEntity<Void> rejectStudyGroupApplication(
             @PathVariable Long applicationId,
-            @Authenticated final AuthClaims leader
+            @Parameter(hidden = true) @Authenticated final AuthClaims leader
     ) {
         studyGroupService.rejectStudyGroupApplication(leader.getUserId(), applicationId);
         return ResponseEntity.ok().build();
