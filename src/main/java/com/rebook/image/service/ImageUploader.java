@@ -33,8 +33,6 @@ public class ImageUploader {
     @Value("${cloud.aws.s3.baseUrl}")
     private String baseUrl;
 
-
-
     public String uploadImage(final ImageFile imageFile, final Directory directory) {
         final String path = directory.getFullPath(imageFile.getHashedName());
         final ObjectMetadata metadata = new ObjectMetadata();
@@ -51,6 +49,5 @@ public class ImageUploader {
         }
         return baseUrl + path;
     }
-
 
 }
