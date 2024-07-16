@@ -53,7 +53,7 @@ cloud:
       secretKey: ${AWS_SECRET_KEY}
     s3:
       bucketName: howread-dev-assets
-      baseUrl: static/howread.net/
+      baseUrl: static.howread.net/
     region:
       static: ap-northeast-2
     stack:
