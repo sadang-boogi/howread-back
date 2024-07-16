@@ -52,8 +52,8 @@ cloud:
       accessKey: ${AWS_ACCESS_KEY}
       secretKey: ${AWS_SECRET_KEY}
     s3:
-      bucketName: howread-dev-images
-      folder: images/
+      bucketName: howread-dev-assets
+      baseUrl: static/howread.net/
     region:
       static: ap-northeast-2
     stack:

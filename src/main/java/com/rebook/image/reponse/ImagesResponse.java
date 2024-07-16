@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ImagesResponse {
 
-    private String imageName;
+    private String imagePath;
 
-    public static ImagesResponse of(final String imageUrl) {
-        return new ImagesResponse(imageUrl);
+    public static ImagesResponse of(final String imagePath) {
+        return new ImagesResponse(imagePath);
     }
 }

@@ -3,6 +3,7 @@ package com.rebook.image.service;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.rebook.image.domain.Directory;
 import com.rebook.image.domain.ImageFile;
 import com.rebook.image.exception.ImageException;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +30,13 @@ public class ImageUploader {
     @Value("${cloud.aws.s3.bucketName}")
     private String bucket;
 
-    @Value("${cloud.aws.s3.folder}")
-    private String folder;
+    @Value("${cloud.aws.s3.baseUrl}")
+    private String baseUrl;
 
-    public String uploadImage(final ImageFile imageFile) {
-        final String path = folder + imageFile.getHashedName();
+
+
+    public String uploadImage(final ImageFile imageFile, final Directory directory) {
+        final String path = directory.getFullPath(imageFile.getHashedName());
         final ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(imageFile.getContentType());
         metadata.setContentLength(imageFile.getSize());
@@ -46,7 +49,7 @@ public class ImageUploader {
         } catch (final IOException e) {
             throw new ImageException(INVALID_IMAGE);
         }
-        return imageFile.getHashedName();
+        return baseUrl + path;
     }
 
 
