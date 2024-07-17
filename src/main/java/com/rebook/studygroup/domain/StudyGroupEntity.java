@@ -21,6 +21,9 @@ public class StudyGroupEntity extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "max_members", nullable = false)
     private int maxMembers;
 
