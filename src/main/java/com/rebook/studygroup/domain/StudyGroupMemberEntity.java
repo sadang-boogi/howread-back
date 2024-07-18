@@ -1,5 +1,6 @@
 package com.rebook.studygroup.domain;
 
+import com.rebook.common.domain.BaseEntity;
 import com.rebook.user.domain.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +13,7 @@ import org.hibernate.annotations.SQLRestriction;
 @AllArgsConstructor
 @Table(name = "study_group_member")
 @Entity
-public class StudyGroupMemberEntity {
+public class StudyGroupMemberEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
