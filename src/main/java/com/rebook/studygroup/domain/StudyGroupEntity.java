@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SQLRestriction(value = "is_deleted = false")
 @Builder
 @Getter
@@ -30,4 +33,7 @@ public class StudyGroupEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "leader_id", nullable = false)
     private UserEntity leader;
+
+    @OneToMany(mappedBy = "studyGroup", cascade = CascadeType.ALL)
+    private List<StudyGroupMemberEntity> members = new ArrayList<>();
 }
