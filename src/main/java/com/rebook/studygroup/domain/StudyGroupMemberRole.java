@@ -1,6 +1,6 @@
 package com.rebook.studygroup.domain;
 
-public enum StudyGroupMemberGrade {
+public enum StudyGroupMemberRole {
     LEADER,
     MEMBER
 }
