@@ -1,7 +1,6 @@
 package com.rebook.studygroup.domain;
 
 import com.rebook.common.domain.BaseEntity;
-import com.rebook.user.domain.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
@@ -29,10 +28,6 @@ public class StudyGroupEntity extends BaseEntity {
 
     @Column(name = "max_members", nullable = false)
     private int maxMembers;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "leader_id", nullable = false)
-    private UserEntity leader;
 
     @OneToMany(mappedBy = "studyGroup", cascade = CascadeType.ALL)
     private List<StudyGroupMemberEntity> members = new ArrayList<>();

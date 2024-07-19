@@ -4,8 +4,11 @@ import com.rebook.common.domain.BaseEntity;
 import com.rebook.user.domain.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLRestriction;
 
+@DynamicInsert
 @SQLRestriction(value = "is_deleted = false")
 @Builder
 @Getter
@@ -26,4 +29,9 @@ public class StudyGroupMemberEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
+
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'MEMBER'")
+    @Column(name = "grade", nullable = false)
+    private StudyGroupMemberGrade grade;
 }
