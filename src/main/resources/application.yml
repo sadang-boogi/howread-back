@@ -49,11 +49,11 @@ app:
 cloud:
   aws:
     credentials:
-      accessKey: ${AWS_ACCESS_KEY}
-      secretKey: ${AWS_SECRET_KEY}
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
     s3:
-      bucketName: howread-dev-assets
-      baseUrl: static.howread.net/
+      bucket-name: howread-dev-assets
+      base-url: static.howread.net/
     region:
       static: ap-northeast-2
     stack:
