@@ -45,3 +45,17 @@ app:
       - "https://www.howread.net"
       - "https://howread.net"
       - "http://localhost:3000"
+
+    # S3
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    s3:
+      bucket-name: howread-dev-assets
+      base-url: static.howread.net/
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

@@ -26,3 +26,17 @@ spring:
 jwt:
   secret: test_secret_key
   token-validity-in-seconds: 1209600
+
+  # S3
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    s3:
+      bucket-name: howread-dev-assets
+      base-url: static.howread.net/
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
