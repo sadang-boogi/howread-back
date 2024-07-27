@@ -33,5 +33,5 @@ public class StudyGroupMemberEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'MEMBER'")
     @Column(name = "grade", nullable = false)
-    private StudyGroupMemberRole grade;
+    private StudyGroupMemberRole role;
 }
