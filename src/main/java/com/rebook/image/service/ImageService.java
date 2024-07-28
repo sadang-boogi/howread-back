@@ -5,8 +5,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public interface ImageService {
-    ImageResponse save(MultipartFile image);
-    ImageResponse getImage(Long id);
+public class ImageService {
+
+    public ImageResponse save(MultipartFile image) {
+        // 로직
+        return new ImageResponse();
+    }
+
+    public ImageResponse getImage(Long id) {
+        // 로직
+        return new ImageResponse();
+    }
+
 
 }
