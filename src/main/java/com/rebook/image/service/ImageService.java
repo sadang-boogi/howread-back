@@ -7,4 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public interface ImageService {
     ImageResponse save(MultipartFile image);
+    ImageResponse getImage(Long id);
+
 }

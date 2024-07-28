@@ -6,10 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
@@ -25,8 +22,14 @@ public class ImageController {
     @Operation(summary = "Upload an image")
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ImageResponse> uploadBookImage(@RequestPart final MultipartFile image) {
-        final ImageResponse imagesResponse = imageService.save(image);
-        return ResponseEntity.created(URI.create(imagesResponse.getImagePath())).body(imagesResponse);
+        final ImageResponse imageResponse = imageService.save(image);
+        return ResponseEntity.created(URI.create("/api/v1/image/" + imageResponse.getId())).body(imageResponse);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ImageResponse> getImageById(@PathVariable Long id) {
+        final ImageResponse imageResponse = imageService.getImage(id);
+        return ResponseEntity.ok().body(imageResponse);
     }
 
 }
