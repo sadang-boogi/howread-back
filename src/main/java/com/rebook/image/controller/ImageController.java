@@ -26,10 +26,4 @@ public class ImageController {
         return ResponseEntity.created(URI.create("/api/v1/image/" + imageResponse.getId())).body(imageResponse);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ImageResponse> getImageById(@PathVariable Long id) {
-        final ImageResponse imageResponse = imageService.getImage(id);
-        return ResponseEntity.ok().body(imageResponse);
-    }
-
 }

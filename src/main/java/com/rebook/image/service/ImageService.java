@@ -12,10 +12,4 @@ public class ImageService {
         return new ImageResponse();
     }
 
-    public ImageResponse getImage(Long id) {
-        // 로직
-        return new ImageResponse();
-    }
-
-
 }
