@@ -21,32 +21,23 @@ jobs:
       - name: Gradle 권한 부여
         run: chmod +x gradlew
 
-      - name: Environment 값 설정
+      - name: .env 파일 생성
+        run: |
+          echo 'GOOGLE_OAUTH_CLIENT_ID=${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}' > .env
+          echo 'GOOGLE_OAUTH_CLIENT_SECRET=${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}' >> .env
+          echo 'GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}' >> .env
+          echo 'JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}' >> .env
+          echo 'DB_URL=${{ secrets.DB_URL }}' >> .env
+          echo 'DB_USERNAME=${{ secrets.DB_USERNAME }}' >> .env
+          echo 'DB_PASSWORD=${{ secrets.DB_PASSWORD }}' >> .env
+          echo 'AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}' >> .env
+          echo 'AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}' >> .env
+
+      - name: 테스트 및 빌드
         env:
-          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
-          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
-          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
           DB_URL: ${{ secrets.DB_URL }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-        run: echo "Environment variables set"
-
-      - name: .env 파일 생성
-        run: |
-          echo 'GOOGLE_OAUTH_CLIENT_ID="${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}"' > .env
-          echo 'GOOGLE_OAUTH_CLIENT_SECRET="${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}"' >> .env
-          echo 'GOOGLE_REDIRECT_URI="${{ secrets.GOOGLE_REDIRECT_URI }}"' >> .env
-          echo 'JWT_SECRET_KEY="${{ secrets.JWT_SECRET_KEY }}"' >> .env
-          echo 'DB_URL="${{ secrets.DB_URL }}"' >> .env
-          echo 'DB_USERNAME="${{ secrets.DB_USERNAME }}"' >> .env
-          echo 'DB_PASSWORD="${{ secrets.DB_PASSWORD }}"' >> .env
-          echo 'AWS_ACCESS_KEY="${{ secrets.AWS_ACCESS_KEY }}"' >> .env
-          echo 'AWS_SECRET_KEY="${{ secrets.AWS_SECRET_KEY }}"' >> .env
-
-      - name: 테스트 및 빌드
         run: ./gradlew clean build
 
       - name: 빌드된 파일 이름 변경
@@ -83,7 +74,9 @@ jobs:
             rm -rf /home/ubuntu/howread-server/current
             mkdir /home/ubuntu/howread-server/current
             mv /home/ubuntu/howread-server/tobe/release.jar /home/ubuntu/howread-server/current
+            mv /home/ubuntu/howread-server/current/.env /home/ubuntu/howread-server/current/.env
             cd /home/ubuntu/howread-server/current
+            export $(cat .env | xargs)
             sudo fuser -k -n tcp 8080 || true
             nohup java -jar release.jar > ./output.log 2>&1 &
             rm -rf /home/ubuntu/howread-server/tobe
