@@ -62,13 +62,13 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 2222
           source: .env
-          target: /home/ubuntu/howread-server/tobe
+          target: /home/ubuntu/howread-server/tobe/
 
       - name: .env 파일 위치 확인 (디버깅)
         run: |
           echo "${{ secrets.EC2_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
-          ssh -o StrictHostKeyChecking=no -i private_key.pem -p 2222 ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'ls -la /home/ubuntu/howread-server/ && cat /home/ubuntu/howread-server/.env'
+          ssh -o StrictHostKeyChecking=no -i private_key.pem -p 2222 ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'ls -la /home/ubuntu/howread-server/tobe/ && cat /home/ubuntu/howread-server/tobe/.env'
 
       - name: release.jar 파일 전송
         uses: appleboy/scp-action@master
@@ -78,7 +78,7 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 2222
           source: ./release.jar
-          target: /home/ubuntu/howread-server/current/tobe
+          target: /home/ubuntu/howread-server/current/tobe/
 
       - name: SSH로 EC2에 접속하여 애플리케이션 시작
         uses: appleboy/ssh-action@master
@@ -89,6 +89,7 @@ jobs:
           port: 2222
           script: |
             rm -rf /home/ubuntu/howread-server/current
+            mkdir /home/ubuntu/howread-server/current
             mv /home/ubuntu/howread-server/tobe/.env /home/ubuntu/howread-server/current/.env
             mv /home/ubuntu/howread-server/tobe/release.jar /home/ubuntu/howread-server/current/release.jar
             cd /home/ubuntu/howread-server/current
