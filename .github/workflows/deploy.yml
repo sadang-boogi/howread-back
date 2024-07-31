@@ -6,7 +6,7 @@ on:
       - develop
 
 jobs:
-  Depoly:
+  Deploy:
     runs-on: ubuntu-latest
     steps:
       - name: GitHub 저장소에서 파일 가져오기
@@ -21,22 +21,18 @@ jobs:
       - name: Gradle 권한 부여
         run: chmod +x gradlew
 
-      - name: Environment 값 설정
-        env:
-          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
-          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
-          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
-          WS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-        run: echo "Environment variables set"
-
-      - name: ENV 파일 값 설정
+      - name: .env 파일 생성
         run: |
-          echo "GOOGLE_OAUTH_CLIENT_ID=${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "GOOGLE_OAUTH_CLIENT_SECRET=${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}" >> $GITHUB_ENV
-          echo "GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}" >> $GITHUB_ENV
-          echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" >> $GITHUB_ENV
-          echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> $GITHUB_ENV
+          echo 'GOOGLE_OAUTH_CLIENT_ID="${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}"' > .env
+          echo 'GOOGLE_OAUTH_CLIENT_SECRET="${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}"' >> .env
+          echo 'GOOGLE_REDIRECT_URI="${{ secrets.GOOGLE_REDIRECT_URI }}"' >> .env
+          echo 'JWT_SECRET_KEY="${{ secrets.JWT_SECRET_KEY }}"' >> .env
+          echo 'DB_URL="${{ secrets.DB_URL }}"' >> .env
+          echo 'DB_USERNAME="${{ secrets.DB_USERNAME }}"' >> .env
+          echo 'DB_PASSWORD="${{ secrets.DB_PASSWORD }}"' >> .env
+          echo 'LOCAL_DB_URL="${{ secrets.LOCAL_DB_URL }}"' >> .env
+          echo 'LOCAL_DB_USERNAME="${{ secrets.LOCAL_DB_USERNAME }}"' >> .env
+          echo 'LOCAL_DB_PASSWORD="${{ secrets.LOCAL_DB_PASSWORD }}"' >> .env
 
       - name: 테스트 및 빌드
         run: ./gradlew clean build
@@ -54,7 +50,17 @@ jobs:
           source: "./release.jar"
           target: "/home/ubuntu/howread-server/tobe"
 
-      - name: SSH로 EC2에 접속하기
+      - name: SCP로 .env 파일 전송
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          port: 2222
+          source: "./.env"
+          target: "/home/ubuntu/howread-server/current/.env"
+
+      - name: SSH로 EC2에 접속하여 애플리케이션 시작
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
