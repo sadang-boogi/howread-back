@@ -77,7 +77,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 2222
-          source: ./release.jar
+          source: release.jar
           target: /home/ubuntu/howread-server/current/tobe/
 
       - name: SSH로 EC2에 접속하여 애플리케이션 시작
