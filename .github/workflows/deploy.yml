@@ -8,6 +8,7 @@ on:
 jobs:
   Deploy:
     runs-on: ubuntu-latest
+    environment: develop
     steps:
       - name: GitHub 저장소에서 파일 가져오기
         uses: actions/checkout@v4
