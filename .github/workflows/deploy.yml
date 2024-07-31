@@ -62,7 +62,7 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 2222
           source: ".env"
-          target: "/home/ubuntu/howread-server/.env"
+          target: "/home/ubuntu/howread-server/"
 
       - name: .env 파일 위치 확인 (디버깅)
         run: |
