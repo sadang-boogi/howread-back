@@ -16,7 +16,7 @@ services:
 
   blue:
     image: sadang-boogi/howread-api:latest
-    cotainer_name: blue
+    container_name: blue
     restart: always
     ports:
       - 8081:8080
