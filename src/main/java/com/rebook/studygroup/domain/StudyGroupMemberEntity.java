@@ -30,8 +30,8 @@ public class StudyGroupMemberEntity extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING )
     @ColumnDefault("'MEMBER'")
-    @Column(name = "grade", nullable = false)
+    @Column(name = "grade", nullable = false, columnDefinition = "varchar(255)")
     private StudyGroupMemberRole role;
 }
