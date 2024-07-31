@@ -74,9 +74,8 @@ jobs:
             rm -rf /home/ubuntu/howread-server/current
             mkdir /home/ubuntu/howread-server/current
             mv /home/ubuntu/howread-server/tobe/release.jar /home/ubuntu/howread-server/current
-            mv /home/ubuntu/howread-server/current/.env /home/ubuntu/howread-server/current/.env
             cd /home/ubuntu/howread-server/current
-            export $(cat .env | xargs)
+            export $(grep -v '^#' .env | xargs) # .env 파일의 내용을 환경 변수로 설정
             sudo fuser -k -n tcp 8080 || true
             nohup java -jar release.jar > ./output.log 2>&1 &
             rm -rf /home/ubuntu/howread-server/tobe
