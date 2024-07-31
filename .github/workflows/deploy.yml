@@ -67,9 +67,6 @@ jobs:
           source: "./.env"
           target: "/home/ubuntu/howread-server/current/.env"
 
-      - name: .env 파일이 EC2에 전송되었는지 확인
-        run: ssh -i ${{ secrets.EC2_PRIVATE_KEY }} -p 2222 ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'cat /home/ubuntu/howread-server/current/.env'
-
       - name: SSH로 EC2에 접속하여 애플리케이션 시작
         uses: appleboy/ssh-action@master
         with:
