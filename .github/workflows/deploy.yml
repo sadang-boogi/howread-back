@@ -62,7 +62,7 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 2222
           source: .env
-          target: /home/ubuntu/howread-server/tobe/.env
+          target: /home/ubuntu/howread-server/tobe/
 
       - name: .env 파일 위치 확인 (디버깅)
         run: |
@@ -78,7 +78,7 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 2222
           source: release.jar
-          target: /home/ubuntu/howread-server/tobe/release.jar
+          target: /home/ubuntu/howread-server/tobe/
 
       - name: SSH로 EC2에 접속하여 애플리케이션 시작
         uses: appleboy/ssh-action@master
@@ -94,3 +94,4 @@ jobs:
             sudo fuser -k -n tcp 8080 || true
             export $(grep -v '^#' .env | xargs)
             nohup java -jar release.jar > ./output.log 2>&1 &
+            rm -rf /home/ubuntu/howread-server/tobe
