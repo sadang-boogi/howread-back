@@ -30,9 +30,8 @@ jobs:
           echo 'DB_URL="${{ secrets.DB_URL }}"' >> .env
           echo 'DB_USERNAME="${{ secrets.DB_USERNAME }}"' >> .env
           echo 'DB_PASSWORD="${{ secrets.DB_PASSWORD }}"' >> .env
-          echo 'LOCAL_DB_URL="${{ secrets.LOCAL_DB_URL }}"' >> .env
-          echo 'LOCAL_DB_USERNAME="${{ secrets.LOCAL_DB_USERNAME }}"' >> .env
-          echo 'LOCAL_DB_PASSWORD="${{ secrets.LOCAL_DB_PASSWORD }}"' >> .env
+          echo 'AWS_ACCESS_KEY="${{ secrets.AWS_ACCESS_KEY }}"' >> .env
+          echo 'AWS_SECRET_KEY="${{ secrets.AWS_SECRET_KEY }}"' >> .env
 
       - name: 테스트 및 빌드
         run: ./gradlew clean build
