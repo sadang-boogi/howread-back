@@ -33,7 +33,6 @@ jobs:
 
       - name: 환경 변수 설정 및 .env 파일 생성
         run: |
-          touch .env
           echo "GOOGLE_OAUTH_CLIENT_ID=${{ secrets.test.GOOGLE_OAUTH_CLIENT_ID }}" > .env
           echo "GOOGLE_OAUTH_CLIENT_SECRET=${{ secrets.test.GOOGLE_OAUTH_CLIENT_SECRET }}" >> .env
           echo "GOOGLE_REDIRECT_URI=${{ secrets.test.GOOGLE_REDIRECT_URI }}" >> .env
@@ -62,7 +61,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 2222
-          source: "./.env"
+          source: ".env"
           target: "/home/ubuntu/howread-server/.env"
 
       - name: .env 파일 위치 확인 (디버깅)
