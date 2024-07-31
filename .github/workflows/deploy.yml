@@ -90,7 +90,7 @@ jobs:
           port: 2222
           script: |
             cd /home/ubuntu/howread-server/current
-            mv /home/ubuntu/howread-server/.env /home/ubuntu/howread-server/current/.env
+            cp /home/ubuntu/howread-server/.env /home/ubuntu/howread-server/current/.env
             export $(grep -v '^#' .env | xargs)
             sudo fuser -k -n tcp 8080 || true
             nohup java -jar release.jar > ./output.log 2>&1 &
