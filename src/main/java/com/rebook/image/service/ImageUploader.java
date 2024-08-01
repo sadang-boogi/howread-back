@@ -26,10 +26,10 @@ public class ImageUploader {
 
     private final AmazonS3 s3Client;
 
-    @Value("${cloud.aws.s3.bucketName}")
+    @Value("${cloud.aws.s3.bucket-name}")
     private String bucket;
 
-    @Value("${cloud.aws.s3.baseUrl}")
+    @Value("${cloud.aws.s3.base-url}")
     private String baseUrl;
 
     public String uploadImage(final ImageFile imageFile) {
