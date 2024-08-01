@@ -9,15 +9,15 @@ jobs:
   Deploy:
     runs-on: ubuntu-latest
     env:
-      GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.test.GOOGLE_OAUTH_CLIENT_ID }}
-      GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.test.GOOGLE_OAUTH_CLIENT_SECRET }}
-      GOOGLE_REDIRECT_URI: ${{ secrets.test.GOOGLE_REDIRECT_URI }}
-      JWT_SECRET_KEY: ${{ secrets.test.JWT_SECRET_KEY }}
-      DB_URL: ${{ secrets.test.DB_URL }}
-      DB_USERNAME: ${{ secrets.test.DB_USERNAME }}
-      DB_PASSWORD: ${{ secrets.test.DB_PASSWORD }}
-      AWS_ACCESS_KEY: ${{ secrets.test.AWS_ACCESS_KEY }}
-      AWS_SECRET_KEY: ${{ secrets.test.AWS_SECRET_KEY }}
+      GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+      GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+      DB_URL: ${{ secrets.DB_URL }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
     steps:
       - name: GitHub 저장소에서 파일 가져오기
         uses: actions/checkout@v4
@@ -33,27 +33,35 @@ jobs:
 
       - name: 환경 변수 설정 및 .env 파일 생성
         run: |
-          touch .env
-          echo "GOOGLE_OAUTH_CLIENT_ID=${{ secrets.test.GOOGLE_OAUTH_CLIENT_ID }}" > .env
-          echo "GOOGLE_OAUTH_CLIENT_SECRET=${{ secrets.test.GOOGLE_OAUTH_CLIENT_SECRET }}" >> .env
-          echo "GOOGLE_REDIRECT_URI=${{ secrets.test.GOOGLE_REDIRECT_URI }}" >> .env
-          echo "JWT_SECRET_KEY=${{ secrets.test.JWT_SECRET_KEY }}" >> .env
-          echo "DB_URL=${{ secrets.test.DB_URL }}" >> .env
-          echo "DB_USERNAME=${{ secrets.test.DB_USERNAME }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.test.DB_PASSWORD }}" >> .env
-          echo "AWS_ACCESS_KEY=${{ secrets.test.AWS_ACCESS_KEY }}" >> .env
-          echo "AWS_SECRET_KEY=${{ secrets.test.AWS_SECRET_KEY }}" >> .env
+          echo "GOOGLE_OAUTH_CLIENT_ID=${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}" > .env
+          echo "GOOGLE_OAUTH_CLIENT_SECRET=${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}" >> .env
+          echo "GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}" >> .env
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+          echo "DB_URL=${{ secrets.DB_URL }}" >> .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" >> .env
+          echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
           cat .env
 
       - name: 테스트 및 빌드
         env:
-          DB_URL: ${{ secrets.test.DB_URL }}
-          DB_USERNAME: ${{ secrets.test.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.test.DB_PASSWORD }}
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: ./gradlew clean build
 
       - name: 빌드된 파일 이름 변경
         run: mv ./build/libs/*SNAPSHOT.jar ./release.jar
+
+      - name: 기존 .env 파일 삭제
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          port: 2222
+          script: rm -f /home/ubuntu/howread-server/tobe/.env
 
       - name: .env 파일 전송
         uses: appleboy/scp-action@master
@@ -62,14 +70,14 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 2222
-          source: "./.env"
-          target: "/home/ubuntu/howread-server/.env"
+          source: .env
+          target: /home/ubuntu/howread-server/tobe
 
       - name: .env 파일 위치 확인 (디버깅)
         run: |
           echo "${{ secrets.EC2_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
-          ssh -o StrictHostKeyChecking=no -i private_key.pem -p 2222 ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'ls -la /home/ubuntu/howread-server/ && cat /home/ubuntu/howread-server/.env'
+          ssh -o StrictHostKeyChecking=no -i private_key.pem -p 2222 ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'ls -la /home/ubuntu/howread-server/tobe/ && cat /home/ubuntu/howread-server/tobe/.env'
 
       - name: release.jar 파일 전송
         uses: appleboy/scp-action@master
@@ -78,8 +86,14 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 2222
-          source: "./release.jar"
-          target: "/home/ubuntu/howread-server/current/release.jar"
+          source: release.jar
+          target: /home/ubuntu/howread-server/tobe
+
+      - name: release.jar 파일 위치 확인 (디버깅)
+        run: |
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -o StrictHostKeyChecking=no -i private_key.pem -p 2222 ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'ls -la /home/ubuntu/howread-server/tobe/ && ls -la /home/ubuntu/howread-server/tobe/release.jar'
 
       - name: SSH로 EC2에 접속하여 애플리케이션 시작
         uses: appleboy/ssh-action@master
@@ -89,8 +103,12 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 2222
           script: |
+            rm -rf /home/ubuntu/howread-server/current
+            mkdir -p /home/ubuntu/howread-server/current
+            mv /home/ubuntu/howread-server/tobe/.env /home/ubuntu/howread-server/current
+            mv /home/ubuntu/howread-server/tobe/release.jar /home/ubuntu/howread-server/current
             cd /home/ubuntu/howread-server/current
-            mv /home/ubuntu/howread-server/.env /home/ubuntu/howread-server/current/.env
-            export $(grep -v '^#' .env | xargs)
             sudo fuser -k -n tcp 8080 || true
+            export $(grep -v '^#' .env | xargs)
             nohup java -jar release.jar > ./output.log 2>&1 &
+            rm -rf /home/ubuntu/howread-server/tobe
