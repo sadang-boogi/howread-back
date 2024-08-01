@@ -10,11 +10,13 @@ public class UserUpdateCommand {
 
     private Long userId;
     private String nickname;
+    private String avatarUrl;
 
     public static UserUpdateCommand from(UserUpdateRequest request, Long userId) {
         return new UserUpdateCommand(
                 userId,
-                request.getNickname()
+                request.getNickname(),
+                request.getAvatarUrl()
         );
     }
 }

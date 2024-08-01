@@ -37,6 +37,7 @@ public class UserService {
                 .socialType(SocialType.valueOf(userCommand.getSocialType()))
                 .socialId(userCommand.getSocialId())
                 .role(Role.USER)
+                .avatarUrl(null) // 소셜 로그인 회원 가입시 프로필 사진 추후 등록
                 .build();
 
         return AuthClaims.fromEntity(userRepository.save(newUser));
@@ -54,7 +55,7 @@ public class UserService {
         UserEntity user = userRepository.findById(command.getUserId())
                 .orElseThrow(() -> new NotFoundException("사용자 정보 수정 실패", "해당 유저가 존재하지 않습니다."));
 
-        user.update(command.getNickname());
+        user.update(command.getNickname(), command.getAvatarUrl());
 
         return UserDto.fromEntity(user);
     }
