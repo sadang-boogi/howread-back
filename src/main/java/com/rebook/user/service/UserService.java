@@ -1,6 +1,9 @@
 package com.rebook.user.service;
 
+import com.rebook.common.exception.ExceptionCode;
 import com.rebook.common.exception.NotFoundException;
+import com.rebook.image.domain.ImageEntity;
+import com.rebook.image.repository.ImageRepository;
 import com.rebook.user.domain.Role;
 import com.rebook.user.domain.UserEntity;
 import com.rebook.user.repository.UserRepository;
@@ -19,6 +22,7 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final ImageRepository imageRepository;
 
     @Transactional
     public AuthClaims createUser(UserCommand userCommand) {
@@ -55,7 +59,10 @@ public class UserService {
         UserEntity user = userRepository.findById(command.getUserId())
                 .orElseThrow(() -> new NotFoundException("사용자 정보 수정 실패", "해당 유저가 존재하지 않습니다."));
 
-        user.update(command.getNickname(), command.getAvatarUrl());
+        ImageEntity image = imageRepository.findById(command.getAvatarImageId())
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_IMAGE_ID));
+
+        user.update(command.getNickname(), image.getUrl());
 
         return UserDto.fromEntity(user);
     }
