@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class ReactionSaveCommand {
+public class ReactionCommand {
     Long userId;
     ReactionType reactionType;
     TargetType targetType;
