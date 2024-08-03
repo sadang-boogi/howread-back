@@ -34,13 +34,11 @@ public class JwtUtil {
         return JWT.create()
                 .withSubject(String.valueOf(authClaims.getUserId()))
                 .withExpiresAt(currentDate.plusSeconds(jwtProperties.getTokenValidityInSeconds()))
-                .withIssuer("auth0")
                 .sign(Algorithm.HMAC512(jwtProperties.getSecret()));
     }
 
     public boolean isTokenExpired(String token) {
         Instant expiredAt = JWT.require(Algorithm.HMAC512(jwtProperties.getSecret()))
-                .withIssuer("auth0")
                 .build().verify(token)
                 .getExpiresAtAsInstant();
         return expiredAt.isBefore(Instant.now());
@@ -49,7 +47,6 @@ public class JwtUtil {
     public boolean isTokenNotManipulated(String token) {
         try {
             JWT.require(Algorithm.HMAC512(jwtProperties.getSecret()))
-                    .withIssuer("auth0")
                     .build()
                     .verify(token);
             return true;
