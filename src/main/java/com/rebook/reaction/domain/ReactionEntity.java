@@ -4,10 +4,12 @@ import com.rebook.common.domain.BaseEntity;
 import com.rebook.user.domain.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.SQLRestriction;
 
+@Getter
 @Entity
 @SQLRestriction("is_deleted = false")
 @AllArgsConstructor
@@ -41,4 +43,10 @@ public class ReactionEntity extends BaseEntity {
     @Column(name = "is_on", nullable = false)
     private boolean isOn;
 
+    public void turnOn() {
+        this.isOn = true;
+    }
+    public void turnOff() {
+        this.isOn = false;
+    }
 }
