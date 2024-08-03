@@ -11,7 +11,6 @@ import com.rebook.user.service.dto.AuthClaims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Base64;
 
@@ -20,8 +19,8 @@ import java.util.Base64;
 public class JwtUtil {
 
     private final JwtProperties jwtProperties;
-    private final String tokenPrefix = "Bearer ";
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private String tokenPrefix = "Bearer ";
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public boolean isIncludeTokenPrefix(String header) {
         return header.split(" ")[0].equals(tokenPrefix.trim());
@@ -41,7 +40,7 @@ public class JwtUtil {
     public boolean isTokenExpired(String token) {
         Instant expiredAt = JWT.require(Algorithm.HMAC512(jwtProperties.getSecret()))
                 .build().verify(token)
-                .getExpiresAt().toInstant();
+                .getExpiresAtAsInstant();
         return expiredAt.isBefore(Instant.now());
     }
 
@@ -58,13 +57,11 @@ public class JwtUtil {
     }
 
     public AuthClaims extractClaimFromToken(String token) {
-        String payload = JWT.decode(token).getPayload();
+        String payload = JWT.decode(token)
+                .getPayload();
 
-        // URL-safe Base64 디코딩
         byte[] decodedBytes = Base64.getUrlDecoder().decode(payload);
-
-        // UTF-8 인코딩을 사용하여 문자열로 변환
-        String decodedPayload = new String(decodedBytes, StandardCharsets.UTF_8);
+        String decodedPayload = new String(decodedBytes);
 
         return parseUserFromJwt(decodedPayload);
     }
@@ -75,7 +72,7 @@ public class JwtUtil {
             Long userId = payload.getSub();
             return new AuthClaims(userId);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to parse JWT payload", e);
+            throw new RuntimeException(e);
         }
     }
 }
