@@ -5,6 +5,10 @@
 <img width="300px" src="https://github.com/sadang-boogi/howread-back/assets/120021021/3fafbae0-71a1-45e3-acb8-281f0c722c75" alt="HowRead"/>
 
 </div>
+
+## CI/CD
+
+![cicd](https://github.com/user-attachments/assets/14a527ef-6416-426e-b31d-d25fce202c98)
  
 ## ER Diagram
 
