@@ -6,7 +6,7 @@
 
 </div>
 
-##CI/CD
+## CI/CD
 
 ![cicd](https://github.com/user-attachments/assets/14a527ef-6416-426e-b31d-d25fce202c98)
  
