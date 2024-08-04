@@ -1,8 +1,6 @@
 package com.rebook.studygroup.service;
 
 import com.rebook.common.exception.NotFoundException;
-import com.rebook.studygroup.repository.StudyGroupMemberRepository;
-import com.rebook.studygroup.repository.StudyGroupRepository;
 import com.rebook.studygroup.service.dto.StudyGroupDto;
 import com.rebook.user.domain.Role;
 import com.rebook.user.domain.UserEntity;
@@ -24,12 +22,6 @@ class StudyGroupServiceTest {
 
     @Autowired
     private StudyGroupService studyGroupService;
-
-    @Autowired
-    private StudyGroupMemberRepository studyGroupMemberRepository;
-
-    @Autowired
-    private StudyGroupRepository studyGroupRepository;
 
     @Autowired
     private UserRepository userRepository;
