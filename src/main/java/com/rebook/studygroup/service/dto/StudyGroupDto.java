@@ -11,16 +11,16 @@ public class StudyGroupDto {
     private Long id;
     private String name;
     private String description;
-    private int maxMemberCount;
-    private int currentMemberCount;
+    private int maxMembers;
+    private int currentMembers;
 
     @Builder
-    private StudyGroupDto(Long id, String name, String description, int maxMemberCount, int currentMemberCount) {
+    private StudyGroupDto(Long id, String name, String description, int maxMembers, int currentMembers) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.maxMemberCount = maxMemberCount;
-        this.currentMemberCount = currentMemberCount;
+        this.maxMembers = maxMembers;
+        this.currentMembers = currentMembers;
     }
 
     public static StudyGroupDto fromEntity(StudyGroupEntity studyGroupEntity) {
@@ -28,8 +28,8 @@ public class StudyGroupDto {
                 .id(studyGroupEntity.getId())
                 .name(studyGroupEntity.getName())
                 .description(studyGroupEntity.getDescription())
-                .maxMemberCount(studyGroupEntity.getMaxMembers())
-                .currentMemberCount(studyGroupEntity.getMembers().size())
+                .maxMembers(studyGroupEntity.getMaxMembers())
+                .currentMembers(studyGroupEntity.getMembers().size())
                 .build();
     }
 }

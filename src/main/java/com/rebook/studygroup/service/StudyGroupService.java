@@ -5,6 +5,7 @@ import com.rebook.studygroup.domain.StudyGroupEntity;
 import com.rebook.studygroup.domain.StudyGroupMemberEntity;
 import com.rebook.studygroup.repository.StudyGroupMemberRepository;
 import com.rebook.studygroup.repository.StudyGroupRepository;
+import com.rebook.studygroup.service.command.StudyGroupCreateCommand;
 import com.rebook.studygroup.service.dto.StudyGroupDto;
 import com.rebook.user.domain.UserEntity;
 import com.rebook.user.repository.UserRepository;
@@ -24,16 +25,16 @@ public class StudyGroupService {
     private final UserRepository userRepository;
 
     @Transactional
-    public StudyGroupDto create(String studyGroupName, String description, int maxMemberCount, Long userId) {
+    public StudyGroupDto create(final StudyGroupCreateCommand studyGroupCreateCommand, final Long userId) {
         // userId로 사용자 조회
         UserEntity leader = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_USER_ID));
 
         // 스터디그룹 생성
         StudyGroupEntity savedStudyGroup = studyGroupRepository.save(StudyGroupEntity.builder()
-                .name(studyGroupName)
-                .description(description)
-                .maxMembers(maxMemberCount)
+                .name(studyGroupCreateCommand.getName())
+                .description(studyGroupCreateCommand.getDescription())
+                .maxMembers(studyGroupCreateCommand.getMaxMembers())
                 .build());
 
         // 스터디그룹 리더 생성

@@ -1,6 +1,7 @@
 package com.rebook.studygroup.service;
 
 import com.rebook.common.exception.NotFoundException;
+import com.rebook.studygroup.service.command.StudyGroupCreateCommand;
 import com.rebook.studygroup.service.dto.StudyGroupDto;
 import com.rebook.user.domain.Role;
 import com.rebook.user.domain.UserEntity;
@@ -49,16 +50,18 @@ class StudyGroupServiceTest {
         String description = "스터디그룹 설명";
         int maxMemberCount = 10;
 
+        StudyGroupCreateCommand studyGroupCreateCommand = new StudyGroupCreateCommand(studyGroupName, description, maxMemberCount);
+
         // when
-        StudyGroupDto studyGroup = studyGroupService.create(studyGroupName, description, maxMemberCount, leader.getId());
+        StudyGroupDto studyGroup = studyGroupService.create(studyGroupCreateCommand, leader.getId());
 
         // then
         assertThat(studyGroup).isNotNull();
         assertThat(studyGroup.getId()).isEqualTo(1L);
         assertThat(studyGroup.getName()).isEqualTo(studyGroupName);
         assertThat(studyGroup.getDescription()).isEqualTo(description);
-        assertThat(studyGroup.getMaxMemberCount()).isEqualTo(maxMemberCount);
-        assertThat(studyGroup.getCurrentMemberCount()).isEqualTo(1);
+        assertThat(studyGroup.getMaxMembers()).isEqualTo(maxMemberCount);
+        assertThat(studyGroup.getCurrentMembers()).isEqualTo(1);
     }
 
     @DisplayName("리더 없이 스터디그룹을 생성하면 예외가 발생한다.")
@@ -69,8 +72,10 @@ class StudyGroupServiceTest {
         String description = "스터디그룹 설명";
         int maxMemberCount = 10;
 
+        StudyGroupCreateCommand studyGroupCreateCommand = new StudyGroupCreateCommand(studyGroupName, description, maxMemberCount);
+
         // when, then
-        assertThatThrownBy(() -> studyGroupService.create(studyGroupName, description, maxMemberCount, 100L))
+        assertThatThrownBy(() -> studyGroupService.create(studyGroupCreateCommand, 100L))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("유저가 존재하지 않습니다.");
     }
