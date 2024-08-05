@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -29,8 +26,16 @@ public class StudyGroupController {
             @Parameter(hidden = true) @Authenticated AuthClaims claims
     ) {
         StudyGroupResponse studyGroupResponse = StudyGroupResponse.from(
-                studyGroupService.create(studyGroupCreateRequest.toCommand(), claims.getUserId()));
+                studyGroupService.createStudyGroup(studyGroupCreateRequest.toCommand(), claims.getUserId()));
 
         return ResponseEntity.created(URI.create("/api/v1/studygroups/" + studyGroupResponse.getId())).body(studyGroupResponse);
+    }
+
+    @GetMapping("/{studyGroupId}")
+    public ResponseEntity<StudyGroupResponse> getStudyGroup(
+            @PathVariable final Long studyGroupId
+    ) {
+        return ResponseEntity.ok(StudyGroupResponse.from(
+                studyGroupService.getStudyGroup(studyGroupId)));
     }
 }

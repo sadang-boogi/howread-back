@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.rebook.common.exception.ExceptionCode.NOT_FOUND_STUDY_GROUP_ID;
 import static com.rebook.common.exception.ExceptionCode.NOT_FOUND_USER_ID;
 import static com.rebook.studygroup.domain.StudyGroupMemberRole.LEADER;
 
@@ -25,7 +26,7 @@ public class StudyGroupService {
     private final UserRepository userRepository;
 
     @Transactional
-    public StudyGroupDto create(final StudyGroupCreateCommand studyGroupCreateCommand, final Long userId) {
+    public StudyGroupDto createStudyGroup(final StudyGroupCreateCommand studyGroupCreateCommand, final Long userId) {
         // userId로 사용자 조회
         UserEntity leader = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_USER_ID));
@@ -49,5 +50,13 @@ public class StudyGroupService {
         savedStudyGroup.getMembers().add(leaderMember);
 
         return StudyGroupDto.fromEntity(savedStudyGroup);
+    }
+
+    @Transactional(readOnly = true)
+    public StudyGroupDto getStudyGroup(Long id) {
+        StudyGroupEntity studyGroup = studyGroupRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_STUDY_GROUP_ID));
+
+        return StudyGroupDto.fromEntity(studyGroup);
     }
 }
