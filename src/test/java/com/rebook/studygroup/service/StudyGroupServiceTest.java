@@ -114,4 +114,19 @@ class StudyGroupServiceTest {
         assertThat(foundStudyGroup.getMaxMembers()).isEqualTo(maxMemberCount);
         assertThat(foundStudyGroup.getCurrentMembers()).isEqualTo(1);
     }
+
+    @DisplayName("존재하지 않는 스터디그룹을 조회하면 예외가 발생한다.")
+    @Test
+    void getStudyGroupWithNotExistStudyGroup() {
+        // when, then
+        assertThatThrownBy(() -> studyGroupService.getStudyGroup(100L))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("요청하신 스터디그룹은 존재하지 않습니다.");
+    }
+
+    @DisplayName("스터디그룹의 멤버를 조회한다.")
+    @Test
+    void getStudyGroupMembers() {
+
+    }
 }
