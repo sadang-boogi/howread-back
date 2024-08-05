@@ -1,10 +1,13 @@
 package com.rebook.studygroup.service;
 
 import com.rebook.common.exception.NotFoundException;
+import com.rebook.studygroup.domain.StudyGroupEntity;
+import com.rebook.studygroup.domain.StudyGroupMemberEntity;
 import com.rebook.studygroup.repository.StudyGroupMemberRepository;
 import com.rebook.studygroup.repository.StudyGroupRepository;
 import com.rebook.studygroup.service.command.StudyGroupCreateCommand;
 import com.rebook.studygroup.service.dto.StudyGroupDto;
+import com.rebook.studygroup.service.dto.StudyGroupMemberDto;
 import com.rebook.user.domain.Role;
 import com.rebook.user.domain.UserEntity;
 import com.rebook.user.repository.UserRepository;
@@ -16,6 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+import static com.rebook.studygroup.domain.StudyGroupMemberRole.LEADER;
+import static com.rebook.studygroup.domain.StudyGroupMemberRole.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -36,6 +43,8 @@ class StudyGroupServiceTest {
     private StudyGroupMemberRepository studyGroupMemberRepository;
 
     private UserEntity leader;
+    private UserEntity member1;
+    private UserEntity member2;
 
     @BeforeEach
     void setUp() {
@@ -45,13 +54,31 @@ class StudyGroupServiceTest {
 
         leader = UserEntity.builder()
                 .email("email.com")
-                .nickname("닉네임")
+                .nickname("리더")
                 .role(Role.USER)
                 .socialType(SocialType.GOOGLE)
                 .socialId("소셜아이디")
                 .build();
 
         userRepository.save(leader);
+
+        member1 = UserEntity.builder()
+                .email("email1.com")
+                .nickname("닉네임1")
+                .role(Role.USER)
+                .socialType(SocialType.GOOGLE)
+                .socialId("소셜아이디1")
+                .build();
+
+        member2 = UserEntity.builder()
+                .email("email2.com")
+                .nickname("닉네임2")
+                .role(Role.USER)
+                .socialType(SocialType.GOOGLE)
+                .socialId("소셜아이디2")
+                .build();
+
+        userRepository.saveAll(List.of(member1, member2));
     }
 
     @DisplayName("스터디그룹을 생성하고, 생성된 스터디그룹의 ID를 반환한다.")
@@ -127,6 +154,44 @@ class StudyGroupServiceTest {
     @DisplayName("스터디그룹의 멤버를 조회한다.")
     @Test
     void getStudyGroupMembers() {
+        // given
+        String studyGroupName = "스터디그룹";
+        String description = "스터디그룹 설명";
+        int maxMemberCount = 10;
 
+        StudyGroupCreateCommand studyGroupCreateCommand = new StudyGroupCreateCommand(studyGroupName, description, maxMemberCount);
+        StudyGroupDto studyGroup = studyGroupService.createStudyGroup(studyGroupCreateCommand, leader.getId());
+
+        StudyGroupEntity savedStudyGroup = studyGroupRepository.findById(studyGroup.getId()).get();
+
+        StudyGroupMemberEntity memberEntity1 = StudyGroupMemberEntity.builder()
+                .studyGroup(studyGroupRepository.findById(studyGroup.getId()).get())
+                .user(member1)
+                .role(MEMBER)
+                .build();
+        studyGroupMemberRepository.save(memberEntity1);
+
+        StudyGroupMemberEntity memberEntity2 = StudyGroupMemberEntity.builder()
+                .studyGroup(studyGroupRepository.findById(studyGroup.getId()).get())
+                .user(member2)
+                .role(MEMBER)
+                .build();
+        studyGroupMemberRepository.save(memberEntity2);
+
+        savedStudyGroup.getMembers().add(memberEntity1);
+        savedStudyGroup.getMembers().add(memberEntity2);
+
+        // when
+        List<StudyGroupMemberDto> members = studyGroupService.getStudyGroupMembers(studyGroup.getId());
+
+        // then
+        assertThat(members).isNotEmpty();
+        assertThat(members.size()).isEqualTo(3); // Leader + 2 members
+        assertThat(members)
+                .extracting("nickname")
+                .containsExactlyInAnyOrder("리더", "닉네임1", "닉네임2");
+        assertThat(members)
+                .extracting("role")
+                .contains(LEADER, MEMBER, MEMBER);
     }
 }

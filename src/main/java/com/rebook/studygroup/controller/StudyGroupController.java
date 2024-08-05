@@ -4,6 +4,7 @@ import com.rebook.auth.annotation.Authenticated;
 import com.rebook.studygroup.controller.request.StudyGroupCreateRequest;
 import com.rebook.studygroup.controller.response.StudyGroupResponse;
 import com.rebook.studygroup.service.StudyGroupService;
+import com.rebook.studygroup.service.dto.StudyGroupMemberDto;
 import com.rebook.user.service.dto.AuthClaims;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/studygroups")
@@ -35,7 +37,19 @@ public class StudyGroupController {
     public ResponseEntity<StudyGroupResponse> getStudyGroup(
             @PathVariable final Long studyGroupId
     ) {
-        return ResponseEntity.ok(StudyGroupResponse.from(
-                studyGroupService.getStudyGroup(studyGroupId)));
+        StudyGroupResponse studyGroupResponse = StudyGroupResponse.from(
+                studyGroupService.getStudyGroup(studyGroupId));
+
+        return ResponseEntity.ok()
+                .body(studyGroupResponse);
+    }
+
+    @GetMapping("/{id}/members")
+    public ResponseEntity<List<StudyGroupMemberDto>> getStudyGroupMembers(
+            @PathVariable Long id
+    ) {
+        List<StudyGroupMemberDto> members = studyGroupService.getStudyGroupMembers(id);
+
+        return ResponseEntity.ok().body(members);
     }
 }

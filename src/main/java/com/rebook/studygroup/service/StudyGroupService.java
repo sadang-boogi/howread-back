@@ -7,11 +7,14 @@ import com.rebook.studygroup.repository.StudyGroupMemberRepository;
 import com.rebook.studygroup.repository.StudyGroupRepository;
 import com.rebook.studygroup.service.command.StudyGroupCreateCommand;
 import com.rebook.studygroup.service.dto.StudyGroupDto;
+import com.rebook.studygroup.service.dto.StudyGroupMemberDto;
 import com.rebook.user.domain.UserEntity;
 import com.rebook.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.rebook.common.exception.ExceptionCode.NOT_FOUND_STUDY_GROUP_ID;
 import static com.rebook.common.exception.ExceptionCode.NOT_FOUND_USER_ID;
@@ -54,5 +57,15 @@ public class StudyGroupService {
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_STUDY_GROUP_ID));
 
         return StudyGroupDto.fromEntity(studyGroup);
+    }
+
+    @Transactional(readOnly = true)
+    public List<StudyGroupMemberDto> getStudyGroupMembers(Long studyGroupId) {
+        StudyGroupEntity studyGroup = studyGroupRepository.findById(studyGroupId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_STUDY_GROUP_ID));
+
+        return studyGroup.getMembers().stream()
+                .map(StudyGroupMemberDto::fromEntity)
+                .toList();
     }
 }
