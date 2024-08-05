@@ -23,8 +23,7 @@ import java.util.List;
 
 import static com.rebook.studygroup.domain.StudyGroupMemberRole.LEADER;
 import static com.rebook.studygroup.domain.StudyGroupMemberRole.MEMBER;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -89,7 +88,7 @@ class StudyGroupServiceTest {
         String description = "스터디그룹 설명";
         int maxMemberCount = 10;
 
-        StudyGroupCreateCommand studyGroupCreateCommand = new StudyGroupCreateCommand(studyGroupName, description, maxMemberCount);
+        StudyGroupCreateCommand studyGroupCreateCommand = createStudyGroupCommand(studyGroupName, description, maxMemberCount);
 
         // when
         StudyGroupDto studyGroup = studyGroupService.createStudyGroup(studyGroupCreateCommand, leader.getId());
@@ -107,11 +106,7 @@ class StudyGroupServiceTest {
     @Test
     void createStudyGroupStudyGroupWithOutLeader() {
         // given
-        String studyGroupName = "스터디그룹";
-        String description = "스터디그룹 설명";
-        int maxMemberCount = 10;
-
-        StudyGroupCreateCommand studyGroupCreateCommand = new StudyGroupCreateCommand(studyGroupName, description, maxMemberCount);
+        StudyGroupCreateCommand studyGroupCreateCommand = createStudyGroupCommand("스터디그룹", "스터디그룹 설명", 10);
 
         // when, then
         assertThatThrownBy(() -> studyGroupService.createStudyGroup(studyGroupCreateCommand, 100L))
@@ -119,7 +114,38 @@ class StudyGroupServiceTest {
                 .hasMessage("유저가 존재하지 않습니다.");
     }
 
-    @DisplayName("스터디그룹을 조회한다.")
+    @DisplayName("스터디그룹 목록을 조회한다.")
+    @Test
+    void getStudyGroups() {
+        // given
+        String studyGroupName1 = "스터디그룹1";
+        String description1 = "스터디그룹 설명1";
+        int maxMemberCount1 = 10;
+
+        String studyGroupName2 = "스터디그룹2";
+        String description2 = "스터디그룹 설명2";
+        int maxMemberCount2 = 5;
+
+        StudyGroupCreateCommand studyGroupCommand1 = createStudyGroupCommand(studyGroupName1, description1, maxMemberCount1);
+        StudyGroupCreateCommand studyGroupCommand2 = createStudyGroupCommand(studyGroupName2, description2, maxMemberCount2);
+
+        studyGroupService.createStudyGroup(studyGroupCommand1, leader.getId());
+        studyGroupService.createStudyGroup(studyGroupCommand2, leader.getId());
+
+        // when
+        List<StudyGroupDto> studyGroups = studyGroupService.getStudyGroups();
+
+        // then
+        assertThat(studyGroups).hasSize(2);
+        assertThat(studyGroups)
+                .extracting("name", "description")
+                .containsExactlyInAnyOrder(
+                        tuple(studyGroupName1, description1),
+                        tuple(studyGroupName2, description2)
+                );
+    }
+
+    @DisplayName("단일 스터디그룹을 조회한다.")
     @Test
     void getStudyGroup() {
         // given
@@ -127,7 +153,7 @@ class StudyGroupServiceTest {
         String description = "스터디그룹 설명";
         int maxMemberCount = 10;
 
-        StudyGroupCreateCommand studyGroupCreateCommand = new StudyGroupCreateCommand(studyGroupName, description, maxMemberCount);
+        StudyGroupCreateCommand studyGroupCreateCommand = createStudyGroupCommand(studyGroupName, description, maxMemberCount);
         StudyGroupDto studyGroup = studyGroupService.createStudyGroup(studyGroupCreateCommand, leader.getId());
 
         // when
@@ -156,10 +182,7 @@ class StudyGroupServiceTest {
     void getStudyGroupMembers() {
         // given
         String studyGroupName = "스터디그룹";
-        String description = "스터디그룹 설명";
-        int maxMemberCount = 10;
-
-        StudyGroupCreateCommand studyGroupCreateCommand = new StudyGroupCreateCommand(studyGroupName, description, maxMemberCount);
+        StudyGroupCreateCommand studyGroupCreateCommand = createStudyGroupCommand(studyGroupName, "스터디그룹 설명", 10);
         StudyGroupDto studyGroup = studyGroupService.createStudyGroup(studyGroupCreateCommand, leader.getId());
 
         StudyGroupEntity savedStudyGroup = studyGroupRepository.findById(studyGroup.getId()).get();
@@ -194,4 +217,10 @@ class StudyGroupServiceTest {
                 .extracting("role")
                 .contains(LEADER, MEMBER, MEMBER);
     }
+
+    private static StudyGroupCreateCommand createStudyGroupCommand(String studyGroupName, String description, int maxMemberCount) {
+        StudyGroupCreateCommand studyGroupCreateCommand = new StudyGroupCreateCommand(studyGroupName, description, maxMemberCount);
+        return studyGroupCreateCommand;
+    }
+
 }

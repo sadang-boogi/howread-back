@@ -52,6 +52,13 @@ public class StudyGroupService {
     }
 
     @Transactional(readOnly = true)
+    public List<StudyGroupDto> getStudyGroups() {
+        return studyGroupRepository.findAll().stream()
+                .map(StudyGroupDto::fromEntity)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public StudyGroupDto getStudyGroup(Long id) {
         StudyGroupEntity studyGroup = studyGroupRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_STUDY_GROUP_ID));
