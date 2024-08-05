@@ -27,18 +27,15 @@ public class StudyGroupService {
 
     @Transactional
     public StudyGroupDto createStudyGroup(final StudyGroupCreateCommand studyGroupCreateCommand, final Long userId) {
-        // userId로 사용자 조회
         UserEntity leader = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_USER_ID));
 
-        // 스터디그룹 생성
         StudyGroupEntity savedStudyGroup = studyGroupRepository.save(StudyGroupEntity.builder()
                 .name(studyGroupCreateCommand.getName())
                 .description(studyGroupCreateCommand.getDescription())
                 .maxMembers(studyGroupCreateCommand.getMaxMembers())
                 .build());
 
-        // 스터디그룹 리더 생성
         StudyGroupMemberEntity leaderMember = studyGroupMemberRepository.save(
                 StudyGroupMemberEntity.builder()
                         .studyGroup(savedStudyGroup)
@@ -46,7 +43,6 @@ public class StudyGroupService {
                         .role(LEADER)
                         .build());
 
-        // 스터디그룹에 리더 추가
         savedStudyGroup.getMembers().add(leaderMember);
 
         return StudyGroupDto.fromEntity(savedStudyGroup);
