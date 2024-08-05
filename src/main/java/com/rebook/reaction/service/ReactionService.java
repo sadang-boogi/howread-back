@@ -34,13 +34,13 @@ public class ReactionService {
 
         ReactionEntity reactionEntity;
 
-        if (optionalReaction.isPresent()) { // 리액션이 없을 때
+        if (optionalReaction.isPresent()) { // 리액션이 있을 때
             reactionEntity = optionalReaction.get();
             if (!reactionEntity.isOn()) { // 리액션이 꺼져있을 때
                 reactionEntity.turnOn();
             }
         } else {
-            reactionEntity = reactionRepository.save(
+            reactionEntity = reactionRepository.save( // 리액션 없을 때
                     new ReactionEntity(
                             null,
                             userEntity,
