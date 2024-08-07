@@ -1,6 +1,7 @@
 package com.rebook.studygroup.controller;
 
 import com.rebook.auth.annotation.Authenticated;
+import com.rebook.auth.annotation.LoginRequired;
 import com.rebook.studygroup.controller.request.StudyGroupCreateRequest;
 import com.rebook.studygroup.controller.response.StudyGroupResponse;
 import com.rebook.studygroup.service.StudyGroupService;
@@ -22,6 +23,7 @@ public class StudyGroupController {
 
     private final StudyGroupService studyGroupService;
 
+    @LoginRequired
     @PostMapping
     public ResponseEntity<StudyGroupResponse> createStudyGroup(
             @RequestBody @Valid final StudyGroupCreateRequest studyGroupCreateRequest,
