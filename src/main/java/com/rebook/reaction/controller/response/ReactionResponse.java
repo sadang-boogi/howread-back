@@ -23,7 +23,7 @@ public class ReactionResponse {
                 reactionDto.getReactionType(),
                 reactionDto.getTargetType(),
                 reactionDto.getTargetId(),
-                reactionDto.isOn()
+                reactionDto.getIsOn()
         );
     }
 }

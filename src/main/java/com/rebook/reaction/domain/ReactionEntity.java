@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.SQLRestriction;
 
 @Getter
@@ -20,28 +19,23 @@ public class ReactionEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Comment("리액션 유저")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
     private UserEntity user;
 
-    @Comment("리액션 유형")
     @Enumerated(EnumType.STRING)
-    @Column(name = "reaction_type", columnDefinition = "varchar(255)")
+    @Column(name = "reaction_type", nullable = false, columnDefinition = "varchar(255)")
     private ReactionType reactionType;
 
-    @Comment("리액션 대상")
     @Enumerated(EnumType.STRING)
-    @Column(name = "target_type", columnDefinition = "varchar(255)")
+    @Column(name = "target_type", nullable = false, columnDefinition = "varchar(255)")
     private TargetType targetType;
 
-    @Comment("리액션 대상 id")
-    @Column(name = "target_id")
+    @Column(name = "target_id", nullable = false)
     private Long targetId;
 
-    @Comment("활성화 여부")
     @Column(name = "is_on", nullable = false)
-    private boolean isOn;
+    private Boolean isOn;
 
     public void turnOn() {
         this.isOn = true;
