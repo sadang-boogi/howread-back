@@ -1,5 +1,7 @@
 package com.rebook.image.controller.response;
 
+import com.rebook.image.domain.ImageEntity;
+import com.rebook.image.service.dto.ImageDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,10 +12,9 @@ import lombok.NoArgsConstructor;
 public class ImageResponse {
 
     private Long id;
-    private String url;
+    public static ImageResponse from(final ImageDto dto) {
 
-    public static ImageResponse of(final Long id, final String url) {
-        return new ImageResponse(id, url);
+        return new ImageResponse(dto.getId());
     }
 
 }

@@ -45,7 +45,7 @@ class ReviewServiceTest {
         BookEntity bookEntity = new BookEntity(1L, "오브젝트", "조영호", "test-image", "978-89-123456-0-0", Collections.emptyList(), Collections.emptyList());
 
         // 사용자
-        UserEntity user = new UserEntity(1L, "test", "test", Role.USER, SocialType.GOOGLE, "1212");
+        UserEntity user = new UserEntity(1L, "test", "test", Role.USER, SocialType.GOOGLE, "1212", "defaultUrl");
 
         // 리뷰 객체
         ReviewEntity reviewEntity1 = ReviewEntity.of(bookEntity, user, "first content", BigDecimal.valueOf(4.5));

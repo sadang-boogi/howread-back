@@ -29,6 +29,7 @@ public class StudyGroupEntity extends BaseEntity {
     @Column(name = "max_members", nullable = false)
     private int maxMembers;
 
+    @Builder.Default
     @OneToMany(mappedBy = "studyGroup", cascade = CascadeType.ALL)
     private List<StudyGroupMemberEntity> members = new ArrayList<>();
 }

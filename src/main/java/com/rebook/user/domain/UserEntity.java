@@ -45,18 +45,23 @@ public class UserEntity extends BaseEntity {
 
     private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
+    @Column(name = "avatar_url", nullable = true)
+    private String avatarUrl;
+
     @Builder
-    public UserEntity(Long id, String nickname, String email, Role role, SocialType socialType, String socialId) {
+    public UserEntity(Long id, String nickname, String email, Role role, SocialType socialType, String socialId, String avatarUrl) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
         this.role = role;
         this.socialType = socialType;
         this.socialId = socialId;
+        this.avatarUrl = avatarUrl;
     }
 
-    public UserEntity update(String nickname) {
+    public UserEntity update(String nickname, String avatarUrl) {
         this.nickname = nickname;
+        this.avatarUrl = avatarUrl;
         return this;
     }
 

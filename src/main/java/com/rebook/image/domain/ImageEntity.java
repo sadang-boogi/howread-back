@@ -22,4 +22,8 @@ public class ImageEntity extends BaseEntity {
     @Comment("이미지 주소")
     @Column(name = "url", nullable = false)
     private String url;
+
+    public ImageEntity(String url) {
+        this.url = url;
+    }
 }
