@@ -6,5 +6,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ReactionType {
-    LIKE,FOLLOW
+    LIKE, FOLLOW
 }

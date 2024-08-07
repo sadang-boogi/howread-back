@@ -35,7 +35,7 @@ public class ReactionEntity extends BaseEntity {
     private Long targetId;
 
     @Column(name = "is_on", nullable = false)
-    private boolean isOn;
+    private Boolean isOn;
 
     public void turnOn() {
         this.isOn = true;

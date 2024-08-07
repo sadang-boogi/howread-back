@@ -14,7 +14,7 @@ public class ReactionResponse {
     private ReactionType reactionType;
     private TargetType targetType;
     private Long targetId;
-    private boolean isOn;
+    private Boolean isOn;
 
     public static ReactionResponse from(ReactionDto reactionDto) {
         return new ReactionResponse(
@@ -23,7 +23,7 @@ public class ReactionResponse {
                 reactionDto.getReactionType(),
                 reactionDto.getTargetType(),
                 reactionDto.getTargetId(),
-                reactionDto.isOn()
+                reactionDto.getIsOn()
         );
     }
 }

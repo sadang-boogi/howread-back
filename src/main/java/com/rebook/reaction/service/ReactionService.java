@@ -36,7 +36,7 @@ public class ReactionService {
 
         if (optionalReaction.isPresent()) { // 리액션이 있을 때
             reactionEntity = optionalReaction.get();
-            if (!reactionEntity.isOn()) { // 리액션이 꺼져있을 때
+            if (!reactionEntity.getIsOn()) { // 리액션이 꺼져있을 때
                 reactionEntity.turnOn();
             }
         } else {
@@ -63,7 +63,7 @@ public class ReactionService {
                         reactionCommand.getTargetId())
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_REACTION_ID));
 
-        if (reactionEntity.isOn()) { // 리액션이 켜져 있을 때
+        if (reactionEntity.getIsOn()) { // 리액션이 켜져 있을 때
             reactionEntity.turnOff();
             reactionRepository.save(reactionEntity);
         }
