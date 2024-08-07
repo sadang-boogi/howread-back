@@ -1,4 +1,4 @@
-package com.rebook.reaction.config;
+package com.rebook.common.config;
 
 import com.rebook.reaction.util.StringToReactionTypeConverter;
 import com.rebook.reaction.util.StringToTargetTypeConverter;
