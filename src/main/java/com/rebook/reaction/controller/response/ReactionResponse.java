@@ -9,12 +9,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ReactionResponse {
-    private Long Id;
+    private Long id;
     private Long userId;
     private ReactionType reactionType;
     private TargetType targetType;
     private Long targetId;
-    private boolean isOn;
+    private Boolean isOn;
 
     public static ReactionResponse from(ReactionDto reactionDto) {
         return new ReactionResponse(
