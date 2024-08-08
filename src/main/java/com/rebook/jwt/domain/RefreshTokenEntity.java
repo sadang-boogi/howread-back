@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -23,7 +21,4 @@ public class RefreshTokenEntity {
 
     @Column(nullable = false, unique = true)
     private String token;
-
-    @Column(nullable = false)
-    private Instant expiredAt;
 }

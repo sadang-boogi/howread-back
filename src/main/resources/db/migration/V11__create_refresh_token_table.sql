@@ -1,9 +1,8 @@
 CREATE TABLE refresh_token
 (
-    id         BIGINT AUTO_INCREMENT NOT NULL,
-    user_id    BIGINT                NOT NULL,
-    token      VARCHAR(255)          NOT NULL,
-    expired_at datetime              NOT NULL,
+    id      BIGINT AUTO_INCREMENT NOT NULL,
+    user_id BIGINT                NOT NULL,
+    token   VARCHAR(255)          NOT NULL,
     CONSTRAINT pk_refresh_token PRIMARY KEY (id)
 );
 
