@@ -30,8 +30,9 @@ public class StudyGroupController {
             @Parameter(hidden = true) @Authenticated AuthClaims claims
     ) {
         StudyGroupResponse studyGroupResponse = StudyGroupResponse.from(
-                studyGroupService.createStudyGroup(studyGroupCreateRequest.toCommand(), claims.getUserId()));
-
+                studyGroupService.createStudyGroup(studyGroupCreateRequest.toCommand(), claims.getUserId())
+                , null
+        );
         return ResponseEntity.created(URI.create("/api/v1/studygroups/" + studyGroupResponse.getId())).body(studyGroupResponse);
     }
 
@@ -40,7 +41,9 @@ public class StudyGroupController {
             @PathVariable final Long studyGroupId
     ) {
         StudyGroupResponse studyGroupResponse = StudyGroupResponse.from(
-                studyGroupService.getStudyGroup(studyGroupId));
+                studyGroupService.getStudyGroup(studyGroupId),
+                studyGroupService.getStudyGroupMembers(studyGroupId)
+        );
 
         return ResponseEntity.ok()
                 .body(studyGroupResponse);
