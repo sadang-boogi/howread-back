@@ -50,7 +50,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
 		String token = jwtService.extractTokenFromHeader(authorizationHeader);
 
-		// 토큰이 유효한 경우 사용자 정보를 요청에 설정
+		// 토큰이 유효한 경우 AuthClaims 추출
 		request.setAttribute("authClaims", jwtService.getClaims(token));
 
 		return true;
