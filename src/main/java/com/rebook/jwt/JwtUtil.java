@@ -30,7 +30,7 @@ public class JwtUtil {
         return header.replace(TOKEN_PREFIX, "");
     }
 
-    public String createToken(AuthClaims authClaims, Instant currentDate) {
+    public String createAccessToken(AuthClaims authClaims, Instant currentDate) {
         return JWT.create()
                 .withSubject(String.valueOf(authClaims.getUserId()))
                 .withExpiresAt(currentDate.plusSeconds(jwtProperties.getTokenValidityInSeconds()))

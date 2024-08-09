@@ -1,16 +1,15 @@
 package com.rebook.user.controller;
 
+import com.rebook.jwt.JwtUtil;
 import com.rebook.user.controller.request.SocialLoginRequest;
 import com.rebook.user.controller.response.JwtResponse;
 import com.rebook.user.controller.response.UriResponse;
 import com.rebook.user.service.LoginService;
-import com.rebook.jwt.JwtUtil;
 import com.rebook.user.service.dto.AuthClaims;
 import com.rebook.user.util.SocialType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +52,7 @@ public class LoginController {
             @PathVariable SocialType provider
     ) {
         AuthClaims auth = loginService.socialLogin(body.getCode(), provider, body.getRedirectUri());
-        String token = jwtUtil.createToken(auth, Instant.now());
+        String token = jwtUtil.createAccessToken(auth, Instant.now());
         return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(token));
     }
 }

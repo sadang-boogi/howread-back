@@ -8,8 +8,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @ActiveProfiles("test")
 class JwtUtilTest {
@@ -17,8 +15,8 @@ class JwtUtilTest {
     JwtUtil jwtUtil;
 
     @Test
-    void createToken() {
-        String token = jwtUtil.createToken(new AuthClaims(1L), Instant.now());
+    void createAccessToken() {
+        String token = jwtUtil.createAccessToken(new AuthClaims(1L), Instant.now());
         System.out.println("token = " + token);
     }
 }
