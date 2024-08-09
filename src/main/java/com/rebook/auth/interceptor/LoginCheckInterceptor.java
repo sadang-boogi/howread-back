@@ -1,5 +1,6 @@
 package com.rebook.auth.interceptor;
 
+import com.rebook.auth.annotation.LoginOptional;
 import com.rebook.auth.annotation.LoginRequired;
 import com.rebook.jwt.service.JwtService;
 import com.rebook.user.exception.TokenException;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+import static com.rebook.common.exception.ExceptionCode.TOKEN_INVALID;
 
 @RequiredArgsConstructor
 @Component
@@ -26,28 +29,39 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         LoginRequired loginRequired = handlerMethod.getMethodAnnotation(LoginRequired.class);
+        LoginOptional loginOptional = handlerMethod.getMethodAnnotation(LoginOptional.class);
 
-        if (loginRequired == null) {
-            return true;
+        if (loginRequired != null) {
+            // 로그인 필수인 경우
+            validateAndSetAuthClaims(request, true);
+        } else if (loginOptional != null) {
+            // 로그인 옵션인 경우
+            validateAndSetAuthClaims(request, false);
         }
-
-        // Authorization 헤더에서 토큰 추출
-        String authorizationHeader = request.getHeader("Authorization");
-
-        // 토큰이 없는 경우
-        if (isNotExist(authorizationHeader)) {
-            throw new TokenException("TOKEN_REQUIRED", "로그인 필요", "로그인이 필요한 기능입니다.");
-        }
-
-        String token = jwtService.extractTokenFromHeader(authorizationHeader);
-
-        // 유효한 토큰인 경우 사용자 정보를 요청에 설정
-        request.setAttribute("authClaims", jwtService.getClaims(token));
 
         return true;
+    }
+
+    private void validateAndSetAuthClaims(final HttpServletRequest request, final boolean isLoginRequired) {
+        String authorizationHeader = request.getHeader("Authorization");
+
+        // 로그인 필수 + 토큰 필요인 경우 예외 처리
+        if(isLoginRequired && isNotExist(authorizationHeader))
+            throw new TokenException(TOKEN_INVALID);
+
+
+        if(!isNotExist(authorizationHeader)){
+            // 토큰이 있는 경우
+            String token = jwtService.extractTokenFromHeader(authorizationHeader);
+            request.setAttribute("authClaims",jwtService.getClaims(token));
+        }else {
+            // 토큰이 없는 경우 null로 설정
+            request.setAttribute("authClaims",null);
+        }
     }
 
     private boolean isNotExist(final String accessToken) {
         return accessToken == null || accessToken.isBlank();
     }
+
 }
