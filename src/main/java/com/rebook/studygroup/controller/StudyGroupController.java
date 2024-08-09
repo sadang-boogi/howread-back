@@ -2,6 +2,7 @@ package com.rebook.studygroup.controller;
 
 import com.rebook.auth.annotation.Authenticated;
 import com.rebook.auth.annotation.LoginRequired;
+import com.rebook.common.schema.ListResponse;
 import com.rebook.studygroup.controller.request.StudyGroupCreateRequest;
 import com.rebook.studygroup.controller.response.StudyGroupResponse;
 import com.rebook.studygroup.service.StudyGroupService;
@@ -31,7 +32,6 @@ public class StudyGroupController {
     ) {
         StudyGroupResponse studyGroupResponse = StudyGroupResponse.from(
                 studyGroupService.createStudyGroup(studyGroupCreateRequest.toCommand(), claims.getUserId())
-                , null
         );
         return ResponseEntity.created(URI.create("/api/v1/studygroups/" + studyGroupResponse.getId())).body(studyGroupResponse);
     }
@@ -41,8 +41,7 @@ public class StudyGroupController {
             @PathVariable final Long studyGroupId
     ) {
         StudyGroupResponse studyGroupResponse = StudyGroupResponse.from(
-                studyGroupService.getStudyGroup(studyGroupId),
-                studyGroupService.getStudyGroupMembers(studyGroupId)
+                studyGroupService.getStudyGroup(studyGroupId)
         );
 
         return ResponseEntity.ok()
@@ -50,11 +49,12 @@ public class StudyGroupController {
     }
 
     @GetMapping("/{id}/members")
-    public ResponseEntity<List<StudyGroupMemberDto>> getStudyGroupMembers(
+    public ResponseEntity<ListResponse<StudyGroupMemberDto>> getStudyGroupMembers(
             @PathVariable Long id
     ) {
         List<StudyGroupMemberDto> members = studyGroupService.getStudyGroupMembers(id);
+        ListResponse<StudyGroupMemberDto> response = new ListResponse<>(members);
 
-        return ResponseEntity.ok().body(members);
+        return ResponseEntity.ok().body(response);
     }
 }

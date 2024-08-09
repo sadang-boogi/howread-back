@@ -2,11 +2,9 @@ package com.rebook.studygroup.controller.response;
 
 import com.rebook.common.schema.ListResponse;
 import com.rebook.studygroup.service.dto.StudyGroupDto;
-import com.rebook.studygroup.service.dto.StudyGroupMemberDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -20,19 +18,19 @@ public class StudyGroupResponse {
     private int currentMembers;
     private ListResponse<StudyGroupMemberResponse> studyGroupMemberResponseListResponse;
 
-    public static StudyGroupResponse from(StudyGroupDto studyGroupDto, List<StudyGroupMemberDto> studyGroupMemberDtoList) {
+    public static StudyGroupResponse from(StudyGroupDto studyGroupDto) {
         return new StudyGroupResponse(
                 studyGroupDto.getId(),
                 studyGroupDto.getName(),
                 studyGroupDto.getDescription(),
                 studyGroupDto.getMaxMembers(),
                 studyGroupDto.getCurrentMembers(),
-
                 new ListResponse<>(
-                        studyGroupMemberDtoList == null ? List.of() : studyGroupMemberDtoList.stream() // 빈 리스트면 null
+                        studyGroupDto.getMembers().stream()
                                 .map(StudyGroupMemberResponse::from)
                                 .collect(Collectors.toList())
                 )
+
         );
     }
 }

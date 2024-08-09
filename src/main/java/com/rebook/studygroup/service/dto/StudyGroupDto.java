@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @NoArgsConstructor
 @Getter
 public class StudyGroupDto {
@@ -13,14 +16,16 @@ public class StudyGroupDto {
     private String description;
     private int maxMembers;
     private int currentMembers;
+    private List<StudyGroupMemberDto> members;
 
     @Builder
-    private StudyGroupDto(Long id, String name, String description, int maxMembers, int currentMembers) {
+    private StudyGroupDto(Long id, String name, String description, int maxMembers, int currentMembers, List<StudyGroupMemberDto> members) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.maxMembers = maxMembers;
         this.currentMembers = currentMembers;
+        this.members = members;
     }
 
     public static StudyGroupDto fromEntity(StudyGroupEntity studyGroupEntity) {
@@ -30,6 +35,11 @@ public class StudyGroupDto {
                 .description(studyGroupEntity.getDescription())
                 .maxMembers(studyGroupEntity.getMaxMembers())
                 .currentMembers(studyGroupEntity.getMembers().size())
+                .members(
+                        studyGroupEntity.getMembers().stream()
+                        .map(StudyGroupMemberDto::fromEntity)
+                        .collect(Collectors.toList())
+                )
                 .build();
     }
 }

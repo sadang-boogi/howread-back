@@ -60,8 +60,10 @@ public class StudyGroupService {
 
     @Transactional(readOnly = true)
     public StudyGroupDto getStudyGroup(Long id) {
-        StudyGroupEntity studyGroup = studyGroupRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(NOT_FOUND_STUDY_GROUP_ID));
+        StudyGroupEntity studyGroup = studyGroupRepository.findStudyGroupById(id);
+
+        if(studyGroup == null)
+            throw new NotFoundException(NOT_FOUND_STUDY_GROUP_ID);
 
         return StudyGroupDto.fromEntity(studyGroup);
     }
