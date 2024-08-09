@@ -30,7 +30,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 		HandlerMethod handlerMethod = (HandlerMethod)handler;
 		LoginRequired loginRequired = handlerMethod.getMethodAnnotation(LoginRequired.class);
 		if (loginRequired == null) {
-			// 애노테이션이 없는 경우, 로그인 요구 없음
+			// 애노테이션이 없는 경우
 			return true;
 		}
 
@@ -55,6 +55,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
 		return true;
 	}
+
 	private boolean isNotExist(final String accessToken) {
 		return accessToken == null || accessToken.isBlank();
 	}
