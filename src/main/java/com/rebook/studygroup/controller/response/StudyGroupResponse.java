@@ -5,8 +5,6 @@ import com.rebook.studygroup.service.dto.StudyGroupDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.stream.Collectors;
-
 @AllArgsConstructor
 @Getter
 public class StudyGroupResponse {
@@ -28,7 +26,7 @@ public class StudyGroupResponse {
                 new ListResponse<>(
                         studyGroupDto.getMembers().stream()
                                 .map(StudyGroupMemberResponse::from)
-                                .collect(Collectors.toList())
+                                .toList()
                 )
 
         );

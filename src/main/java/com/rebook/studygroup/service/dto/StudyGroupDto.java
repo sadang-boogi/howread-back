@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Getter
@@ -38,7 +37,7 @@ public class StudyGroupDto {
                 .members(
                         studyGroupEntity.getMembers().stream()
                         .map(StudyGroupMemberDto::fromEntity)
-                        .collect(Collectors.toList())
+                        .toList()
                 )
                 .build();
     }

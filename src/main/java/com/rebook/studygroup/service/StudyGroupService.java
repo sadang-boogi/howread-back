@@ -60,17 +60,18 @@ public class StudyGroupService {
 
     @Transactional(readOnly = true)
     public StudyGroupDto getStudyGroup(Long id) {
-        StudyGroupEntity studyGroup = studyGroupRepository.findStudyGroupById(id);
-
-        if(studyGroup == null)
-            throw new NotFoundException(NOT_FOUND_STUDY_GROUP_ID);
+        StudyGroupEntity studyGroup = studyGroupRepository.findStudyGroupById(id)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_STUDY_GROUP_ID));
 
         return StudyGroupDto.fromEntity(studyGroup);
     }
 
     @Transactional(readOnly = true)
     public List<StudyGroupMemberDto> getStudyGroupMembers(Long studyGroupId) {
-        return studyGroupMemberRepository.findByStudyGroupId(studyGroupId).stream()
+        List<StudyGroupMemberEntity> studyGroupMembers = studyGroupMemberRepository.findByStudyGroupId(studyGroupId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_STUDY_GROUP_ID));
+
+        return studyGroupMembers.stream()
                 .map(StudyGroupMemberDto::fromEntity)
                 .toList();
     }
