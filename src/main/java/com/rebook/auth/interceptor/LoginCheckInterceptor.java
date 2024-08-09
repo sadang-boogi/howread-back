@@ -50,13 +50,13 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             throw new TokenException(TOKEN_INVALID);
 
 
-        if(!isNotExist(authorizationHeader)){
+        if( !isNotExist(authorizationHeader )){
             // 토큰이 있는 경우
             String token = jwtService.extractTokenFromHeader(authorizationHeader);
-            request.setAttribute("authClaims",jwtService.getClaims(token));
+            request.setAttribute("authClaims", jwtService.getClaims(token));
         }else {
             // 토큰이 없는 경우 null로 설정
-            request.setAttribute("authClaims",null);
+            request.setAttribute("authClaims", null);
         }
     }
 
