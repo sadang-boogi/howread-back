@@ -20,11 +20,7 @@ public class JwtUtil {
     private final static String TOKEN_PREFIX = "Bearer ";
 
     private final JwtProperties jwtProperties;
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    public boolean isIncludeTokenPrefix(String header) {
-        return header.split(" ")[0].equals(TOKEN_PREFIX.trim());
-    }
+    private final ObjectMapper objectMapper;
 
     public String extractTokenFromHeader(String header) {
         return header.replace(TOKEN_PREFIX, "");
