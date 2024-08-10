@@ -24,10 +24,10 @@ spring:
     enabled: false
 
 jwt:
-  secret: test_secret_key
-  token-validity-in-seconds: 1209600
+  secret: this_is_a_much_longer_secret_key_for_jwt_with_at_least_32_bytes_test_test_test_test_test
+  access-token-validity-in-seconds: 1209600
+  refresh-token-validity-in-seconds: 1309600
 
-  # S3
 cloud:
   aws:
     credentials:

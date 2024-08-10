@@ -25,12 +25,14 @@ public class JwtUtil {
     }
 
     public String createAccessToken(AuthClaims authClaims) {
-        Long validityInMilliSecond = jwtProperties.getAccessTokenValidityInSeconds();
+        log.info("AccessToken Validity: {}", jwtProperties.getAccessTokenValidityInSeconds());
+        log.info("JWT Secret: {}", jwtProperties.getSecret());
+        long validityInMilliSecond = jwtProperties.getAccessTokenValidityInSeconds();
         return createToken(authClaims, validityInMilliSecond);
     }
 
     public String createRefreshToken(AuthClaims authClaims) {
-        Long validityInMilliSecond = jwtProperties.getRefreshTokenValidityInSeconds();
+        long validityInMilliSecond = jwtProperties.getRefreshTokenValidityInSeconds();
         return createToken(authClaims, validityInMilliSecond);
     }
 

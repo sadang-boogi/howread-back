@@ -37,6 +37,7 @@ springdoc:
 jwt:
   secret: ${JWT_SECRET_KEY}
   access-token-validity-in-seconds: 1209600
+  refresh-token-validity-in-seconds: 1309600
 
 app:
   cors:
