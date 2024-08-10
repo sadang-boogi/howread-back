@@ -15,21 +15,25 @@ public class LoginService {
     private final OAuthServiceProvider oAuthServiceProvider;
 
     public AuthClaims socialLogin(String code, SocialType type, String redirectUri) {
-
         OAuthService oAuthService = oAuthServiceProvider.getService(type);
+
         if (oAuthService == null) {
             throw new IllegalArgumentException("Unsupported registrationId: " + type.name());
         }
+
         String accessToken = oAuthService.getAccessToken(code, redirectUri);
         UserCommand userCommand = oAuthService.getUserProfile(accessToken);
+
         return userService.createUser(userCommand);
     }
 
     public String getAuthorizationUrl(SocialType type, String redirectUri) {
         OAuthService oAuthService = oAuthServiceProvider.getService(type);
+
         if (oAuthService == null) {
             throw new IllegalArgumentException("Unsupported registrationId: " + type.name());
         }
+
         return oAuthService.getAuthorizationUrl(redirectUri);
     }
 }

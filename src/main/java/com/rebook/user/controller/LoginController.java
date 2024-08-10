@@ -1,6 +1,7 @@
 package com.rebook.user.controller;
 
 import com.rebook.jwt.JwtUtil;
+import com.rebook.jwt.service.RefreshTokenService;
 import com.rebook.user.controller.request.SocialLoginRequest;
 import com.rebook.user.controller.response.JwtResponse;
 import com.rebook.user.controller.response.UriResponse;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/v1/login/oauth", produces = "application/json")
 public class LoginController {
     private final LoginService loginService;
+    private final RefreshTokenService refreshTokenService;
     private final JwtUtil jwtUtil;
 
     @Operation(
@@ -50,7 +52,11 @@ public class LoginController {
             @PathVariable SocialType provider
     ) {
         AuthClaims auth = loginService.socialLogin(body.getCode(), provider, body.getRedirectUri());
-        String token = jwtUtil.createAccessToken(auth);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(token));
+        String accessToken = jwtUtil.createAccessToken(auth);
+        String refreshToken = jwtUtil.createRefreshToken(auth);
+
+        refreshTokenService.saveRefreshToken(refreshToken, auth.getUserId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(accessToken, refreshToken));
     }
 }
