@@ -1,23 +1,18 @@
 package com.rebook.jwt;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rebook.jwt.dto.JwtPayload;
 import com.rebook.jwt.service.JwtProperties;
 import com.rebook.user.service.dto.AuthClaims;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.time.Instant;
-import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -25,6 +20,7 @@ import java.util.Date;
 public class JwtUtil {
     private final static String TOKEN_PREFIX = "Bearer ";
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
+    private static final Logger log = LoggerFactory.getLogger(JwtUtil.class);
 
     private final JwtProperties jwtProperties;
     private final ObjectMapper objectMapper;
@@ -59,32 +55,48 @@ public class JwtUtil {
     }
 
     public boolean isTokenExpired(String token) {
-        Instant expiredAt = JWT.require(Algorithm.HMAC512(jwtProperties.getSecret()))
-                .build().verify(token)
-                .getExpiresAtAsInstant();
-        return expiredAt.isBefore(Instant.now());
+        SecretKey secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
+        Date now = new Date();
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.getExpiration()
+                    .before(now);
+        } catch (JwtException e) {
+            return true;
+        }
     }
 
-    public boolean isTokenNotManipulated(String token) {
+    public boolean isTokenManipulated(String token) {
+        SecretKey secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
         try {
-            JWT.require(Algorithm.HMAC512(jwtProperties.getSecret()))
+            Jwts.parserBuilder()
+                    .setSigningKey(secretKey)  // 서명 검증을 위한 비밀키 설정
                     .build()
-                    .verify(token);
-            return true;
-        } catch (JWTVerificationException e) {
-            e.printStackTrace();
+                    .parseClaimsJws(token);
             return false;
+        } catch (JwtException e) {
+            log.error(e.getMessage());
+            return true;
         }
     }
 
     public AuthClaims extractClaimFromToken(String token) {
-        String payload = JWT.decode(token)
-                .getPayload();
-
-        byte[] decodedBytes = Base64.getUrlDecoder().decode(payload);
-        String decodedPayload = new String(decodedBytes);
-
-        return parseUserFromJwt(decodedPayload);
+        SecretKey secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            Long userId = Long.valueOf(claims.getSubject());
+            return new AuthClaims(userId);
+        } catch (JwtException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private AuthClaims parseUserFromJwt(String decodedPayload) {
