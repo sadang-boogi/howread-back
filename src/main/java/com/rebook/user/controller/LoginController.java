@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/v1/login/oauth", produces = "application/json")
@@ -52,7 +50,7 @@ public class LoginController {
             @PathVariable SocialType provider
     ) {
         AuthClaims auth = loginService.socialLogin(body.getCode(), provider, body.getRedirectUri());
-        String token = jwtUtil.createAccessToken(auth, Instant.now());
+        String token = jwtUtil.createAccessToken(auth);
         return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(token));
     }
 }

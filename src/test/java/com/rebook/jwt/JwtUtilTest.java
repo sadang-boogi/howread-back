@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.Instant;
-
 @SpringBootTest
 @ActiveProfiles("test")
 class JwtUtilTest {
@@ -16,7 +14,7 @@ class JwtUtilTest {
 
     @Test
     void createAccessToken() {
-        String token = jwtUtil.createAccessToken(new AuthClaims(1L), Instant.now());
+        String token = jwtUtil.createAccessToken(new AuthClaims(1L));
         System.out.println("token = " + token);
     }
 }

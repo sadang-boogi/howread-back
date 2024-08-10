@@ -33,11 +33,14 @@ public class JwtUtil {
         return header.replace(TOKEN_PREFIX, "");
     }
 
-    public String createAccessToken(AuthClaims authClaims, Instant currentDate) {
-        return JWT.create()
-                .withSubject(String.valueOf(authClaims.getUserId()))
-                .withExpiresAt(currentDate.plusSeconds(jwtProperties.getTokenValidityInSeconds()))
-                .sign(Algorithm.HMAC512(jwtProperties.getSecret()));
+    public String createAccessToken(AuthClaims authClaims) {
+        Long validityInMilliSecond = jwtProperties.getAccessTokenValidityInSeconds();
+        return createToken(authClaims, validityInMilliSecond);
+    }
+
+    public String createRefreshToken(AuthClaims authClaims) {
+        Long validityInMilliSecond = jwtProperties.getRefreshTokenValidityInSeconds();
+        return createToken(authClaims, validityInMilliSecond);
     }
 
     private String createToken(final AuthClaims authClaims, final long validityInMilliseconds) {
