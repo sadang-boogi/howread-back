@@ -25,8 +25,6 @@ public class JwtUtil {
     }
 
     public String createAccessToken(AuthClaims authClaims) {
-        log.info("AccessToken Validity: {}", jwtProperties.getAccessTokenValidityInSeconds());
-        log.info("JWT Secret: {}", jwtProperties.getSecret());
         long validityInMilliSecond = jwtProperties.getAccessTokenValidityInSeconds();
         return createToken(authClaims, validityInMilliSecond);
     }
