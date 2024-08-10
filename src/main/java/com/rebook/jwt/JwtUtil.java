@@ -8,16 +8,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rebook.jwt.dto.JwtPayload;
 import com.rebook.jwt.service.JwtProperties;
 import com.rebook.user.service.dto.AuthClaims;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
     private final static String TOKEN_PREFIX = "Bearer ";
+    private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
     private final JwtProperties jwtProperties;
     private final ObjectMapper objectMapper;
@@ -31,6 +38,21 @@ public class JwtUtil {
                 .withSubject(String.valueOf(authClaims.getUserId()))
                 .withExpiresAt(currentDate.plusSeconds(jwtProperties.getTokenValidityInSeconds()))
                 .sign(Algorithm.HMAC512(jwtProperties.getSecret()));
+    }
+
+    private String createToken(final AuthClaims authClaims, final long validityInMilliseconds) {
+        String subject = String.valueOf(authClaims.getUserId());
+        Date issuedDate = new Date();
+        Date expirationDate = new Date(issuedDate.getTime() + validityInMilliseconds);
+        SecretKey secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
+
+        return Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setSubject(subject)
+                .setIssuedAt(issuedDate)
+                .setExpiration(expirationDate)
+                .signWith(secretKey, SIGNATURE_ALGORITHM)
+                .compact();
     }
 
     public boolean isTokenExpired(String token) {
