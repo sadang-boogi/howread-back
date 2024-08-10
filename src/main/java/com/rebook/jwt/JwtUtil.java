@@ -1,29 +1,24 @@
 package com.rebook.jwt;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rebook.jwt.dto.JwtPayload;
 import com.rebook.jwt.service.JwtProperties;
 import com.rebook.user.service.dto.AuthClaims;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
-    private final static String TOKEN_PREFIX = "Bearer ";
+    private static final String TOKEN_PREFIX = "Bearer ";
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
-    private static final Logger log = LoggerFactory.getLogger(JwtUtil.class);
 
     private final JwtProperties jwtProperties;
-    private final ObjectMapper objectMapper;
 
     public String extractTokenFromHeader(String header) {
         return header.replace(TOKEN_PREFIX, "");
@@ -74,7 +69,7 @@ public class JwtUtil {
         SecretKey secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(secretKey)  // 서명 검증을 위한 비밀키 설정
+                    .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(token);
             return false;
@@ -95,16 +90,6 @@ public class JwtUtil {
             Long userId = Long.valueOf(claims.getSubject());
             return new AuthClaims(userId);
         } catch (JwtException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private AuthClaims parseUserFromJwt(String decodedPayload) {
-        try {
-            JwtPayload payload = objectMapper.readValue(decodedPayload, JwtPayload.class);
-            Long userId = payload.getSub();
-            return new AuthClaims(userId);
-        } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
