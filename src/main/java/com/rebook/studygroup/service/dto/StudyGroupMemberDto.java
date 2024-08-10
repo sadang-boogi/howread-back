@@ -13,17 +13,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class StudyGroupMemberDto {
-	private Long id;
-	private String nickname;
-	private StudyGroupMemberRole role;
-	private String avatarUrl;
+    private Long id;
+    private String nickname;
+    private StudyGroupMemberRole role;
+    private String avatarUrl;
 
-	public static StudyGroupMemberDto fromEntity(StudyGroupMemberEntity member) {
-		return StudyGroupMemberDto.builder()
-			.id(member.getId())
-			.nickname(member.getUser().getNickname())
-			.role(member.getRole())
-			.avatarUrl(member.getUser().getAvatarUrl())
-			.build();
-	}
+    public static StudyGroupMemberDto fromEntity(StudyGroupMemberEntity member) {
+        return StudyGroupMemberDto.builder()
+                .id(member.getId())
+                .nickname(member.getUser().getNickname())
+                .role(member.getRole())
+                .avatarUrl(member.getUser().getAvatarUrl())
+                .build();
+    }
 }

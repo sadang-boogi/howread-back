@@ -10,18 +10,18 @@ import lombok.Getter;
 @Getter
 public class StudyGroupMemberResponse {
 
-	private Long id;
-	private String nickname;
-	private StudyGroupMemberRole role;
-	private String avatarUrl;
+    private Long id;
+    private String nickname;
+    private StudyGroupMemberRole role;
+    private String avatarUrl;
 
-	public static StudyGroupMemberResponse from(StudyGroupMemberDto studyGroupMemberDto) {
-		return new StudyGroupMemberResponse(
-			studyGroupMemberDto.getId(),
-			studyGroupMemberDto.getNickname(),
-			studyGroupMemberDto.getRole(),
-			studyGroupMemberDto.getAvatarUrl()
-		);
-	}
+    public static StudyGroupMemberResponse from(StudyGroupMemberDto studyGroupMemberDto) {
+        return new StudyGroupMemberResponse(
+                studyGroupMemberDto.getId(),
+                studyGroupMemberDto.getNickname(),
+                studyGroupMemberDto.getRole(),
+                studyGroupMemberDto.getAvatarUrl()
+        );
+    }
 
 }

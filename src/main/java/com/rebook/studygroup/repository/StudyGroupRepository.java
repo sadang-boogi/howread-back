@@ -10,10 +10,10 @@ import com.rebook.studygroup.domain.StudyGroupEntity;
 
 public interface StudyGroupRepository extends JpaRepository<StudyGroupEntity, Long> {
     @Query("""
-        SELECT sg FROM StudyGroupEntity sg
-        JOIN FETCH sg.members m
-        JOIN FETCH m.user
-        WHERE sg.id = :id
-        """)
+            SELECT sg FROM StudyGroupEntity sg
+            JOIN FETCH sg.members m
+            JOIN FETCH m.user
+            WHERE sg.id = :id
+            """)
     Optional<StudyGroupEntity> findStudyGroupById(@Param("id") Long id);
 }
