@@ -4,17 +4,14 @@ import com.rebook.book.domain.BookEntity;
 import com.rebook.book.domain.BookHashtagEntity;
 import com.rebook.hashtag.service.dto.HashtagDto;
 import com.rebook.review.service.dto.ReviewDto;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @ToString
 @Getter
+@Setter
 @NoArgsConstructor
 public class BookDto {
 
@@ -34,10 +31,10 @@ public class BookDto {
 
     private BigDecimal rating;
 
-    private List<BookReactionDto> reactions = new ArrayList<>();
+    private BookReactionDto reaction;
 
     @Builder
-    private BookDto(Long id, String title, String author, String thumbnailUrl, String isbn, List<HashtagDto> hashtags, List<ReviewDto> reviews, BigDecimal rating, List<BookReactionDto> reactions) {
+    private BookDto(Long id, String title, String author, String thumbnailUrl, String isbn, List<HashtagDto> hashtags, List<ReviewDto> reviews, BigDecimal rating, BookReactionDto reaction) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -46,19 +43,10 @@ public class BookDto {
         this.hashtags = hashtags;
         this.reviews = reviews;
         this.rating = rating;
-        if (reactions != null) {
-            this.reactions = reactions;
-        }
+        this.reaction = reaction;
     }
 
-    public void addReaction(BookReactionDto reaction) {
-        if (this.reactions == null) {
-            this.reactions = new ArrayList<>();
-        }
-        this.reactions.add(reaction);
-    }
-
-    public static BookDto from(BookEntity bookEntity, List<BookReactionDto> reactions) {
+    public static BookDto from(BookEntity bookEntity, BookReactionDto reaction) {
         return BookDto.builder()
                 .id(bookEntity.getId())
                 .title(bookEntity.getTitle())
@@ -73,7 +61,7 @@ public class BookDto {
                         .map(ReviewDto::fromEntity)
                         .toList())
                 .rating(bookEntity.getRating())
-                .reactions(reactions != null ? reactions : new ArrayList<>())
+                .reaction(reaction)
                 .build();
     }
 

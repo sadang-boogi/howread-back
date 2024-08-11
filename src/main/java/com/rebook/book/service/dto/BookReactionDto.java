@@ -1,15 +1,21 @@
 package com.rebook.book.service.dto;
 
-import com.rebook.reaction.domain.ReactionType;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class BookReactionDto {
-    private Long reactionId;
-    private Long targetId;
-    private ReactionType reactionType;
+
+    private boolean isFollowedByMe; // 사용자가 팔로우했는지 여부
+    private boolean isLikedByMe; // 사용자가 좋아요를 눌렀는지 여부
+
+    @Builder
+    public BookReactionDto(boolean isFollowedByMe, boolean isLikedByMe) {
+        this.isFollowedByMe = isFollowedByMe;
+        this.isLikedByMe = isLikedByMe;
+    }
 }

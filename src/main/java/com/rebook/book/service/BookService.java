@@ -13,6 +13,7 @@ import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.hashtag.repository.HashtagRepository;
 import com.rebook.reaction.domain.ReactionEntity;
+import com.rebook.reaction.domain.ReactionType;
 import com.rebook.reaction.repository.ReactionRepository;
 import com.rebook.review.domain.ReviewEntity;
 import com.rebook.user.service.dto.AuthClaims;
@@ -66,32 +67,61 @@ public class BookService {
                 .toList();
 
         // 2. 기본 BookDto 리스트
-        List<BookDto> bookDtos = bookEntities.getContent().stream().map(BookDto::from).toList();
+        List<BookDto> bookDtos = bookEntities.getContent().stream()
+                .map(BookDto::from)
+                .toList();
 
         // 3. 리액션 추가
         if (authClaims != null && !bookIds.isEmpty()) {
             List<ReactionEntity> reactions = reactionRepository.findByUserIdAndBookIds(authClaims.getUserId(), bookIds);
 
             // bookId가 키인 BookReactionDto Map
-            Map<Long, List<BookReactionDto>> reactionMap = reactions.stream().map(reaction -> new BookReactionDto(reaction.getId(), reaction.getTargetId(), reaction.getReactionType())).collect(Collectors.groupingBy(BookReactionDto::getTargetId));
+            Map<Long, BookReactionDto> reactionMap = reactions.stream()
+                    .collect(Collectors.toMap(
+                            ReactionEntity::getTargetId, // Book ID를 키로 사용
+                            reaction -> new BookReactionDto(
+                                    reaction.getReactionType().equals(ReactionType.FOLLOW), // 사용자가 팔로우했는지 여부
+                                    reaction.getReactionType().equals(ReactionType.LIKE) // 사용자가 좋아요를 눌렀는지 여부
+                            )
+                    ));
 
             // BookDto에 리액션 추가
             for (BookDto bookDto : bookDtos) {
-                List<BookReactionDto> bookReactions = reactionMap.get(bookDto.getId());
-                if (bookReactions != null) {
-                    bookReactions.forEach(bookDto::addReaction);
+                BookReactionDto bookReactionDto = reactionMap.get(bookDto.getId());
+                if (bookReactionDto != null) {
+                    bookDto.setReaction(bookReactionDto); // BookReactionDto를 설정
+                } else {
+                    bookDto.setReaction(new BookReactionDto(false, false)); // 기본값 설정
                 }
             }
         }
         return new SliceImpl<>(bookDtos, pageable, bookEntities.hasNext());
+
     }
 
     @Transactional(readOnly = true)
-    public BookDto getBook(final Long bookId) {
+    public BookDto getBook(final Long bookId, AuthClaims authClaims) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
-        return BookDto.from(book);
+        BookReactionDto reactionDto = null;
+
+        if (authClaims != null) {
+            // 사용자의 리액션 조회
+            ReactionEntity reactionEntity = reactionRepository.findByUserIdAndBookId(authClaims.getUserId(), bookId);
+
+            if (reactionEntity != null) {
+                reactionDto = new BookReactionDto(
+                        reactionEntity.getReactionType().equals(ReactionType.FOLLOW), // 사용자가 팔로우했는지 여부
+                        reactionEntity.getReactionType().equals(ReactionType.LIKE)    // 사용자가 좋아요를 눌렀는지 여부
+                );
+            } else {
+                // 리액션 정보가 없으면 기본값 설정
+                reactionDto = new BookReactionDto(false, false);
+            }
+        }
+
+        return BookDto.from(book, reactionDto);
     }
 
     @Transactional

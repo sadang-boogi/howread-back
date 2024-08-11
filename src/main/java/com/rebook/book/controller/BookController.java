@@ -71,10 +71,14 @@ public class BookController {
         return ResponseEntity.ok().body(response);
     }
 
+    @LoginRequired(optional = true)
     @Operation(summary = "Get Book", description = "bookId와 일치하는 단일 책을 조회한다.")
     @GetMapping("/{bookId}")
-    public ResponseEntity<BookResponse> getBook(@PathVariable Long bookId) {
-        BookResponse book = BookResponse.from(bookService.getBook(bookId));
+    public ResponseEntity<BookResponse> getBook(
+            @PathVariable Long bookId,
+            @Authenticated AuthClaims authClaims
+    ) {
+        BookResponse book = BookResponse.from(bookService.getBook(bookId, authClaims));
 
         return ResponseEntity.ok()
                 .body(book);

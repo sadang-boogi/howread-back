@@ -7,6 +7,7 @@ import com.rebook.book.service.dto.BookDto;
 import com.rebook.hashtag.controller.requeest.HashtagRequest;
 import com.rebook.hashtag.service.HashtagService;
 import com.rebook.hashtag.service.command.HashtagCommand;
+import com.rebook.user.service.dto.AuthClaims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -71,7 +72,7 @@ class BookServiceTest {
         bookService.updateBook(bookDto.getId(), updateBook);
 
         // then
-        BookDto book = bookService.getBook(bookDto.getId());
+        BookDto book = bookService.getBook(bookDto.getId(),new AuthClaims(1L));
         assertThat(book.getTitle()).isEqualTo("수정제목");
         assertThat(book.getAuthor()).isEqualTo("수정저자");
         assertThat(book.getThumbnailUrl()).isEqualTo("수정썸네일");

@@ -36,4 +36,15 @@ public interface ReactionRepository extends JpaRepository<ReactionEntity, Long> 
             @Param("userId") Long userId,
             @Param("bookIds") List<Long> bookIds
     );
+
+    @Query("""
+        SELECT r FROM ReactionEntity r
+        WHERE r.user.id = :userId
+        AND r.targetId = :bookId
+        AND r.targetType = 'BOOK'
+        """)
+    ReactionEntity findByUserIdAndBookId(
+            @Param("userId") Long userId,
+            @Param("bookId") Long bookId
+    );
 }
