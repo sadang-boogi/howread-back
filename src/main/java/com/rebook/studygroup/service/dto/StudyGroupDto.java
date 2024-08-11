@@ -27,7 +27,7 @@ public class StudyGroupDto {
         this.members = members;
     }
 
-    public static StudyGroupDto fromEntity(StudyGroupEntity studyGroupEntity) {
+    public static StudyGroupDto from(StudyGroupEntity studyGroupEntity) {
         return StudyGroupDto.builder()
                 .id(studyGroupEntity.getId())
                 .name(studyGroupEntity.getName())
