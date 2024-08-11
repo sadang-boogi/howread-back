@@ -79,9 +79,6 @@ public class BookService {
                 }
             }
         }
-        for (BookDto bookDto : bookDtos) {
-            log.info("BookDto: {}", bookDto);  // 리액션이 없는 경우에도 전체 BookDto 출력
-        }
         return new SliceImpl<>(bookDtos, pageable, bookEntities.hasNext());
     }
 
