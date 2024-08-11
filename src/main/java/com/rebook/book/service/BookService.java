@@ -95,8 +95,12 @@ public class BookService {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
-        BookEntity updateBook = BookEntity.builder().title(bookUpdateCommand.getTitle()).author(bookUpdateCommand.getAuthor()).thumbnailUrl(bookUpdateCommand.getThumbnailUrl()).isbn(bookUpdateCommand.getIsbn()).build();
-
+        BookEntity updateBook = BookEntity.builder()
+                .title(bookUpdateCommand.getTitle())
+                .author(bookUpdateCommand.getAuthor())
+                .thumbnailUrl(bookUpdateCommand.getThumbnailUrl())
+                .isbn(bookUpdateCommand.getIsbn())
+                .build();
         book.update(updateBook);
 
         List<BookHashtagEntity> findBookHashtags = bookHashtagRepository.findByBookId(bookId);
