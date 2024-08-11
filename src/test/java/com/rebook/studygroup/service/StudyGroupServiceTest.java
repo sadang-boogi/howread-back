@@ -133,7 +133,7 @@ class StudyGroupServiceTest {
         studyGroupService.createStudyGroup(studyGroupCommand2, leader.getId());
 
         // when
-        List<StudyGroupDto> studyGroups = studyGroupService.getStudyGroups();
+        List<StudyGroupDto> studyGroups = studyGroupService.getStudyGroups(1, 10);
 
         // then
         assertThat(studyGroups).hasSize(2);
