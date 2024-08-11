@@ -120,9 +120,11 @@ public class BookService {
     public void deleteBook(Long bookId) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
-        book.getReviews().forEach(ReviewEntity::softDelete);
+        book.getReviews()
+                .forEach(ReviewEntity::softDelete);
         book.softDelete();
-        book.getBookHashtags().forEach(BaseEntity::softDelete);
+        book.getBookHashtags()
+                .forEach(BaseEntity::softDelete);
     }
 
     private void setHashtag(List<HashtagEntity> hashtags, BookEntity book) {
