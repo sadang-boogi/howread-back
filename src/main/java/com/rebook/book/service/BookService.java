@@ -42,7 +42,11 @@ public class BookService {
 
     @Transactional
     public BookDto save(final BookCreateCommand bookCreateCommand) {
-        BookEntity book = BookEntity.of(bookCreateCommand.getTitle(), bookCreateCommand.getAuthor(), bookCreateCommand.getThumbnailUrl(), bookCreateCommand.getIsbn());
+        BookEntity book = BookEntity.of(
+                bookCreateCommand.getTitle(),
+                bookCreateCommand.getAuthor(),
+                bookCreateCommand.getThumbnailUrl(),
+                bookCreateCommand.getIsbn());
 
         if (bookCreateCommand.getHashtagIds() != null && !bookCreateCommand.getHashtagIds().isEmpty()) {
             List<HashtagEntity> hashtags = hashtagRepository.findByIds(bookCreateCommand.getHashtagIds());
@@ -114,7 +118,8 @@ public class BookService {
 
     @Transactional
     public void deleteBook(Long bookId) {
-        BookEntity book = bookRepository.findById(bookId).orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
+        BookEntity book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
         book.getReviews().forEach(ReviewEntity::softDelete);
         book.softDelete();
         book.getBookHashtags().forEach(BaseEntity::softDelete);
