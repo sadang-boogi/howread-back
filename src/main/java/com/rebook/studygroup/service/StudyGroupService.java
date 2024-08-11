@@ -48,13 +48,13 @@ public class StudyGroupService {
 
         savedStudyGroup.getMembers().add(leaderMember);
 
-        return StudyGroupDto.fromEntity(savedStudyGroup);
+        return StudyGroupDto.from(savedStudyGroup);
     }
 
     @Transactional(readOnly = true)
     public List<StudyGroupDto> getStudyGroups() {
         return studyGroupRepository.findAll().stream()
-                .map(StudyGroupDto::fromEntity)
+                .map(StudyGroupDto::from)
                 .toList();
     }
 
