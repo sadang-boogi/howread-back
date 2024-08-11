@@ -177,6 +177,7 @@ class StudyGroupServiceTest {
                 .hasMessage("요청하신 스터디그룹은 존재하지 않습니다.");
     }
 
+
     @DisplayName("스터디그룹의 멤버를 조회한다.")
     @Test
     void getStudyGroupMembers() {
@@ -211,12 +212,13 @@ class StudyGroupServiceTest {
         assertThat(members).isNotEmpty();
         assertThat(members.size()).isEqualTo(3); // Leader + 2 members
         assertThat(members)
-                .extracting("nickname")
+                .extracting(member -> member.getUser().getNickname())
                 .containsExactlyInAnyOrder("리더", "닉네임1", "닉네임2");
         assertThat(members)
-                .extracting("role")
-                .contains(LEADER, MEMBER, MEMBER);
+                .extracting(StudyGroupMemberDto::getRole)
+                .containsExactlyInAnyOrder(LEADER, MEMBER, MEMBER);
     }
+
 
     private static StudyGroupCreateCommand createStudyGroupCommand(String studyGroupName, String description, int maxMemberCount) {
         StudyGroupCreateCommand studyGroupCreateCommand = new StudyGroupCreateCommand(studyGroupName, description, maxMemberCount);

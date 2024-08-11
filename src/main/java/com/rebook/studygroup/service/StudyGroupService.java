@@ -50,7 +50,7 @@ public class StudyGroupService {
 
         savedStudyGroup.getMembers().add(leaderMember);
 
-        return StudyGroupDto.fromEntity(savedStudyGroup);
+        return StudyGroupDto.from(savedStudyGroup);
     }
 
     @Transactional(readOnly = true)
@@ -58,16 +58,16 @@ public class StudyGroupService {
         PageRequest pageable = PageRequest.of(page - 1, pageSize);
         Page<StudyGroupEntity> result = studyGroupRepository.findStudyGroupEntitiesBy(pageable);
         return result.getContent().stream()
-                .map(StudyGroupDto::fromEntity)
+                .map(StudyGroupDto::from)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public StudyGroupDto getStudyGroup(Long id) {
-        StudyGroupEntity studyGroup = studyGroupRepository.findById(id)
+        StudyGroupEntity studyGroup = studyGroupRepository.findStudyGroupById(id)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_STUDY_GROUP_ID));
 
-        return StudyGroupDto.fromEntity(studyGroup);
+        return StudyGroupDto.from(studyGroup);
     }
 
     @Transactional(readOnly = true)
@@ -76,7 +76,7 @@ public class StudyGroupService {
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_STUDY_GROUP_ID));
 
         return studyGroup.getMembers().stream()
-                .map(StudyGroupMemberDto::fromEntity)
+                .map(StudyGroupMemberDto::from)
                 .toList();
     }
 }

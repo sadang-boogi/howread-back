@@ -1,5 +1,6 @@
 package com.rebook.studygroup.controller.response;
 
+import com.rebook.common.schema.ListResponse;
 import com.rebook.studygroup.service.dto.StudyGroupDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,7 @@ public class StudyGroupResponse {
     private String description;
     private int maxMembers;
     private int currentMembers;
+    private ListResponse<StudyGroupMemberResponse> studyGroupMemberResponseListResponse;
 
     public static StudyGroupResponse from(StudyGroupDto studyGroupDto) {
         return new StudyGroupResponse(
@@ -20,6 +22,13 @@ public class StudyGroupResponse {
                 studyGroupDto.getName(),
                 studyGroupDto.getDescription(),
                 studyGroupDto.getMaxMembers(),
-                studyGroupDto.getCurrentMembers());
+                studyGroupDto.getCurrentMembers(),
+                new ListResponse<>(
+                        studyGroupDto.getMembers().stream()
+                                .map(StudyGroupMemberResponse::from)
+                                .toList()
+                )
+
+        );
     }
 }

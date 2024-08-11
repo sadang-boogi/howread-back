@@ -32,8 +32,8 @@ public class StudyGroupController {
             @Parameter(hidden = true) @Authenticated AuthClaims claims
     ) {
         StudyGroupResponse studyGroupResponse = StudyGroupResponse.from(
-                studyGroupService.createStudyGroup(studyGroupCreateRequest.toCommand(), claims.getUserId()));
-
+                studyGroupService.createStudyGroup(studyGroupCreateRequest.toCommand(), claims.getUserId())
+        );
         return ResponseEntity.created(URI.create("/api/v1/studygroups/" + studyGroupResponse.getId())).body(studyGroupResponse);
     }
 
@@ -55,18 +55,20 @@ public class StudyGroupController {
             @PathVariable final Long studyGroupId
     ) {
         StudyGroupResponse studyGroupResponse = StudyGroupResponse.from(
-                studyGroupService.getStudyGroup(studyGroupId));
+                studyGroupService.getStudyGroup(studyGroupId)
+        );
 
         return ResponseEntity.ok()
                 .body(studyGroupResponse);
     }
 
     @GetMapping("/{id}/members")
-    public ResponseEntity<List<StudyGroupMemberDto>> getStudyGroupMembers(
+    public ResponseEntity<ListResponse<StudyGroupMemberDto>> getStudyGroupMembers(
             @PathVariable Long id
     ) {
         List<StudyGroupMemberDto> members = studyGroupService.getStudyGroupMembers(id);
+        ListResponse<StudyGroupMemberDto> response = new ListResponse<>(members);
 
-        return ResponseEntity.ok().body(members);
+        return ResponseEntity.ok().body(response);
     }
 }

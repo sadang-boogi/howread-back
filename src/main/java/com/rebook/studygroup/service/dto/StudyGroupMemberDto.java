@@ -2,6 +2,7 @@ package com.rebook.studygroup.service.dto;
 
 import com.rebook.studygroup.domain.StudyGroupMemberEntity;
 import com.rebook.studygroup.domain.StudyGroupMemberRole;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,13 +14,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class StudyGroupMemberDto {
     private Long id;
-    private String nickname;
+    private UserInfoDto user;
     private StudyGroupMemberRole role;
 
-    public static StudyGroupMemberDto fromEntity(StudyGroupMemberEntity member) {
+    public static StudyGroupMemberDto from(StudyGroupMemberEntity member) {
         return StudyGroupMemberDto.builder()
+                .user(UserInfoDto.from(member.getUser()))
                 .id(member.getId())
-                .nickname(member.getUser().getNickname())
                 .role(member.getRole())
                 .build();
     }
