@@ -177,6 +177,7 @@ class StudyGroupServiceTest {
                 .hasMessage("요청하신 스터디그룹은 존재하지 않습니다.");
     }
 
+
     @DisplayName("스터디그룹의 멤버를 조회한다.")
     @Test
     void getStudyGroupMembers() {
@@ -188,18 +189,21 @@ class StudyGroupServiceTest {
         StudyGroupEntity savedStudyGroup = studyGroupRepository.findById(studyGroup.getId()).get();
 
         StudyGroupMemberEntity memberEntity1 = StudyGroupMemberEntity.builder()
-                .studyGroup(savedStudyGroup)
+                .studyGroup(studyGroupRepository.findById(studyGroup.getId()).get())
                 .user(member1)
                 .role(MEMBER)
                 .build();
         studyGroupMemberRepository.save(memberEntity1);
 
         StudyGroupMemberEntity memberEntity2 = StudyGroupMemberEntity.builder()
-                .studyGroup(savedStudyGroup)
+                .studyGroup(studyGroupRepository.findById(studyGroup.getId()).get())
                 .user(member2)
                 .role(MEMBER)
                 .build();
         studyGroupMemberRepository.save(memberEntity2);
+
+        savedStudyGroup.getMembers().add(memberEntity1);
+        savedStudyGroup.getMembers().add(memberEntity2);
 
         // when
         List<StudyGroupMemberDto> members = studyGroupService.getStudyGroupMembers(studyGroup.getId());
@@ -211,9 +215,10 @@ class StudyGroupServiceTest {
                 .extracting(member -> member.getUser().getNickname())
                 .containsExactlyInAnyOrder("리더", "닉네임1", "닉네임2");
         assertThat(members)
-                .extracting("role")
-                .contains(LEADER, MEMBER, MEMBER);
+                .extracting(StudyGroupMemberDto::getRole)
+                .containsExactlyInAnyOrder(LEADER, MEMBER, MEMBER);
     }
+
 
     private static StudyGroupCreateCommand createStudyGroupCommand(String studyGroupName, String description, int maxMemberCount) {
         StudyGroupCreateCommand studyGroupCreateCommand = new StudyGroupCreateCommand(studyGroupName, description, maxMemberCount);
