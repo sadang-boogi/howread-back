@@ -11,6 +11,8 @@ import com.rebook.studygroup.service.dto.StudyGroupMemberDto;
 import com.rebook.user.domain.UserEntity;
 import com.rebook.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,8 +54,10 @@ public class StudyGroupService {
     }
 
     @Transactional(readOnly = true)
-    public List<StudyGroupDto> getStudyGroups() {
-        return studyGroupRepository.findAll().stream()
+    public List<StudyGroupDto> getStudyGroups(int page, int pageSize) {
+        PageRequest pageable = PageRequest.of(page - 1, pageSize);
+        Page<StudyGroupEntity> result = studyGroupRepository.findStudyGroupEntitiesBy(pageable);
+        return result.getContent().stream()
                 .map(StudyGroupDto::fromEntity)
                 .toList();
     }
