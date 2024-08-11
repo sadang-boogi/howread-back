@@ -188,21 +188,18 @@ class StudyGroupServiceTest {
         StudyGroupEntity savedStudyGroup = studyGroupRepository.findById(studyGroup.getId()).get();
 
         StudyGroupMemberEntity memberEntity1 = StudyGroupMemberEntity.builder()
-                .studyGroup(studyGroupRepository.findById(studyGroup.getId()).get())
+                .studyGroup(savedStudyGroup)
                 .user(member1)
                 .role(MEMBER)
                 .build();
         studyGroupMemberRepository.save(memberEntity1);
 
         StudyGroupMemberEntity memberEntity2 = StudyGroupMemberEntity.builder()
-                .studyGroup(studyGroupRepository.findById(studyGroup.getId()).get())
+                .studyGroup(savedStudyGroup)
                 .user(member2)
                 .role(MEMBER)
                 .build();
         studyGroupMemberRepository.save(memberEntity2);
-
-        savedStudyGroup.getMembers().add(memberEntity1);
-        savedStudyGroup.getMembers().add(memberEntity2);
 
         // when
         List<StudyGroupMemberDto> members = studyGroupService.getStudyGroupMembers(studyGroup.getId());
@@ -211,7 +208,7 @@ class StudyGroupServiceTest {
         assertThat(members).isNotEmpty();
         assertThat(members.size()).isEqualTo(3); // Leader + 2 members
         assertThat(members)
-                .extracting("nickname")
+                .extracting(member -> member.getUser().getNickname())
                 .containsExactlyInAnyOrder("리더", "닉네임1", "닉네임2");
         assertThat(members)
                 .extracting("role")
