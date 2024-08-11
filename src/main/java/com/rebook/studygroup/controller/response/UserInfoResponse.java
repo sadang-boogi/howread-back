@@ -7,13 +7,13 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class UserInfoResponse {
-    private Long userId;
+    private Long id;
     private String nickname;
     private String avatarUrl;
 
     public static UserInfoResponse from(UserInfoDto userInfoDto) {
         return new UserInfoResponse(
-                userInfoDto.getUserId(),
+                userInfoDto.getId(),
                 userInfoDto.getNickname(),
                 userInfoDto.getAvatarUrl()
         );

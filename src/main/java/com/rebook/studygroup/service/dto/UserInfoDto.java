@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class UserInfoDto {
-    private Long userId;
+    private Long id;
     private String nickname;
     private String avatarUrl;
 
