@@ -72,7 +72,7 @@ public class StudyGroupService {
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_STUDY_GROUP_ID));
 
         return studyGroupMembers.stream()
-                .map(StudyGroupMemberDto::fromEntity)
+                .map(StudyGroupMemberDto::from)
                 .toList();
     }
 }

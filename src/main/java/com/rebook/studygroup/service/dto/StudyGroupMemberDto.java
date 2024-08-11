@@ -14,16 +14,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class StudyGroupMemberDto {
     private Long id;
-    private String nickname;
+    private UserInfoDto user;
     private StudyGroupMemberRole role;
-    private String avatarUrl;
 
-    public static StudyGroupMemberDto fromEntity(StudyGroupMemberEntity member) {
+    public static StudyGroupMemberDto from(StudyGroupMemberEntity member) {
         return StudyGroupMemberDto.builder()
+                .user(UserInfoDto.from(member.getUser()))
                 .id(member.getId())
-                .nickname(member.getUser().getNickname())
                 .role(member.getRole())
-                .avatarUrl(member.getUser().getAvatarUrl())
                 .build();
     }
 }

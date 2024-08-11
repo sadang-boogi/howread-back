@@ -11,16 +11,14 @@ import lombok.Getter;
 public class StudyGroupMemberResponse {
 
     private Long id;
-    private String nickname;
+    private UserInfoResponse userInfoResponse;
     private StudyGroupMemberRole role;
-    private String avatarUrl;
 
     public static StudyGroupMemberResponse from(StudyGroupMemberDto studyGroupMemberDto) {
         return new StudyGroupMemberResponse(
                 studyGroupMemberDto.getId(),
-                studyGroupMemberDto.getNickname(),
-                studyGroupMemberDto.getRole(),
-                studyGroupMemberDto.getAvatarUrl()
+                UserInfoResponse.from(studyGroupMemberDto.getUser()),
+                studyGroupMemberDto.getRole()
         );
     }
 

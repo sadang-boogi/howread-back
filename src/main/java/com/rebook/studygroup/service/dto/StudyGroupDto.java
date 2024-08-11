@@ -36,7 +36,7 @@ public class StudyGroupDto {
                 .currentMembers(studyGroupEntity.getMembers().size())
                 .members(
                         studyGroupEntity.getMembers().stream()
-                                .map(StudyGroupMemberDto::fromEntity)
+                                .map(StudyGroupMemberDto::from)
                                 .toList()
                 )
                 .build();
