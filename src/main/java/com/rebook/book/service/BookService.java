@@ -84,14 +84,16 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public BookDto getBook(final Long bookId) {
-        BookEntity book = bookRepository.findById(bookId).orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
+        BookEntity book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
         return BookDto.from(book);
     }
 
     @Transactional
     public void updateBook(Long bookId, BookUpdateCommand bookUpdateCommand) {
-        BookEntity book = bookRepository.findById(bookId).orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
+        BookEntity book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
         BookEntity updateBook = BookEntity.builder().title(bookUpdateCommand.getTitle()).author(bookUpdateCommand.getAuthor()).thumbnailUrl(bookUpdateCommand.getThumbnailUrl()).isbn(bookUpdateCommand.getIsbn()).build();
 
