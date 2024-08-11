@@ -64,10 +64,10 @@ public class StudyGroupService {
 
     @Transactional(readOnly = true)
     public StudyGroupDto getStudyGroup(Long id) {
-        StudyGroupEntity studyGroup = studyGroupRepository.findById(id)
+        StudyGroupEntity studyGroup = studyGroupRepository.findStudyGroupById(id)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_STUDY_GROUP_ID));
 
-        return StudyGroupDto.fromEntity(studyGroup);
+        return StudyGroupDto.from(studyGroup);
     }
 
     @Transactional(readOnly = true)
