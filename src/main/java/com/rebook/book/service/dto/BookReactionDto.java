@@ -1,12 +1,10 @@
 package com.rebook.book.service.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @ToString
 @Getter
+@Setter
 @NoArgsConstructor
 public class BookReactionDto {
 

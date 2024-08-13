@@ -66,7 +66,7 @@ public class BookDto {
     }
 
     public static BookDto from(BookEntity bookEntity) {
-        return from(bookEntity, null);  // 리액션이 없는 경우
+        return from(bookEntity, new BookReactionDto(false, false));  // 리액션이 없는 경우
     }
 
 }
