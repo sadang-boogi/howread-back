@@ -30,7 +30,7 @@ public class BookResponse {
                         .map(HashtagDto::getName)
                         .toList(),
                 book.getRating(),
-                BookReactionResponse.from(book.getReaction())
+                book.getReaction() != null ? BookReactionResponse.from(book.getReaction()) : null
         );
     }
 

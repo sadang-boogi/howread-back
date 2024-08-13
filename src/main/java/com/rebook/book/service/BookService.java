@@ -13,7 +13,6 @@ import com.rebook.common.exception.NotFoundException;
 import com.rebook.hashtag.domain.HashtagEntity;
 import com.rebook.hashtag.repository.HashtagRepository;
 import com.rebook.reaction.domain.ReactionEntity;
-import com.rebook.reaction.domain.ReactionType;
 import com.rebook.reaction.repository.ReactionRepository;
 import com.rebook.review.domain.ReviewEntity;
 import com.rebook.user.service.dto.AuthClaims;
@@ -99,25 +98,24 @@ public class BookService {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_BOOK_ID));
 
-        BookReactionDto reactionDto = null;
+        BookReactionDto reactionDto = new BookReactionDto(false, false);  // 기본값으로 초기화
 
         if (authClaims != null) {
             // 사용자의 리액션 조회
-            ReactionEntity reactionEntity = reactionRepository.findByUserIdAndBookId(authClaims.getUserId(), bookId);
+            List<ReactionEntity> reactionEntityList = reactionRepository.findByUserIdAndBookIds(authClaims.getUserId(), List.of(bookId));
 
-            if (reactionEntity != null) {
-                reactionDto = new BookReactionDto(
-                        reactionEntity.getReactionType().equals(ReactionType.FOLLOW), // 사용자가 팔로우했는지 여부
-                        reactionEntity.getReactionType().equals(ReactionType.LIKE)    // 사용자가 좋아요를 눌렀는지 여부
-                );
-            } else {
-                // 리액션 정보가 없으면 기본값 설정
-                reactionDto = new BookReactionDto(false, false);
+            if (!reactionEntityList.isEmpty()) {  // 리스트가 비어있는지 확인
+                ReactionEntity reactionEntity = reactionEntityList.get(0);
+
+                switch (reactionEntity.getReactionType()) {
+                    case FOLLOW -> reactionDto.setFollowedByMe(true);
+                    case LIKE -> reactionDto.setLikedByMe(true);
+                }
             }
         }
-
         return BookDto.from(book, reactionDto);
     }
+
 
     @Transactional
     public void updateBook(Long bookId, BookUpdateCommand bookUpdateCommand) {

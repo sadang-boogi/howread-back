@@ -31,20 +31,11 @@ public interface ReactionRepository extends JpaRepository<ReactionEntity, Long> 
             WHERE r.user.id = :userId
             AND r.targetId IN :bookIds
             AND r.targetType = 'BOOK'
+            AND r.isOn = true
             """)
     List<ReactionEntity> findByUserIdAndBookIds(
             @Param("userId") Long userId,
             @Param("bookIds") List<Long> bookIds
     );
 
-    @Query("""
-        SELECT r FROM ReactionEntity r
-        WHERE r.user.id = :userId
-        AND r.targetId = :bookId
-        AND r.targetType = 'BOOK'
-        """)
-    ReactionEntity findByUserIdAndBookId(
-            @Param("userId") Long userId,
-            @Param("bookId") Long bookId
-    );
 }

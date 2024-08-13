@@ -2,7 +2,6 @@ package com.rebook.book.service.dto;
 
 import lombok.*;
 
-@ToString
 @Getter
 @Setter
 @NoArgsConstructor
