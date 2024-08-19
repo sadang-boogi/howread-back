@@ -21,7 +21,7 @@ public class JwtService {
     }
 
     private void validateToken(String token) {
-        if (!jwtUtil.isTokenNotManipulated(token)) {
+        if (jwtUtil.isTokenManipulated(token)) {
             throw new TokenException("INVALID_TOKEN", "로그인 실패", "다시 로그인 해주세요.");
         }
 
