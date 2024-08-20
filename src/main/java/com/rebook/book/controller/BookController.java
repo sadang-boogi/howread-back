@@ -1,5 +1,6 @@
 package com.rebook.book.controller;
 
+import com.rebook.auth.annotation.Authenticated;
 import com.rebook.auth.annotation.LoginRequired;
 import com.rebook.book.controller.request.BookCreateRequest;
 import com.rebook.book.controller.request.BookUpdateRequest;
@@ -9,6 +10,7 @@ import com.rebook.book.service.command.BookUpdateCommand;
 import com.rebook.book.service.dto.BookDto;
 import com.rebook.common.domain.PageInfo;
 import com.rebook.common.schema.PageResponse;
+import com.rebook.user.service.dto.AuthClaims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +34,7 @@ public class BookController {
 
     private final BookService bookService;
 
-    //    @LoginRequired
+    @LoginRequired
     @Operation(summary = "Create Book", description = "책을 등록한다.",
             security = @SecurityRequirement(name = "Bearer Authentication")
     )
@@ -47,14 +49,16 @@ public class BookController {
         return ResponseEntity.created(URI.create("/api/v1/books/" + book.getId())).body(book);
     }
 
+    @LoginRequired(optional = true)
     @Operation(summary = "Get All Books", description = "등록된 모든 책을 조회한다.")
     @GetMapping
     public ResponseEntity<PageResponse<BookResponse>> getBooks(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @Authenticated AuthClaims authClaims
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Slice<BookDto> books = bookService.getBooks(pageable);
+        Slice<BookDto> books = bookService.getBooks(pageable, authClaims);
         List<BookResponse> items = books.getContent()
                 .stream()
                 .map(BookResponse::from)
@@ -67,10 +71,14 @@ public class BookController {
         return ResponseEntity.ok().body(response);
     }
 
+    @LoginRequired(optional = true)
     @Operation(summary = "Get Book", description = "bookId와 일치하는 단일 책을 조회한다.")
     @GetMapping("/{bookId}")
-    public ResponseEntity<BookResponse> getBook(@PathVariable Long bookId) {
-        BookResponse book = BookResponse.from(bookService.getBook(bookId));
+    public ResponseEntity<BookResponse> getBook(
+            @PathVariable Long bookId,
+            @Authenticated AuthClaims authClaims
+    ) {
+        BookResponse book = BookResponse.from(bookService.getBook(bookId, authClaims));
 
         return ResponseEntity.ok()
                 .body(book);

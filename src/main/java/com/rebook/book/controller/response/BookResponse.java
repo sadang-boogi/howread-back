@@ -18,6 +18,7 @@ public class BookResponse {
     private String thumbnailUrl;
     private List<String> hashtags;
     private BigDecimal rating;
+    private BookReactionResponse reaction;
 
     public static BookResponse from(final BookDto book) {
         return new BookResponse(
@@ -28,7 +29,8 @@ public class BookResponse {
                 book.getHashtags().stream()
                         .map(HashtagDto::getName)
                         .toList(),
-                book.getRating()
+                book.getRating(),
+                book.getReaction() != null ? BookReactionResponse.from(book.getReaction()) : null
         );
     }
 

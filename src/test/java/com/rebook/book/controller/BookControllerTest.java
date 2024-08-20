@@ -7,7 +7,8 @@ import com.rebook.book.service.BookService;
 import com.rebook.book.service.command.BookCreateCommand;
 import com.rebook.book.service.dto.BookDto;
 import com.rebook.hashtag.service.dto.HashtagDto;
-import com.rebook.user.service.dto.AuthClaims;
+import com.rebook.jwt.JwtUtil;
+import com.rebook.jwt.service.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +45,15 @@ class BookControllerTest {
     @MockBean
     private BookService bookService;
 
+    @MockBean
+    private JwtUtil jwtUtil;
+
+    @MockBean
+    private JwtService jwtService;
+
     private RequestPostProcessor loggedInUser() {
         return request -> {
-            request.setAttribute("authClaims", new AuthClaims(1L));
+            request.setAttribute("authClaims", null);
             return request;
         };
     }

@@ -4,14 +4,14 @@ import com.rebook.book.domain.BookEntity;
 import com.rebook.book.domain.BookHashtagEntity;
 import com.rebook.hashtag.service.dto.HashtagDto;
 import com.rebook.review.service.dto.ReviewDto;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@ToString
 @Getter
+@Setter
 @NoArgsConstructor
 public class BookDto {
 
@@ -31,8 +31,10 @@ public class BookDto {
 
     private BigDecimal rating;
 
+    private BookReactionDto reaction;
+
     @Builder
-    private BookDto(Long id, String title, String author, String thumbnailUrl, String isbn, List<HashtagDto> hashtags, List<ReviewDto> reviews, BigDecimal rating) {
+    private BookDto(Long id, String title, String author, String thumbnailUrl, String isbn, List<HashtagDto> hashtags, List<ReviewDto> reviews, BigDecimal rating, BookReactionDto reaction) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -41,9 +43,10 @@ public class BookDto {
         this.hashtags = hashtags;
         this.reviews = reviews;
         this.rating = rating;
+        this.reaction = reaction;
     }
 
-    public static BookDto fromEntity(BookEntity bookEntity) {
+    public static BookDto from(BookEntity bookEntity, BookReactionDto reaction) {
         return BookDto.builder()
                 .id(bookEntity.getId())
                 .title(bookEntity.getTitle())
@@ -58,6 +61,12 @@ public class BookDto {
                         .map(ReviewDto::fromEntity)
                         .toList())
                 .rating(bookEntity.getRating())
+                .reaction(reaction)
                 .build();
     }
+
+    public static BookDto from(BookEntity bookEntity) {
+        return from(bookEntity, new BookReactionDto(false, false));  // 리액션이 없는 경우
+    }
+
 }
