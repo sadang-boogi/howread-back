@@ -1,8 +1,12 @@
 package com.rebook.jwt;
 
 import com.rebook.jwt.service.JwtProperties;
+import com.rebook.user.exception.TokenException;
 import com.rebook.user.service.dto.AuthClaims;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +64,7 @@ public class JwtUtil {
                     .getBody();
             return claims.getExpiration()
                     .before(now);
-        } catch (JwtException e) {
+        } catch (TokenException e) {
             return true;
         }
     }
@@ -73,7 +77,7 @@ public class JwtUtil {
                     .build()
                     .parseClaimsJws(token);
             return false;
-        } catch (JwtException e) {
+        } catch (TokenException e) {
             log.error(e.getMessage());
             return true;
         }
@@ -89,7 +93,7 @@ public class JwtUtil {
                     .getBody();
             Long userId = Long.valueOf(claims.getSubject());
             return new AuthClaims(userId);
-        } catch (JwtException e) {
+        } catch (TokenException e) {
             throw new RuntimeException(e);
         }
     }
