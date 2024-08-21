@@ -19,4 +19,8 @@ public class RefreshTokenService {
 
         refreshTokenRepository.save(token);
     }
+
+    public boolean isValidRefreshToken(String refreshToken) {
+        return refreshTokenRepository.existsByToken(refreshToken);
+    }
 }

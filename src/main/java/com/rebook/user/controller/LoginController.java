@@ -1,6 +1,7 @@
 package com.rebook.user.controller;
 
 import com.rebook.jwt.JwtUtil;
+import com.rebook.jwt.service.JwtService;
 import com.rebook.jwt.service.RefreshTokenService;
 import com.rebook.user.controller.request.SocialLoginRequest;
 import com.rebook.user.controller.response.JwtResponse;
@@ -22,6 +23,7 @@ public class LoginController {
     private final LoginService loginService;
     private final RefreshTokenService refreshTokenService;
     private final JwtUtil jwtUtil;
+    private final JwtService jwtService;
 
     @Operation(
             summary = "OAuth URL 생성",
@@ -58,5 +60,22 @@ public class LoginController {
         refreshTokenService.saveRefreshToken(refreshToken, auth.getUserId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(accessToken, accessToken, refreshToken));
+    }
+
+    @Operation(
+            summary = "액세스 토큰 갱신",
+            description = "리프레시 토큰을 통해 액세스 토큰을 갱신합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "JWT 토큰을 반환합니다.")
+            }
+    )
+    @PostMapping("/refresh")
+    public ResponseEntity<JwtResponse> refreshAccessToken(
+            @RequestHeader("Authorization") String authorizationHeader
+    ) {
+        String refreshToken = jwtUtil.extractTokenFromHeader(authorizationHeader);
+        String newAccessToken = jwtService.refreshAccessToken(refreshToken);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(newAccessToken, newAccessToken, refreshToken));
     }
 }
