@@ -1,10 +1,9 @@
-package com.rebook.user.controller;
+package com.howread.user.controller;
 
-import com.rebook.jwt.JwtUtil;
-import com.rebook.jwt.service.JwtService;
-import com.rebook.jwt.service.RefreshTokenService;
-import com.rebook.user.exception.TokenException;
-import com.rebook.user.service.LoginService;
+import com.howread.jwt.JwtUtil;
+import com.howread.jwt.controller.TokenController;
+import com.howread.jwt.service.JwtService;
+import com.howread.user.exception.TokenException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(LoginController.class)
+@WebMvcTest(TokenController.class)
 class LoginControllerTest {
 
     @Autowired
@@ -32,12 +31,6 @@ class LoginControllerTest {
 
     @MockBean
     private JwtUtil jwtUtil;
-
-    @MockBean
-    private RefreshTokenService refreshTokenService;
-
-    @MockBean
-    private LoginService loginService;
 
     @DisplayName("리프레시 토큰이 유효하다면 액세스 토큰을 재발급하여 반환한다.")
     @Test
@@ -51,7 +44,7 @@ class LoginControllerTest {
         when(jwtService.refreshAccessToken(refreshToken)).thenReturn(newAccessToken);
 
         // then
-        mockMvc.perform(post("/api/v1/login/oauth/refresh")
+        mockMvc.perform(post("/api/v1/token/refresh")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + refreshToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -71,7 +64,7 @@ class LoginControllerTest {
         when(jwtService.refreshAccessToken(invalidRefreshToken)).thenThrow(new TokenException("INVALID_TOKEN", "로그인 실패", "다시 로그인 해주세요."));
 
         // then
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/login/oauth/refresh")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/token/refresh")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + invalidRefreshToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());

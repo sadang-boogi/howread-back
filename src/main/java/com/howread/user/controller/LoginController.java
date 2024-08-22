@@ -57,6 +57,12 @@ public class LoginController {
 
         refreshTokenService.saveRefreshToken(refreshToken, auth.getUserId());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(accessToken, accessToken, refreshToken));
+        JwtResponse jwtResponse = JwtResponse.builder()
+                .token(accessToken)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(jwtResponse);
     }
 }
