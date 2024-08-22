@@ -3,6 +3,7 @@ package com.howread.user.controller;
 import com.howread.jwt.JwtUtil;
 import com.howread.jwt.controller.TokenController;
 import com.howread.jwt.service.JwtService;
+import com.howread.jwt.service.dto.RefreshAndAccessTokenDto;
 import com.howread.user.exception.TokenException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TokenController.class)
-class LoginControllerTest {
+class TokenControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,20 +37,20 @@ class LoginControllerTest {
     @Test
     void goodRefreshTokenReturnNewAccessToken() throws Exception {
         // given
-        String refreshToken = "refreshToken";
+        String newRefreshToken = "newRefreshToken";
         String newAccessToken = "newAccessToken";
 
         // when
-        when(jwtUtil.extractTokenFromHeader(anyString())).thenReturn(refreshToken);
-        when(jwtService.refreshAccessToken(refreshToken)).thenReturn(newAccessToken);
+        when(jwtUtil.extractTokenFromHeader(anyString())).thenReturn(newRefreshToken);
+        when(jwtService.renewalRefreshAndAccessToken(newRefreshToken)).thenReturn(new RefreshAndAccessTokenDto(newAccessToken, newRefreshToken));
 
         // then
         mockMvc.perform(post("/api/v1/token/refresh")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + refreshToken)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + newRefreshToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.accessToken").value(newAccessToken))
-                .andExpect(jsonPath("$.refreshToken").value(refreshToken));
+                .andExpect(jsonPath("$.refreshToken").value(newRefreshToken));
     }
 
     @DisplayName("리프레시 토큰이 유효하지 않은 경우 401 상태 코드를 반환한다")
@@ -58,10 +59,9 @@ class LoginControllerTest {
         // given
         String invalidRefreshToken = "invalid-refresh-token";
 
-
         // when
         when(jwtUtil.extractTokenFromHeader(anyString())).thenReturn(invalidRefreshToken);
-        when(jwtService.refreshAccessToken(invalidRefreshToken)).thenThrow(new TokenException("INVALID_TOKEN", "로그인 실패", "다시 로그인 해주세요."));
+        when(jwtService.renewalRefreshAndAccessToken(invalidRefreshToken)).thenThrow(new TokenException("INVALID_TOKEN", "로그인 실패", "다시 로그인 해주세요."));
 
         // then
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/token/refresh")

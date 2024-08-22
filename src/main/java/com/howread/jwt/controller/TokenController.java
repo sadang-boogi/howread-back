@@ -2,6 +2,7 @@ package com.howread.jwt.controller;
 
 import com.howread.jwt.JwtUtil;
 import com.howread.jwt.service.JwtService;
+import com.howread.jwt.service.dto.RefreshAndAccessTokenDto;
 import com.howread.user.controller.response.JwtResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,12 +34,12 @@ public class TokenController {
             @RequestHeader("Authorization") String authorizationHeader
     ) {
         String refreshToken = jwtUtil.extractTokenFromHeader(authorizationHeader);
-        String newAccessToken = jwtService.refreshAccessToken(refreshToken);
+        RefreshAndAccessTokenDto refreshAndAccessTokenDto = jwtService.renewalRefreshAndAccessToken(refreshToken);
 
         JwtResponse jwtResponse = JwtResponse.builder()
-                .token(newAccessToken)
-                .accessToken(newAccessToken)
-                .refreshToken(refreshToken)
+                .token(refreshAndAccessTokenDto.getAccessToken())
+                .accessToken(refreshAndAccessTokenDto.getAccessToken())
+                .refreshToken(refreshAndAccessTokenDto.getRefreshToken())
                 .build();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(jwtResponse);

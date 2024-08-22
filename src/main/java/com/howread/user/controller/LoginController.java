@@ -1,7 +1,7 @@
 package com.howread.user.controller;
 
 import com.howread.jwt.JwtUtil;
-import com.howread.jwt.service.RefreshTokenService;
+import com.howread.jwt.service.JwtService;
 import com.howread.user.controller.request.SocialLoginRequest;
 import com.howread.user.controller.response.JwtResponse;
 import com.howread.user.controller.response.UriResponse;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/v1/login/oauth", produces = "application/json")
 public class LoginController {
     private final LoginService loginService;
-    private final RefreshTokenService refreshTokenService;
+    private final JwtService jwtService;
     private final JwtUtil jwtUtil;
 
     @Operation(
@@ -55,7 +55,7 @@ public class LoginController {
         String accessToken = jwtUtil.createAccessToken(auth);
         String refreshToken = jwtUtil.createRefreshToken(auth);
 
-        refreshTokenService.saveRefreshToken(refreshToken, auth.getUserId());
+        jwtService.saveRefreshToken(refreshToken, auth.getUserId());
 
         JwtResponse jwtResponse = JwtResponse.builder()
                 .token(accessToken)
