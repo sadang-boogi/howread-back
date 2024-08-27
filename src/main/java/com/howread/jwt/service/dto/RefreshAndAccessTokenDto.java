@@ -1,14 +1,11 @@
-package com.howread.user.controller.response;
+package com.howread.jwt.service.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
-@Getter
-@Builder
 @AllArgsConstructor
-public class JwtResponse {
-    private String token;
+@Getter
+public class RefreshAndAccessTokenDto {
     private String accessToken;
     private String refreshToken;
 }
