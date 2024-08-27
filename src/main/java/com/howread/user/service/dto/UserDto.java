@@ -15,6 +15,7 @@ public class UserDto {
     private Role role;
     private SocialType socialType;
     private String socialId;
+    private String avatarUrl;
 
     public static UserDto fromEntity(UserEntity userEntity) {
         return new UserDto(
@@ -23,7 +24,8 @@ public class UserDto {
                 userEntity.getEmail(),
                 userEntity.getRole(),
                 userEntity.getSocialType(),
-                userEntity.getSocialId()
+                userEntity.getSocialId(),
+                userEntity.getAvatarUrl()
         );
     }
 }

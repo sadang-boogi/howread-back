@@ -10,12 +10,14 @@ public class UserResponse {
     private Long id;
     private String nickname;
     private String email;
+    private String avatarUrl;
 
     public static UserResponse fromDto(UserDto user) {
         return new UserResponse(
                 user.getId(),
                 user.getNickname(),
-                user.getEmail()
+                user.getEmail(),
+                user.getAvatarUrl()
         );
     }
 }
