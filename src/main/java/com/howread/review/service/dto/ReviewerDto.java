@@ -9,8 +9,9 @@ import lombok.Getter;
 public class ReviewerDto {
     private Long id;
     private String name;
+    private String avatarUrl;
 
     public static ReviewerDto fromUserEntity(UserEntity user) {
-        return new ReviewerDto(user.getId(), user.getNickname());
+        return new ReviewerDto(user.getId(), user.getNickname(), user.getAvatarUrl());
     }
 }
