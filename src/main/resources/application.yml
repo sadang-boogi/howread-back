@@ -1,4 +1,15 @@
 spring:
+  config:
+    import:
+      aws-secretsmanager:dev/rebook/secrets
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
+      credentials:
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
