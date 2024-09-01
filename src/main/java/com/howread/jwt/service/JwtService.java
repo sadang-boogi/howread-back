@@ -9,6 +9,8 @@ import com.howread.user.service.dto.AuthClaims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
+
 @RequiredArgsConstructor
 @Service
 public class JwtService {
@@ -31,18 +33,16 @@ public class JwtService {
         String newAccessToken = jwtUtil.createAccessToken(authClaims);
         String newRefreshToken = jwtUtil.createRefreshToken(authClaims);
 
-        refreshTokenRepository.save(RefreshTokenEntity.builder()
-                .token(newRefreshToken)
-                .userId(authClaims.getUserId())
-                .build());
+        saveRefreshToken(newRefreshToken, authClaims.getUserId());
 
         return new RefreshAndAccessTokenDto(newAccessToken, newRefreshToken);
     }
 
     public void saveRefreshToken(String refreshToken, Long userId) {
         RefreshTokenEntity token = RefreshTokenEntity.builder()
-                .token(refreshToken)
                 .userId(userId)
+                .token(refreshToken)
+                .issuedAt(ZonedDateTime.now())
                 .build();
 
         refreshTokenRepository.save(token);
